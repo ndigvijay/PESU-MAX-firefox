@@ -1,0 +1,85 @@
+import { createBulkDownloadZip } from './downloadHelper.js';
+import { CONTENT_TYPE_IDS } from './pesuAPI.js';
+
+const DEFAULT_CONTENT_TYPES = [CONTENT_TYPE_IDS.slides];
+
+export async function handleBulkDownload(selectedItems, contentTypes, mergeOptions = {}, mergeSlides = false, sender, sendResponse) {
+  if (!selectedItems || selectedItems.length === 0) {
+    sendResponse({ error: "No items selected" });
+    return;
+  }
+
+  const typesToDownload = (contentTypes && contentTypes.length > 0) 
+    ? contentTypes 
+    : DEFAULT_CONTENT_TYPES;
+
+  // Track download progress
+  let port = null;
+  if (sender.tab?.id) {
+    try {
+      port = chrome.tabs.connect(sender.tab.id, { name: "downloadProgress" });
+    } catch (e) {
+      console.log("Could not establish progress port");
+    }
+  }
+
+  const progressCallback = (progress) => {
+    if (port) {
+      try {
+        port.postMessage(progress);
+      } catch (e) {
+        // Port may be disconnected
+      }
+    }
+  };
+
+  try {
+    const result = await createBulkDownloadZip(selectedItems, progressCallback, typesToDownload, {
+      mergeOptions,
+      mergeSlides
+    });
+    
+    // Use a blob URL instead of a data: URL — Firefox blocks data: URLs in
+    // chrome.downloads.download() with "Access denied", while blob: URLs work
+    // in both Firefox and Chrome. Also avoids the large base64 overhead.
+    const blobUrl = URL.createObjectURL(result.blob);
+    
+    chrome.downloads.download({
+      url: blobUrl,
+      filename: `PESU_Materials_${Date.now()}.zip`,
+      saveAs: true
+    }, (downloadId) => {
+      if (chrome.runtime.lastError) {
+        console.error("Download error:", chrome.runtime.lastError);
+        sendResponse({ 
+          error: chrome.runtime.lastError.message,
+          stats: result.stats 
+        });
+      } else {
+        sendResponse({
+          success: true,
+          downloadId: downloadId,
+          stats: result.stats
+        });
+      }
+
+      // Revoke the blob URL after the download has been queued
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+      
+      if (port) {
+        try {
+          port.disconnect();
+        } catch (e) {}
+      }
+    });
+  } catch (error) {
+    console.error("Bulk download error:", error);
+    sendResponse({ error: error.message });
+    
+    if (port) {
+      try {
+        port.disconnect();
+      } catch (e) {}
+    }
+  }
+}
