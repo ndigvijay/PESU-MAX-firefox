@@ -3,6 +3,16 @@
   "name": "PESU-MAX",
   "version": "1.0.7",
   "description": "PESU MAX is an extension that makes best use of PESU Academy website",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "vijaydig201@gmail.com",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["authenticationInfo", "personallyIdentifyingInfo", "websiteContent"],
+        "optional": []
+      }
+    }
+  },
   "browser_action": {
     "default_popup": "src/popup/index.html"
   },
@@ -18,8 +28,6 @@
     "https://www.pesuacademy.com/*",
     "https://files.pesuacademy.com/*",
     "https://staff.pes.edu/*",
-    "http://library.pes.edu/*",
-    "https://library.pes.edu/*",
     "https://www.ilovepdf.com/*",
     "https://*.ilovepdf.com/*"
   ],
