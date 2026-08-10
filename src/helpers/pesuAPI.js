@@ -22,18 +22,40 @@ export const CONTENT_TYPE_NAMES = {
 };
 
 export const getAllSemesters = async () => {
+  const csrfToken = await getCsrfToken();
+  const headers = {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Requested-With": "XMLHttpRequest"
+  };
+
+  if (csrfToken) {
+    headers["X-CSRF-TOKEN"] = csrfToken;
+  }
+
   const response = await fetch(
-    `${BASE_URL}/a/studentProfilePESU/getStudentSemestersPESU`,
+    `${BASE_URL}/s/studentProfile/getStudentSemestersPESU?_=${Date.now()}`,
     {
       method: "GET",
       credentials: "include",
-      headers: {
-        "X-Requested-With": "XMLHttpRequest"
-      }
+      headers
     }
   );
-  const data = await response.json();
-  return data;
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch semesters: ${response.status}`);
+  }
+
+  const responseText = await response.text();
+  if (!responseText.trim()) {
+    throw new Error("Semester response was empty");
+  }
+
+  try {
+    return JSON.parse(responseText);
+  } catch {
+    // Some PESU responses contain HTML option elements instead of JSON.
+    return responseText;
+  }
 }
 
 

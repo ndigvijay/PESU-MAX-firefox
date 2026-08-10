@@ -217,7 +217,7 @@ export async function fetchSemesters() {
     const data = await getAllSemesters();
     if (data) {
       const semesterData = parseSemesters(data);
-      save("semestersData", semesterData);
+      await save("semestersData", semesterData);
       console.log(`Found ${semesterData.length} semesters`);
     }
   } catch (err) {
