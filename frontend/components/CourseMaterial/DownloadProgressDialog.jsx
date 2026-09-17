@@ -56,7 +56,9 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                 <Typography variant="body2" sx={{ color: '#666', fontSize: '12px' }}>
                   {downloadProgress.status === 'merging'
                     ? `Merging ${downloadProgress.mergeContentType ? downloadProgress.mergeContentType.toLowerCase() : 'files'} ${downloadProgress.current} of ${downloadProgress.total}`
-                    : `Downloading ${downloadProgress.current} of ${downloadProgress.total}`}
+                    : downloadProgress.status === 'converting'
+                      ? `Converting ${downloadProgress.convertedCount || 0} of ${downloadProgress.convertTotal || 0}`
+                      : `Downloading ${downloadProgress.current} of ${downloadProgress.total}`}
                 </Typography>
               )}
               <Typography variant="body2" sx={{ color: theme.colors.primary, fontSize: '12px', fontWeight: '500' }}>
@@ -85,7 +87,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
             >
               {downloadProgress.currentItem}
             </Typography>
-            {downloadProgress.status === 'merging' && (
+            {(downloadProgress.status === 'merging' || downloadProgress.status === 'converting') && (
               <Typography
                 variant="body2"
                 sx={{
@@ -94,7 +96,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                   fontSize: '11px'
                 }}
               >
-                Converting PPTX/DOCS to PDF might take some time, please wait.
+                Converting PPT/PPTX and DOC/DOCX files to PDF might take some time, please wait.
               </Typography>
             )}
           </Box>

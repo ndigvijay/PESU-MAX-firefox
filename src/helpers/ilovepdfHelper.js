@@ -1,4 +1,6 @@
 const ILOVE_PDF_BASE_URL = "https://www.ilovepdf.com";
+const DEFAULT_CONVERSION_CONCURRENCY = 5;
+const RETRY_DELAYS_MS = [500, 1500];
 
 const OFFICE_CONVERSION_CONFIG = {
   ".ppt": {
@@ -80,16 +82,58 @@ export async function convertOfficeBlobToPdfWithILovePdf({ blob, filename, exten
   return downloadProcessedFile({ workerServer, taskId: taskConfig.taskId });
 }
 
+export async function convertMultipleOfficeBlobsToPdfWithILovePdf(
+  files,
+  { concurrency = DEFAULT_CONVERSION_CONCURRENCY, onProgress, retries = RETRY_DELAYS_MS.length } = {}
+) {
+  if (!Array.isArray(files) || files.length === 0) {
+    return [];
+  }
+
+  const results = new Array(files.length);
+  const workerCount = Math.min(Math.max(1, concurrency), files.length);
+  let nextIndex = 0;
+  let completed = 0;
+
+  const workers = Array.from({ length: workerCount }, async (_, workerIndex) => {
+    if (workerIndex > 0) {
+      await delay(workerIndex * 75);
+    }
+
+    while (nextIndex < files.length) {
+      const index = nextIndex++;
+      const sourceFile = files[index];
+
+      try {
+        const blob = await withRetry(
+          () => convertOfficeBlobToPdfWithILovePdf(sourceFile),
+          retries
+        );
+        results[index] = { sourceFile, success: true, blob };
+      } catch (error) {
+        results[index] = { sourceFile, success: false, error };
+      }
+
+      completed++;
+      onProgress?.(completed, files.length, results[index]);
+    }
+  });
+
+  await Promise.all(workers);
+  return results;
+}
+
 async function fetchTaskConfig(toolPath) {
   const resolvedToolPath = normalizeToolPath(toolPath);
   const response = await fetch(`${ILOVE_PDF_BASE_URL}${resolvedToolPath}`, {
-    method: "GET"
+    method: "GET",
+    cache: "no-store"
   });
 
   const html = await response.text();
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch iLovePDF task config: ${response.status}`);
+    throw createHttpError(`Failed to fetch iLovePDF task config: ${response.status}`, response);
   }
 
   const configMatch = html.match(/(?:var\s+|window\.)ilovepdfConfig\s*=\s*({[\s\S]*?});/);
@@ -166,7 +210,7 @@ async function uploadBlob({ workerServer, token, taskId, blob, filename }) {
   const payload = await parseResponse(response);
 
   if (!response.ok) {
-    throw new Error(buildApiErrorMessage(payload, `Failed to upload file ${filename}`));
+    throw createHttpError(buildApiErrorMessage(payload, `Failed to upload file ${filename}`), response);
   }
 
   if (!payload?.server_filename) {
@@ -205,7 +249,8 @@ async function processFiles({ workerServer, token, taskId, uploadedFiles, output
 
   const payload = await parseResponse(response);
   if (!response.ok || payload?.status !== "TaskSuccess") {
-    throw new Error(buildApiErrorMessage(payload, "iLovePDF processing failed"));
+    const message = buildApiErrorMessage(payload, "iLovePDF processing failed");
+    throw response.ok ? new Error(message) : createHttpError(message, response);
   }
 
   return payload;
@@ -217,7 +262,7 @@ async function downloadProcessedFile({ workerServer, taskId }) {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to download processed file: ${response.status}`);
+    throw createHttpError(`Failed to download processed file: ${response.status}`, response);
   }
 
   return response.blob();
@@ -294,6 +339,59 @@ function buildOutputBaseName(filename, suffix) {
 function buildApiErrorMessage(payload, fallbackMessage) {
   const extractedMessage = extractPayloadMessage(payload);
   return extractedMessage ? `${fallbackMessage}: ${extractedMessage}` : fallbackMessage;
+}
+
+function createHttpError(message, response) {
+  const error = new Error(message);
+  error.status = response.status;
+  error.retryAfter = response.headers.get("Retry-After");
+  return error;
+}
+
+async function withRetry(operation, retries) {
+  let attempt = 0;
+
+  while (true) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (attempt >= retries || !isRetryableError(error)) {
+        throw error;
+      }
+
+      const retryAfterMs = parseRetryAfter(error.retryAfter);
+      await delay(retryAfterMs ?? RETRY_DELAYS_MS[Math.min(attempt, RETRY_DELAYS_MS.length - 1)]);
+      attempt++;
+    }
+  }
+}
+
+function isRetryableError(error) {
+  if (error instanceof TypeError) {
+    return true;
+  }
+
+  return error?.status === 408
+    || error?.status === 429
+    || error?.status >= 500;
+}
+
+function parseRetryAfter(value) {
+  if (!value) {
+    return null;
+  }
+
+  const seconds = Number(value);
+  if (Number.isFinite(seconds)) {
+    return Math.max(0, seconds * 1000);
+  }
+
+  const retryDate = Date.parse(value);
+  return Number.isNaN(retryDate) ? null : Math.max(0, retryDate - Date.now());
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 function extractPayloadMessage(value) {

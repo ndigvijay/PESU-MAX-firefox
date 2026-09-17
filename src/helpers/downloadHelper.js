@@ -3,7 +3,7 @@ import { PDFDocument } from 'pdf-lib';
 import { getCourseMaterials, CONTENT_TYPE_NAMES, CONTENT_TYPE_IDS } from './pesuAPI.js';
 import { parseDownloadLinks, resolveDownloadUrl } from './parser.js';
 import { parallelBatch } from './MiscControllers.js';
-import { convertOfficeBlobToPdfWithILovePdf, isOfficeConvertibleExtension } from './ilovepdfHelper.js';
+import { convertMultipleOfficeBlobsToPdfWithILovePdf, isOfficeConvertibleExtension } from './ilovepdfHelper.js';
 
 const BASE_URL = "https://www.pesuacademy.com";
 
@@ -651,25 +651,11 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
   }
 
   if (subjectMergeGroups.size > 0) {
-    let mergedProgress = 0;
+    const subjectGroups = Array.from(subjectMergeGroups.values());
+    const conversionJobs = [];
+    const conversionResults = new Map();
 
-    for (const subjectGroup of subjectMergeGroups.values()) {
-      mergedProgress++;
-
-      if (progressCallback) {
-        progressCallback({
-          current: downloadOperations + mergedProgress,
-          total: totalOperations,
-          currentItem: `Merging ${subjectGroup.contentTypeName} for ${subjectGroup.subjectName}`,
-          status: 'merging',
-          mergeContentType: subjectGroup.contentTypeName
-        });
-      }
-
-      if (subjectGroup.files.length === 0) {
-        continue;
-      }
-
+    for (const subjectGroup of subjectGroups) {
       subjectGroup.files.sort((first, second) => {
         if (first.unitNumber !== second.unitNumber) {
           return first.unitNumber - second.unitNumber;
@@ -682,7 +668,65 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
         return first.fileNumber - second.fileNumber;
       });
 
+      for (const sourceFile of subjectGroup.files) {
+        if (!sourceFile.isPdf) {
+          conversionJobs.push({
+            blob: sourceFile.blob,
+            filename: sourceFile.fileName,
+            extension: sourceFile.extension,
+            originalSourceFile: sourceFile
+          });
+        }
+      }
+    }
+
+    if (conversionJobs.length > 0) {
+      progressCallback?.({
+        current: downloadOperations,
+        total: totalOperations,
+        currentItem: `Converting Office files to PDF (0/${conversionJobs.length})`,
+        status: 'converting',
+        convertedCount: 0,
+        convertTotal: conversionJobs.length
+      });
+    }
+
+    const convertedFiles = await convertMultipleOfficeBlobsToPdfWithILovePdf(conversionJobs, {
+      concurrency: 5,
+      onProgress: (convertedCount, convertTotal) => {
+        progressCallback?.({
+          current: downloadOperations,
+          total: totalOperations,
+          currentItem: `Converting Office files to PDF (${convertedCount}/${convertTotal})`,
+          status: 'converting',
+          convertedCount,
+          convertTotal
+        });
+      }
+    });
+
+    for (const conversionResult of convertedFiles) {
+      conversionResults.set(conversionResult.sourceFile.originalSourceFile, conversionResult);
+    }
+
+    let mergedProgress = 0;
+
+    await parallelBatch(subjectGroups, async (subjectGroup) => {
+      if (progressCallback) {
+        progressCallback({
+          current: downloadOperations + mergedProgress,
+          total: totalOperations,
+          currentItem: `Merging ${subjectGroup.contentTypeName} for ${subjectGroup.subjectName}`,
+          status: 'merging',
+          mergeContentType: subjectGroup.contentTypeName
+        });
+      }
+
       try {
+        if (subjectGroup.files.length === 0) {
+          return;
+        }
+
         const filesToMerge = [];
 
         for (const sourceFile of subjectGroup.files) {
@@ -691,15 +735,11 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
             continue;
           }
 
-          try {
-            const convertedPdfBlob = await convertOfficeBlobToPdfWithILovePdf({
-              blob: sourceFile.blob,
-              filename: sourceFile.fileName,
-              extension: sourceFile.extension
-            });
-
-            filesToMerge.push({ item: sourceFile.item, blob: convertedPdfBlob });
-          } catch (conversionError) {
+          const conversionResult = conversionResults.get(sourceFile);
+          if (conversionResult?.success) {
+            filesToMerge.push({ item: sourceFile.item, blob: conversionResult.blob });
+          } else {
+            const conversionError = conversionResult?.error;
             const conversionErrorMessage = formatErrorMessage(
               conversionError,
               `Failed to convert ${sourceFile.fileName} to PDF`
@@ -737,7 +777,7 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
         }
 
         if (filesToMerge.length === 0) {
-          continue;
+          return;
         }
 
         const mergeResult = await mergeSubjectContentPdfs(filesToMerge);
@@ -757,7 +797,7 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
         }
 
         if (!mergeResult.blob) {
-          continue;
+          return;
         }
 
         const mergedFilePath = buildMergedContentFilePath(
@@ -783,8 +823,17 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
           contentType: subjectGroup.contentTypeName,
           error: error.message || `Failed to merge subject ${String(subjectGroup.contentTypeName || '').toLowerCase()}`
         });
+      } finally {
+        mergedProgress++;
+        progressCallback?.({
+          current: downloadOperations + mergedProgress,
+          total: totalOperations,
+          currentItem: `Finished ${subjectGroup.contentTypeName} for ${subjectGroup.subjectName}`,
+          status: 'merging',
+          mergeContentType: subjectGroup.contentTypeName
+        });
       }
-    }
+    }, 5);
   }
   
   if (progressCallback) {
