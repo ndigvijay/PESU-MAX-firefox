@@ -4,7 +4,7 @@ PESU-MAX is a tool that makes the best use of pesuacademy.
 
 ### Firefox Extension
 
-[Install PESU-MAX for Firefox](https://github.com/ndigvijay/PESU-MAX-firefox)
+[Install PESU-MAX for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pesu-max/)
 
 ### Local Installation
 
