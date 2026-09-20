@@ -115,7 +115,7 @@ const initialState = {
   search: "",
   semester: "all",
   page: 0,
-  rowsPerPage: 5,
+  rowsPerPage: 10,
   
   // Selection (hierarchical)
   selectedSubjects: {},
@@ -267,6 +267,24 @@ const courseMaterialSlice = createSlice({
       // Fetch semesters
       .addCase(fetchSemesters.fulfilled, (state, action) => {
         state.semesters = action.payload;
+
+        if (state.semester === "all") {
+          const latestSemester = action.payload.reduce((latest, semester) => {
+            const semesterNumber = Number(semester.value);
+
+            if (!Number.isFinite(semesterNumber) || semester.value === "all") {
+              return latest;
+            }
+
+            return !latest || semesterNumber > Number(latest.value)
+              ? semester
+              : latest;
+          }, null);
+
+          if (latestSemester) {
+            state.semester = latestSemester.value;
+          }
+        }
       })
       
       // Download materials

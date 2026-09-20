@@ -90,7 +90,8 @@ const CourseMaterialTable = () => {
           onPageChange={handleChangePage}
           rowsPerPage={effectiveRowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[effectiveRowsPerPage]}
+          rowsPerPageOptions={[5, 10]}
+          labelRowsPerPage="Subjects per page:"
           sx={paginationSx}
         />
       )}

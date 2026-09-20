@@ -145,12 +145,30 @@ export const tableContainerSx = {
 // Pagination styles
 export const paginationSx = {
   borderTop: `1px solid ${theme.colors.secondaryLight}`,
+  '& .MuiTablePagination-toolbar': {
+    minHeight: '48px',
+    padding: '0 16px',
+    gap: '12px',
+    alignItems: 'center'
+  },
+  '& .MuiTablePagination-spacer': {
+    display: 'none'
+  },
   '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
     fontSize: '12px',
-    color: theme.colors.secondary
+    color: theme.colors.secondary,
+    margin: 0,
+    whiteSpace: 'nowrap'
   },
   '& .MuiTablePagination-select': {
-    fontSize: '12px'
+    fontSize: '12px',
+    margin: 0
+  },
+  '& .MuiTablePagination-actions': {
+    marginLeft: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px'
   }
 };
 
