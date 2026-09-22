@@ -9,6 +9,7 @@ import CourseMaterial from '../Pages/CourseMaterial.jsx';
 import KnowYourFaculty from '../Pages/KnowYourFaculty.jsx';
 import Attendance from '../Pages/Attendance.jsx';
 import GPACalculator from '../Pages/GPACalculator.jsx';
+import PYQ from '../Pages/PYQ.jsx';
 const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
 import StarIcon from '@mui/icons-material/Star';
 
@@ -113,11 +114,14 @@ const Sidebar = () => {
                     }} 
                 />
                 {/* content */}
-                {currentPage === "home" && <Home />}
-                {currentPage === "courseMaterial" && <CourseMaterial />}
-                {currentPage === "knowYourFaculty" && <KnowYourFaculty />}
-                {currentPage === "attendance" && <Attendance />}
-                {currentPage === "gpaCalculator" && <GPACalculator />}
+                <Box sx={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex" }}>
+                    {currentPage === "home" && <Home />}
+                    {currentPage === "courseMaterial" && <CourseMaterial />}
+                    {currentPage === "knowYourFaculty" && <KnowYourFaculty />}
+                    {currentPage === "attendance" && <Attendance />}
+                    {currentPage === "gpaCalculator" && <GPACalculator />}
+                    {currentPage === "pyq" && <PYQ />}
+                </Box>
 
 
             </Box>

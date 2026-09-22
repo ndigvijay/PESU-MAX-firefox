@@ -1,6 +1,6 @@
 {
   "name": "pesu-max-firefox",
-  "version": "1.0.8",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "webpack --mode development --watch",

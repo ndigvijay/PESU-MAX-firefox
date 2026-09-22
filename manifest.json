@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "PESU-MAX",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "PESU MAX is an extension that makes best use of PESU Academy website",
   "browser_specific_settings": {
     "gecko": {
@@ -28,6 +28,7 @@
     "https://www.pesuacademy.com/*",
     "https://files.pesuacademy.com/*",
     "https://staff.pes.edu/*",
+    "http://14.143.33.149/*",
     "https://www.ilovepdf.com/*",
     "https://*.ilovepdf.com/*"
   ],
