@@ -8,7 +8,7 @@ module.exports = (env, argv) => {
 
   return {
     mode: isProduction ? 'production' : 'development',
-    devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+    devtool: isProduction ? false : 'cheap-module-source-map',
 
     entry: {
       background: path.resolve(__dirname, 'src/background/background.js'),
