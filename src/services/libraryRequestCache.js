@@ -1,7 +1,7 @@
 import { load, save } from "../utils/storage.js";
 
 const TTL = 15 * 60 * 1000;
-const STORAGE_KEY = "librarySearchCacheV1";
+const STORAGE_KEY = "librarySearchCacheV2";
 const pending = new Map();
 let searchQueue = Promise.resolve();
 
@@ -18,11 +18,15 @@ export function cachedLibrarySearch(key, operation) {
   return singleFlight(JSON.stringify(["search", key]), () => {
     const task = searchQueue.then(async () => {
       const stored = (await load(STORAGE_KEY)) || {};
-      const cache = Object.fromEntries(Object.entries(stored).filter(
+      let cache = Object.fromEntries(Object.entries(stored).filter(
         ([, entry]) => entry && Date.now() - entry.savedAt < TTL
       ));
       if (cache[key]) return cache[key].value;
       const value = await operation();
+      const latestStored = (await load(STORAGE_KEY)) || {};
+      cache = Object.fromEntries(Object.entries(latestStored).filter(
+        ([, entry]) => entry && Date.now() - entry.savedAt < TTL
+      ));
       cache[key] = { savedAt: Date.now(), value };
       const entries = Object.entries(cache).sort((a, b) => b[1].savedAt - a[1].savedAt);
       const bounded = {};
@@ -39,6 +43,10 @@ export function cachedLibrarySearch(key, operation) {
     searchQueue = task.catch(() => {});
     return task;
   });
+}
+
+export function clearLibrarySearchCache() {
+  return save(STORAGE_KEY, {});
 }
 
 let activeFiles = 0;
