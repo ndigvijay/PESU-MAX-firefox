@@ -114,7 +114,20 @@ const Sidebar = () => {
                     }} 
                 />
                 {/* content */}
-                <Box sx={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex" }}>
+                <Box
+                    sx={{
+                        flex: 1,
+                        minHeight: 0,
+                        minWidth: 0,
+                        overflow: "hidden",
+                        display: "flex",
+                        "& > *": {
+                            flex: 1,
+                            minWidth: 0,
+                            width: "100%",
+                        },
+                    }}
+                >
                     {currentPage === "home" && <Home />}
                     {currentPage === "courseMaterial" && <CourseMaterial />}
                     {currentPage === "knowYourFaculty" && <KnowYourFaculty />}
