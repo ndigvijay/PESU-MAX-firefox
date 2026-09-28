@@ -13,6 +13,22 @@ module.exports = (env, argv) => {
     entry: {
       background: path.resolve(__dirname, 'src/background/background.js'),
       content: path.resolve(__dirname, 'src/content/contentScript.jsx'),
+      'content/startPage': {
+        import: path.resolve(__dirname, 'src/content/startPage/documentStart.js'),
+        filename: 'content/startPage.js'
+      },
+      'content/startPageMain': {
+        import: path.resolve(__dirname, 'src/content/startPage/mainWorld.js'),
+        filename: 'content/startPageMain.js'
+      },
+      'content/hideTopBarStart': {
+        import: path.resolve(__dirname, 'src/content/hideTopBarStart.js'),
+        filename: 'content/hideTopBarStart.js'
+      },
+      'content/sideMenuStateStart': {
+        import: path.resolve(__dirname, 'src/content/sideMenuStateStart.js'),
+        filename: 'content/sideMenuStateStart.js'
+      },
       popup: path.resolve(__dirname, 'src/popup/popup.jsx'),
       options: path.resolve(__dirname, 'src/options/Options.jsx')
     },
@@ -101,6 +117,14 @@ module.exports = (env, argv) => {
           {
             from: 'manifest.json',
             to: 'manifest.json'
+          },
+          {
+            from: 'public/content/hideTopBar.css',
+            to: 'content/hideTopBar.css'
+          },
+          {
+            from: 'public/content/sideMenuState.css',
+            to: 'content/sideMenuState.css'
           },
           {
             from: 'public/icons/Pes_logo_square_ui.png',

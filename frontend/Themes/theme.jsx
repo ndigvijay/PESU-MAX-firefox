@@ -1,12 +1,15 @@
 const theme = {
   colors: {
     primary: '#F5821F',
+    onSolid: '#ffffff',
     secondary: '#233A76',
     primaryHover: '#D66F1A',
     secondaryHover: '#1D2F5F',
     primaryLight: 'rgba(245, 130, 31, 0.12)',
     secondaryLight: 'rgba(35, 58, 118, 0.08)',
-    starGold: '#FFD700',
+    secondaryBorder: 'rgba(35, 58, 118, 0.2)',
+    textMuted: '#666666',
+    error: '#d32f2f',
   },
   table: {
     rowEvenBg: 'rgba(245, 130, 31, 0.08)',

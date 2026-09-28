@@ -28,6 +28,13 @@ export async function fetchPesu(url, options) {
   return response;
 }
 
+export const resetCsrfToken = async () => {
+  // Clear the result of any previous-session fetch as well as the cached token.
+  await csrfTokenPromise;
+  cachedCsrfToken = null;
+  cachedCsrfFetchedAt = 0;
+};
+
 export const CONTENT_TYPE_IDS = {
   slides: 2,
   notes: 3,

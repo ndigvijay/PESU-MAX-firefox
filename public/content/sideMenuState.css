@@ -1,0 +1,18 @@
+html[data-pesu-max-menu-collapsed] .menu-left {
+  width: 4% !important;
+}
+
+html[data-pesu-max-menu-collapsed] .content-right {
+  width: 96% !important;
+}
+
+html[data-pesu-max-menu-collapsed] .menu-name,
+html[data-pesu-max-menu-collapsed] .dropdown-arrow {
+  display: none !important;
+}
+
+html[data-pesu-max-menu-collapsed] .menu-left .menu-image {
+  width: 100% !important;
+  margin: auto !important;
+  text-align: center !important;
+}

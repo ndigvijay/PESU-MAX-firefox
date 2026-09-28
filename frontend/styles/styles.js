@@ -218,3 +218,129 @@ export const errorAlertSx = {
     color: '#ffffff'
   }
 };
+
+// Settings switch
+export const switchSx = {
+  width: 46,
+  height: 26,
+  padding: 0,
+  "& .MuiSwitch-switchBase": {
+    padding: "3px",
+    transitionDuration: "200ms",
+    "&.Mui-checked": {
+      transform: "translateX(20px)",
+      "& + .MuiSwitch-track": {
+        backgroundColor: theme.colors.primary,
+        borderColor: theme.colors.primary,
+        opacity: 1,
+      },
+    },
+    "&.Mui-focusVisible .MuiSwitch-thumb": {
+      boxShadow: `0 0 0 4px ${theme.colors.primaryLight}`,
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    width: 20,
+    height: 20,
+    boxShadow: "none",
+    backgroundColor: "rgba(35, 58, 118, 0.35)",
+  },
+  "& .Mui-checked .MuiSwitch-thumb": {
+    backgroundColor: "#ffffff",
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 999,
+    border: "1.5px solid rgba(35, 58, 118, 0.25)",
+    backgroundColor: "#ffffff",
+    opacity: 1,
+  },
+};
+
+// Settings row card
+export const settingsRowSx = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '10px',
+  padding: '10px 12px',
+  border: `1.5px solid ${theme.colors.secondaryBorder}`,
+  borderRadius: '12px',
+};
+
+// Row text column
+export const settingsRowTextSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '2px',
+};
+
+export const settingsRowTitleSx = {
+  color: theme.colors.secondary,
+  fontWeight: 600,
+  fontSize: '14px',
+};
+
+export const settingsRowDescriptionSx = {
+  color: theme.colors.textMuted,
+  fontSize: '12px',
+  lineHeight: 1.35,
+};
+
+// Row action button
+export const settingsActionButtonSx = {
+  backgroundColor: theme.colors.primary,
+  color: '#ffffff',
+  textTransform: 'none',
+  fontSize: '12.5px',
+  fontWeight: 500,
+  padding: '6px 12px',
+  minWidth: 'auto',
+  borderRadius: '8px',
+  whiteSpace: 'nowrap',
+  '&:hover': { backgroundColor: theme.colors.primaryHover },
+  '&.Mui-disabled': {
+    backgroundColor: theme.colors.primary,
+    color: '#ffffff',
+    opacity: 0.55,
+  },
+};
+
+// Row hint and warning
+export const settingsHintSx = {
+  color: theme.colors.secondary,
+};
+
+export const settingsWarningSx = {
+  color: theme.colors.error,
+};
+
+const popupButtonSx = {
+  color: theme.colors.onSolid,
+  borderRadius: '8px',
+  padding: '6px 14px',
+  fontWeight: 500,
+  '&.Mui-focusVisible': {
+    outline: `2px solid ${theme.colors.secondary}`,
+    outlineOffset: '2px',
+  },
+};
+
+export const popupPrimaryButtonSx = {
+  ...primaryButtonSx,
+  ...popupButtonSx,
+  '&.Mui-disabled': {
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.onSolid,
+    opacity: 0.55,
+  },
+};
+
+export const popupSecondaryButtonSx = {
+  ...secondaryButtonSx,
+  ...popupButtonSx,
+  '&.Mui-disabled': {
+    backgroundColor: theme.colors.secondary,
+    color: theme.colors.onSolid,
+    opacity: 0.55,
+  },
+};

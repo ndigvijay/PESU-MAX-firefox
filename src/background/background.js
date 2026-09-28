@@ -1,3 +1,4 @@
+import { handleAcademySession } from "./academySession.js";
 import { load } from "../utils/storage.js";
 import { getPESUDataPagination, getAllPESUDataNested } from "../helpers/getStorageData.js";
 import { handleBulkDownload } from "../helpers/downloadController.js";
@@ -18,6 +19,13 @@ import {
 
 // get from storage and send to frontend
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "probeAcademySession" || request.action === "restoreAcademySession") {
+    handleAcademySession(request.action)
+      .then((data) => sendResponse({ data }))
+      .catch((error) => sendResponse({ error: error.message }));
+    return true;
+  }
+
   if (request.action === "getPESUData") {
     load("pesuData").then((data) => {
       sendResponse({

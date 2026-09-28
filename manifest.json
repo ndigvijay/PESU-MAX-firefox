@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "PESU-MAX",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "PESU MAX is an extension that makes best use of PESU Academy website",
   "browser_specific_settings": {
     "gecko": {
@@ -35,6 +35,23 @@
   "content_scripts": [
     {
       "matches": ["https://www.pesuacademy.com/*"],
+      "js": ["content/startPage.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.pesuacademy.com/*"],
+      "css": ["content/hideTopBar.css"],
+      "js": ["content/hideTopBarStart.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.pesuacademy.com/*"],
+      "css": ["content/sideMenuState.css"],
+      "js": ["content/sideMenuStateStart.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.pesuacademy.com/*"],
       "js": ["content/content.js"]
     }
   ],
@@ -44,6 +61,7 @@
     "128": "icons/icon128.png"
   },
   "web_accessible_resources": [
-    "icons/Pes_logo_square_ui.png"
+    "icons/Pes_logo_square_ui.png",
+    "content/startPageMain.js"
   ]
 }

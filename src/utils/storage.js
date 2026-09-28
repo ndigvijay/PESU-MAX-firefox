@@ -25,3 +25,13 @@ export function load(key) {
     });
   });
 }
+
+export function remove(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.remove(key, () => {
+      const error = chrome.runtime.lastError;
+      if (error) reject(new Error(error.message));
+      else resolve();
+    });
+  });
+}

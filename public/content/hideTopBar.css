@@ -1,0 +1,7 @@
+html[data-pesu-max-hide-top-bar] #pge_menu {
+  display: none !important;
+}
+
+html[data-pesu-max-hide-top-bar] body > .content-wrapper {
+  padding-top: 0 !important;
+}

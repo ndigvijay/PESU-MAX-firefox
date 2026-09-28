@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drawer, Box, IconButton, Typography, Divider } from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { closeSidebar } from '../redux/sidebarSlice.js';
+import { closeSidebar, openSidebar, setCurrentPage } from '../redux/sidebarSlice.js';
 import theme from '../Themes/theme.jsx';
 import Home from '../Pages/Home.jsx';
 import CourseMaterial from '../Pages/CourseMaterial.jsx';
@@ -10,8 +10,9 @@ import KnowYourFaculty from '../Pages/KnowYourFaculty.jsx';
 import Attendance from '../Pages/Attendance.jsx';
 import GPACalculator from '../Pages/GPACalculator.jsx';
 import PYQ from '../Pages/PYQ.jsx';
+import Settings from '../Pages/Settings.jsx';
 const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
-import StarIcon from '@mui/icons-material/Star';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 
@@ -22,6 +23,10 @@ const Sidebar = () => {
     const currentPage = useSelector((state) => state.sidebar.currentPage);
     const HandleClose = () => {
         dispatch(closeSidebar());
+    }
+    const HandleSettings = () => {
+        dispatch(openSidebar());
+        dispatch(setCurrentPage("settings"));
     }
     return (
         <Drawer
@@ -81,26 +86,11 @@ const Sidebar = () => {
                             PESU-MAX
                         </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <a
-                            href="https://github.com/ndigvijay/PESU-MAX/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: theme.colors.starGold,
-                                fontStyle: 'italic',
-                                textDecoration: 'underline',
-                                fontSize: '13px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px'
-                            }}
-                        >
-                            <StarIcon sx={{ fontSize: '16px', color: theme.colors.starGold }}/>
-                            Star This Project
-                            <StarIcon sx={{ fontSize: '16px', color: theme.colors.starGold }}/>
-                        </a>
-                        <IconButton onClick={HandleClose} size="large" sx={{ color: '#333' }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: '#333' }}>
+                            <SettingsIcon fontSize="large" />
+                        </IconButton>
+                        <IconButton onClick={HandleClose} aria-label="Close PESU-MAX" size="large" sx={{ color: '#333' }}>
                             <ExitToAppIcon fontSize="large" />
                         </IconButton>
                     </Box>
@@ -134,6 +124,7 @@ const Sidebar = () => {
                     {currentPage === "attendance" && <Attendance />}
                     {currentPage === "gpaCalculator" && <GPACalculator />}
                     {currentPage === "pyq" && <PYQ />}
+                    {currentPage === "settings" && <Settings />}
                 </Box>
 
 
