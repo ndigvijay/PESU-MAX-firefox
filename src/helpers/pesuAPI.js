@@ -1,32 +1,9 @@
 const BASE_URL = "https://www.pesuacademy.com/Academy";
 const CSRF_CACHE_TTL_MS = 5 * 60 * 1000;
-export const PESU_SESSION_EXPIRED_KEY = "pesuSessionExpired";
 
 let cachedCsrfToken = null;
 let cachedCsrfFetchedAt = 0;
 let csrfTokenPromise = null;
-
-export class PesuSessionExpiredError extends Error {
-  constructor() {
-    super("Your PESU Academy session has expired. Reload the page and log in again.");
-    this.name = "PesuSessionExpiredError";
-  }
-}
-
-export function isPesuSessionExpiredError(error) {
-  return error instanceof PesuSessionExpiredError;
-}
-
-export async function fetchPesu(url, options) {
-  const response = await fetch(url, options);
-
-  if (response.status === 500) {
-    chrome.storage.local.set({ [PESU_SESSION_EXPIRED_KEY]: true });
-    throw new PesuSessionExpiredError();
-  }
-
-  return response;
-}
 
 export const resetCsrfToken = async () => {
   // Clear the result of any previous-session fetch as well as the cached token.
@@ -62,7 +39,7 @@ export const getAllSemesters = async () => {
     headers["X-CSRF-TOKEN"] = csrfToken;
   }
 
-  const response = await fetchPesu(
+  const response = await fetch(
     `${BASE_URL}/s/studentProfile/getStudentSemestersPESU?_=${Date.now()}`,
     {
       method: "GET",
@@ -107,7 +84,7 @@ export const getSemesterDetails = async (semesterId) => {
     headers["X-CSRF-TOKEN"] = csrfToken;
   }
 
-  const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin`, {
+  const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin`, {
     method: "POST",
     credentials: "include",
     headers,
@@ -120,7 +97,7 @@ export const getSemesterDetails = async (semesterId) => {
 
 
 export const getSubjectsCode = async () => {
-  const response = await fetchPesu(`${BASE_URL}/a/g/getSubjectsCode`,{
+  const response = await fetch(`${BASE_URL}/a/g/getSubjectsCode`,{
     method: "GET",
     credentials: "include",
   });
@@ -147,7 +124,7 @@ export const getCourseUnits = async (courseId) => {
       headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -182,7 +159,7 @@ export const getUnitClasses = async (courseId, unitId) => {
       headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -207,7 +184,7 @@ export const getUserProfile = async () => {
       _: String(Date.now())
     });
 
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
     });
@@ -232,7 +209,7 @@ export const getCsrfToken = async () => {
 
   csrfTokenPromise = (async () => {
   try {
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESU`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESU`, {
       method: "GET",
       credentials: "include",
     });
@@ -315,7 +292,7 @@ export const getAttendance = async (semesterId) => {
       "X-Requested-With": "XMLHttpRequest"
     };
 
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -357,7 +334,7 @@ export const getSemesterGpa = async (semesterId) => {
 
   
   try {
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin`, {
       method: "POST",
       credentials: "include",
       headers,
@@ -399,7 +376,7 @@ export const getCourseMaterials = async (courseId, unitId, classId, classNo, con
       _: String(Date.now())
     });
 
-    const viewResponse = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${viewParams.toString()}`, {
+    const viewResponse = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${viewParams.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -423,7 +400,7 @@ export const getCourseMaterials = async (courseId, unitId, classId, classNo, con
       _: String(Date.now())
     });
 
-    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
