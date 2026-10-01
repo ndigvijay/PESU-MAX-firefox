@@ -1,17 +1,22 @@
-import { ACADEMY_PROFILE_PATH, probeSession } from "./academyAuth.js";
+import { ACADEMY_PROFILE_PATH, SESSION_CHECK_REDIRECT, isSessionRedirect, probeSession } from "./academyAuth.js";
+import { readStoredCredentials } from "./academyCredentials.js";
+import { load, save } from "../utils/storage.js";
+import {
+  SESSION_CHECK_REQUESTED_KEY,
+  SESSION_KEEPER_KEY,
+  SESSION_RENEWED_KEY
+} from "../utils/storageKeys.js";
 
 const BASE_URL = "https://www.pesuacademy.com/Academy";
 const CSRF_CACHE_TTL_MS = 5 * 60 * 1000;
 const CSRF_HEADER = "X-CSRF-TOKEN";
-const RESTORE_BACKOFF_MS = 15 * 60 * 1000;
+const TAB_RESTORE_WAIT_MS = 15 * 1000;
 export const PESU_SESSION_EXPIRED_KEY = "pesuSessionExpired";
 
 let cachedCsrfToken = null;
 let cachedCsrfFetchedAt = 0;
 let csrfTokenPromise = null;
-let sessionRestorer = null;
 let recoveryPromise = null;
-let restoreBlockedUntil = 0;
 
 export class PesuSessionExpiredError extends Error {
   constructor() {
@@ -24,15 +29,38 @@ export function isPesuSessionExpiredError(error) {
   return error instanceof PesuSessionExpiredError;
 }
 
-export function setSessionRestorer(restore) {
-  sessionRestorer = restore;
-}
-
 export function clearSessionExpired() {
   chrome.storage.local.remove(PESU_SESSION_EXPIRED_KEY);
 }
 
-// A 500 is often just a stale CSRF token; only prompt when the session is gone and keep-alive can't restore it.
+async function keepAliveCanRestore() {
+  return (await load(SESSION_KEEPER_KEY)) === true && Boolean(await readStoredCredentials());
+}
+
+function waitForRenewal(timeoutMs) {
+  return new Promise((resolve) => {
+    const listener = (changes, area) => {
+      if (area !== "local" || !changes[SESSION_RENEWED_KEY]) return;
+      finish(true);
+    };
+    const timer = setTimeout(() => finish(false), timeoutMs);
+    function finish(renewed) {
+      clearTimeout(timer);
+      chrome.storage.onChanged.removeListener(listener);
+      resolve(renewed);
+    }
+    chrome.storage.onChanged.addListener(listener);
+  });
+}
+
+async function restoreThroughTabs() {
+  if (!(await keepAliveCanRestore())) return false;
+  const renewed = waitForRenewal(TAB_RESTORE_WAIT_MS);
+  await save(SESSION_CHECK_REQUESTED_KEY, Date.now());
+  return renewed;
+}
+
+// A failure is often just a stale CSRF token; only prompt when the session is gone and keep-alive can't restore it.
 // Resolves to true (usable session), false (expired) or null (could not tell).
 function recoverSession() {
   if (!recoveryPromise) {
@@ -40,10 +68,9 @@ function recoverSession() {
       await resetCsrfToken();
       const alive = await probeSession();
       if (alive !== false) return alive;
-      if (!sessionRestorer || Date.now() < restoreBlockedUntil) return false;
-      const restored = await sessionRestorer().catch(() => false);
-      if (restored === false) restoreBlockedUntil = Date.now() + RESTORE_BACKOFF_MS;
-      return restored === true;
+      if (!(await restoreThroughTabs())) return false;
+      await resetCsrfToken();
+      return true;
     })().finally(() => {
       recoveryPromise = null;
     });
@@ -65,9 +92,11 @@ async function withFreshCsrfToken(url, options = {}) {
   return { ...options, headers, body };
 }
 
+const SESSION_FAILURE_STATUSES = [403, 500];
+
 export async function fetchPesu(url, options) {
   const response = await fetch(url, options);
-  if (response.status !== 500) return response;
+  if (!SESSION_FAILURE_STATUSES.includes(response.status)) return response;
 
   const recovered = await recoverSession();
   if (recovered === null) return response;
@@ -76,7 +105,7 @@ export async function fetchPesu(url, options) {
     return fetch(url, await withFreshCsrfToken(url, options));
   }
 
-  chrome.storage.local.set({ [PESU_SESSION_EXPIRED_KEY]: true });
+  chrome.storage.local.set({ [PESU_SESSION_EXPIRED_KEY]: Date.now() });
   throw new PesuSessionExpiredError();
 }
 
@@ -284,13 +313,13 @@ export const getCsrfToken = async () => {
 
   csrfTokenPromise = (async () => {
   try {
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESU`, {
+    const response = await fetch(`${BASE_URL}${ACADEMY_PROFILE_PATH}`, {
       method: "GET",
       credentials: "include",
+      redirect: SESSION_CHECK_REDIRECT,
     });
 
-    // A dead session redirects to the login page, whose _csrf is useless once the user signs back in.
-    if (!response.url.includes(ACADEMY_PROFILE_PATH)) {
+    if (isSessionRedirect(response)) {
       return null;
     }
     

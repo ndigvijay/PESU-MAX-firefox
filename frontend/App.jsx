@@ -5,19 +5,23 @@ import { store } from "./redux/store.jsx";
 import Sidebar from "./components/SideBar.jsx";
 import CircularButton from "./components/CircularButton.jsx";
 import { PESU_SESSION_EXPIRED_KEY } from "../src/helpers/pesuAPI.js";
+import { hasLoginForm } from "../src/content/academyPage.js";
 import theme from "./Themes/theme.jsx";
+
+const expiredDuringThisPage = (expiredAt) =>
+    typeof expiredAt === "number" && expiredAt >= performance.timeOrigin && !hasLoginForm();
 
 const App = () => {
     const [sessionExpired, setSessionExpired] = useState(false);
 
     useEffect(() => {
         chrome.storage.local.get(PESU_SESSION_EXPIRED_KEY, (result) => {
-            setSessionExpired(result[PESU_SESSION_EXPIRED_KEY] === true);
+            setSessionExpired(expiredDuringThisPage(result[PESU_SESSION_EXPIRED_KEY]));
         });
 
         const listener = (changes, areaName) => {
             if (areaName === "local" && changes[PESU_SESSION_EXPIRED_KEY]) {
-                setSessionExpired(changes[PESU_SESSION_EXPIRED_KEY].newValue === true);
+                setSessionExpired(expiredDuringThisPage(changes[PESU_SESSION_EXPIRED_KEY].newValue));
             }
         };
 

@@ -1,8 +1,11 @@
 import { load } from "../utils/storage.js";
 import {
+  LOGIN_BOUNCE_KEY,
   RELOGIN_GUARD_KEY,
   REJECT_COUNT_KEY,
-  SESSION_KEEPER_KEY
+  SESSION_CHECK_REQUESTED_KEY,
+  SESSION_KEEPER_KEY,
+  SESSION_RENEWED_KEY
 } from "../utils/storageKeys.js";
 import {
   ACADEMY_BASE_URL,
@@ -12,13 +15,14 @@ import {
   captureCredentials,
   forgetStoredCredentials
 } from "../helpers/academyCredentials.js";
-import { loginToAcademy, readSessionToken } from "../services/academySession.js";
-import { syncPageCsrfToken } from "./csrfSync/csrfSync.js";
+import { loginToAcademy, readSessionToken, reportManualLogin } from "../services/academySession.js";
+import { syncPageCsrfToken, watchCsrfRejections } from "./csrfSync/csrfSync.js";
 import {
   ACADEMY_APP_PATH_PREFIX,
   LOG_PREFIX,
   hasCaptchaGate,
   hasLoginForm,
+  isLoginSubmit,
   loginFormEngaged
 } from "./academyPage.js";
 
@@ -28,6 +32,8 @@ const RELOGIN_MIN_GAP_MS = SESSION_PING_INTERVAL_MS;
 const RELOGIN_BACKOFF_MS = 15 * 60 * 1000;
 const MAX_RELOGIN_REJECTIONS = 3;
 const LOGIN_PAGE_GRACE_MS = 1000;
+const CSRF_RECHECK_GAP_MS = 10 * 1000;
+const LOGIN_BOUNCE_GAP_MS = 30 * 1000;
 
 // Returns "ok", "failed" or "skipped".
 async function attemptReLogin(isCurrent) {
@@ -71,6 +77,7 @@ async function attemptReLogin(isCurrent) {
 }
 
 async function settleAppPage(isCurrent) {
+  watchCsrfRejections(recheckAfterRejection);
   const session = await readSessionToken();
   if (!isCurrent() || session === null) return;
   if (session.alive) {
@@ -80,14 +87,41 @@ async function settleAppPage(isCurrent) {
     return;
   }
 
-  if ((await attemptReLogin(isCurrent)) !== "ok") return;
+  await attemptReLogin(isCurrent);
 
   const restored = await readSessionToken();
   if (isCurrent() && restored?.alive) syncPageCsrfToken(restored.csrfToken);
 }
 
+function openProfile() {
+  location.replace(`${ACADEMY_BASE_URL}${ACADEMY_PROFILE_PATH}`);
+}
+
+let manualLoginStarted = false;
+
+function watchManualLogin() {
+  const onSubmit = (event) => {
+    if (manualLoginStarted || !isLoginSubmit(event)) return;
+    manualLoginStarted = true;
+    void reportManualLogin().catch(() => {});
+  };
+  document.addEventListener("click", onSubmit, true);
+  document.addEventListener("submit", onSubmit, true);
+}
+
 async function settleLoginPage(isCurrent) {
-  if (loginFormEngaged()) return;
+  if (manualLoginStarted || loginFormEngaged()) return;
+
+  const lastBounce = Number(sessionStorage.getItem(LOGIN_BOUNCE_KEY) || 0);
+  if (Date.now() - lastBounce > LOGIN_BOUNCE_GAP_MS) {
+    const session = await readSessionToken();
+    if (!isCurrent() || loginFormEngaged()) return;
+    if (session?.alive) {
+      sessionStorage.setItem(LOGIN_BOUNCE_KEY, String(Date.now()));
+      openProfile();
+      return;
+    }
+  }
 
   // captcha error
   if (hasCaptchaGate()) {
@@ -103,7 +137,7 @@ async function settleLoginPage(isCurrent) {
   if (!isCurrent()) return;
 
   if (result === "ok") {
-    location.replace(`${ACADEMY_BASE_URL}${ACADEMY_PROFILE_PATH}`);
+    openProfile();
     return;
   }
 
@@ -126,8 +160,17 @@ async function settleSession() {
   await settleAppPage(isCurrent);
 }
 
+let lastRejectionRecheck = 0;
+
+function recheckAfterRejection() {
+  if (Date.now() - lastRejectionRecheck < CSRF_RECHECK_GAP_MS) return;
+  lastRejectionRecheck = Date.now();
+  void settleSession().catch(() => {});
+}
+
 export function startSessionKeeper() {
   if (hasLoginForm()) {
+    watchManualLogin();
     setTimeout(() => void settleSession().catch(() => {}), LOGIN_PAGE_GRACE_MS);
   } else if (location.pathname.startsWith(ACADEMY_APP_PATH_PREFIX)) {
     void settleSession().catch(() => {});
@@ -136,8 +179,11 @@ export function startSessionKeeper() {
   setInterval(() => void settleSession().catch(() => {}), SESSION_PING_INTERVAL_MS);
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && changes[SESSION_KEEPER_KEY]) {
+    if (area !== "local") return;
+    if (changes[SESSION_KEEPER_KEY]) {
       generation += 1;
+      void settleSession().catch(() => {});
+    } else if (changes[SESSION_RENEWED_KEY] || changes[SESSION_CHECK_REQUESTED_KEY]) {
       void settleSession().catch(() => {});
     }
   });

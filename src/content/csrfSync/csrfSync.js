@@ -1,6 +1,7 @@
-import { CSRF_INPUT_SELECTOR, CSRF_META_SELECTOR } from "../academyPage.js";
+import { CSRF_INPUT_SELECTOR, CSRF_META_SELECTOR, CSRF_REJECTED_EVENT } from "../academyPage.js";
 
 let mainWorldInjected = false;
+let watchingRejections = false;
 
 function injectMainWorld() {
   if (mainWorldInjected) return;
@@ -9,6 +10,13 @@ function injectMainWorld() {
   script.src = chrome.runtime.getURL("content/csrfSyncMain.js");
   script.onload = script.onerror = () => script.remove();
   (document.head || document.documentElement).appendChild(script);
+}
+
+export function watchCsrfRejections(onRejected) {
+  if (watchingRejections || !document.querySelector(CSRF_META_SELECTOR)) return;
+  watchingRejections = true;
+  document.addEventListener(CSRF_REJECTED_EVENT, onRejected);
+  injectMainWorld();
 }
 
 export function syncPageCsrfToken(token) {

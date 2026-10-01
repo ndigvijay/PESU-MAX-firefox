@@ -1,11 +1,13 @@
 import { probeSession, loginToAcademy, readSessionToken } from "../helpers/academyAuth.js";
 import { readStoredCredentials } from "../helpers/academyCredentials.js";
-import { clearSessionExpired, resetCsrfToken, setSessionRestorer } from "../helpers/pesuAPI.js";
-import { load } from "../utils/storage.js";
-import { SESSION_KEEPER_KEY } from "../utils/storageKeys.js";
+import { clearSessionExpired, resetCsrfToken } from "../helpers/pesuAPI.js";
+import { load, save } from "../utils/storage.js";
+import { SESSION_KEEPER_KEY, SESSION_RENEWED_KEY } from "../utils/storageKeys.js";
+
+const MANUAL_LOGIN_QUIET_MS = 60 * 1000;
 
 let loginController = null;
-let loginPromise = null;
+let manualLoginAt = 0;
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes[SESSION_KEEPER_KEY] &&
@@ -15,6 +17,11 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 export async function handleAcademySession(action) {
+  if (action === "manualAcademyLogin") {
+    manualLoginAt = Date.now();
+    loginController?.abort();
+    return true;
+  }
   if ((await load(SESSION_KEEPER_KEY)) !== true) return null;
   if (action === "probeAcademySession") return probeSession();
   if (action === "readAcademySessionToken") {
@@ -22,15 +29,8 @@ export async function handleAcademySession(action) {
     if (session?.alive) clearSessionExpired();
     return session;
   }
-  if (loginController) return null;
+  if (loginController || Date.now() - manualLoginAt < MANUAL_LOGIN_QUIET_MS) return null;
 
-  loginPromise = restoreSession().finally(() => {
-    loginPromise = null;
-  });
-  return loginPromise;
-}
-
-async function restoreSession() {
   const controller = new AbortController();
   loginController = controller;
   try {
@@ -40,6 +40,7 @@ async function restoreSession() {
     if (loggedIn) {
       await resetCsrfToken();
       clearSessionExpired();
+      await save(SESSION_RENEWED_KEY, Date.now());
     }
     return controller.signal.aborted ? null : loggedIn;
   } catch (error) {
@@ -49,6 +50,3 @@ async function restoreSession() {
     loginController = null;
   }
 }
-
-// Wait for a re-login keep-alive already started instead of reporting the session as expired meanwhile.
-setSessionRestorer(() => loginPromise || handleAcademySession("restoreAcademySession"));

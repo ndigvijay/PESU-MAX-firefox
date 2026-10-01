@@ -1,4 +1,4 @@
-import { getAllSemesters, getCourseUnits, getUnitClasses, getUserProfile, getSemesterGpa, getSemesterDetails } from "../helpers/pesuAPI.js";
+import { getAllSemesters, getCourseUnits, getUnitClasses, getUserProfile, getSemesterGpa, getSemesterDetails, resetCsrfToken } from "../helpers/pesuAPI.js";
 import { parseSemesters, parseCourseUnits, parseUnitClasses, parseUserProfile, parseGpaData, parseSemesterDetails } from "../helpers/parser.js";
 import { save, load } from "../utils/storage.js";
 import { parallelBatch } from "../helpers/MiscControllers.js";
@@ -289,6 +289,8 @@ export async function fetchAllGpaData() {
 }
 
 // In-memory locks 
+const LOGIN_SETTLE_MS = 5000;
+
 const fetchLocks = {
   sessionId: false,
   userProfile: false,
@@ -406,13 +408,16 @@ export function initializeDataSync() {
     }
   });
 
-  // Trigger sync when user logs in
+  // Trigger sync when user logs in. PESU sets the new session cookie on the login redirect but only
+  // finishes setting the session up on /Academy/a/0; anything asked before that is told it expired.
+  let loginSyncTimer = null;
   chrome.cookies.onChanged.addListener((changeInfo) => {
-    if (changeInfo.cookie.name === "JSESSIONID" && 
-        changeInfo.cookie.domain.includes("pesuacademy.com") &&
-        !changeInfo.removed) {
+    if (changeInfo.cookie.name !== "JSESSIONID" || !changeInfo.cookie.domain.includes("pesuacademy.com")) return;
+    void resetCsrfToken();
+    if (!changeInfo.removed) {
       console.log("Login detected, syncing data...");
-      syncMissingData();
+      clearTimeout(loginSyncTimer);
+      loginSyncTimer = setTimeout(syncMissingData, LOGIN_SETTLE_MS);
     }
   });
 

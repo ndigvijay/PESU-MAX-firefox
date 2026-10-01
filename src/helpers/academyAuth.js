@@ -6,6 +6,8 @@ export const ACADEMY_PROFILE_PATH = "/s/studentProfilePESU";
 const ACADEMY_LOGIN_PATH = "/j_spring_security_check";
 const CSRF_META_PATTERN = /<meta\s+name="csrf-token"\s+content="([^"]+)"/i;
 
+export const SESSION_CHECK_REDIRECT = "manual";
+export const isSessionRedirect = (response) => response.type === "opaqueredirect";
 
 export async function probeSession() {
   const controller = new AbortController();
@@ -13,11 +15,11 @@ export async function probeSession() {
   try {
     const response = await fetch(`${ACADEMY_BASE_URL}${ACADEMY_PROFILE_PATH}`, {
       credentials: "include",
-      redirect: "follow",
+      redirect: SESSION_CHECK_REDIRECT,
       signal: controller.signal
     });
 
-    const alive = response.url.includes(ACADEMY_PROFILE_PATH);
+    const alive = !isSessionRedirect(response);
     controller.abort();
     return alive;
   } catch (error) {
@@ -29,10 +31,10 @@ export async function readSessionToken() {
   try {
     const response = await fetch(`${ACADEMY_BASE_URL}${ACADEMY_PROFILE_PATH}`, {
       credentials: "include",
-      redirect: "follow"
+      redirect: SESSION_CHECK_REDIRECT
     });
 
-    if (!response.url.includes(ACADEMY_PROFILE_PATH)) {
+    if (isSessionRedirect(response)) {
       return { alive: false, csrfToken: null };
     }
 

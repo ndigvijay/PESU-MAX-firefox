@@ -14,10 +14,13 @@ export const ACADEMY_HOME_URL_MARKER = "/Home/";
 export const LOG_PREFIX = "[PESU-MAX]";
 export const CSRF_META_SELECTOR = 'meta[name="csrf-token"]';
 export const CSRF_INPUT_SELECTOR = 'input[name="_csrf"]';
+export const CSRF_REJECTED_EVENT = "pesu-max:csrf-rejected";
 
 const LOGIN_USERNAME_SELECTOR = 'input[name="j_username"]';
 const LOGIN_PASSWORD_SELECTOR = 'input[name="j_password"]';
 const LOGIN_CAPTCHA_SELECTOR = "#captchaInput, #captchaImg";
+// Academy's Sign In button submits the form from a click handler, which fires no submit event.
+const LOGIN_SUBMIT_SELECTOR = '[id^="postloginform"], button[type="submit"], input[type="submit"]';
 
 export const menuItems = (list) =>
   [...list.children].filter((el) => el.tagName === "LI" && el.id.startsWith(MENU_ITEM_ID_PREFIX));
@@ -48,6 +51,12 @@ const passwordField = () => document.querySelector(LOGIN_PASSWORD_SELECTOR);
 
 export function hasLoginForm() {
   return Boolean(passwordField());
+}
+
+export function isLoginSubmit(event) {
+  const form = passwordField()?.closest("form");
+  if (!form || !(event.target instanceof Element) || !form.contains(event.target)) return false;
+  return event.type === "submit" || Boolean(event.target.closest(LOGIN_SUBMIT_SELECTOR));
 }
 
 export function loginFormEngaged() {
