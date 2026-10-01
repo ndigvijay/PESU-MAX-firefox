@@ -21,6 +21,18 @@ module.exports = (env, argv) => {
         import: path.resolve(__dirname, 'src/content/startPage/mainWorld.js'),
         filename: 'content/startPageMain.js'
       },
+      'content/backNavigation': {
+        import: path.resolve(__dirname, 'src/content/backNavigation/documentStart.js'),
+        filename: 'content/backNavigation.js'
+      },
+      'content/backNavigationMain': {
+        import: path.resolve(__dirname, 'src/content/backNavigation/mainWorld.js'),
+        filename: 'content/backNavigationMain.js'
+      },
+      'content/csrfSyncMain': {
+        import: path.resolve(__dirname, 'src/content/csrfSync/mainWorld.js'),
+        filename: 'content/csrfSyncMain.js'
+      },
       'content/hideTopBarStart': {
         import: path.resolve(__dirname, 'src/content/hideTopBarStart.js'),
         filename: 'content/hideTopBarStart.js'

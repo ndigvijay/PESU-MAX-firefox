@@ -16,6 +16,7 @@ import {
 } from "../../src/content/menuReorder";
 import { START_PAGE_OPTIONS } from "../../src/content/startPage";
 import {
+  BACK_NAVIGATION_KEY,
   SESSION_KEEPER_KEY,
   SIDE_MENU_STATE_KEY,
   START_PAGE_KEY,
@@ -72,8 +73,14 @@ const Settings = () => {
         <SettingsSelectRow
           storageKey={START_PAGE_KEY}
           title="Set the start page"
-          description="Opens this page instead of Home"
+          description="Opens this page instead of Home after login"
           options={START_PAGE_OPTIONS}
+        />
+
+        <SettingsToggleRow
+          storageKey={BACK_NAVIGATION_KEY}
+          title="disable back button"
+          description="Back returns to your previous page instead of logging you out. persists on the next page load."
         />
 
         <SettingsEditRow

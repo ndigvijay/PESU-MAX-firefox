@@ -1,9 +1,84 @@
+import { ACADEMY_PROFILE_PATH, probeSession } from "./academyAuth.js";
+
 const BASE_URL = "https://www.pesuacademy.com/Academy";
 const CSRF_CACHE_TTL_MS = 5 * 60 * 1000;
+const CSRF_HEADER = "X-CSRF-TOKEN";
+const RESTORE_BACKOFF_MS = 15 * 60 * 1000;
+export const PESU_SESSION_EXPIRED_KEY = "pesuSessionExpired";
 
 let cachedCsrfToken = null;
 let cachedCsrfFetchedAt = 0;
 let csrfTokenPromise = null;
+let sessionRestorer = null;
+let recoveryPromise = null;
+let restoreBlockedUntil = 0;
+
+export class PesuSessionExpiredError extends Error {
+  constructor() {
+    super("Your PESU Academy session has expired. Reload the page and log in again.");
+    this.name = "PesuSessionExpiredError";
+  }
+}
+
+export function isPesuSessionExpiredError(error) {
+  return error instanceof PesuSessionExpiredError;
+}
+
+export function setSessionRestorer(restore) {
+  sessionRestorer = restore;
+}
+
+export function clearSessionExpired() {
+  chrome.storage.local.remove(PESU_SESSION_EXPIRED_KEY);
+}
+
+// A 500 is often just a stale CSRF token; only prompt when the session is gone and keep-alive can't restore it.
+// Resolves to true (usable session), false (expired) or null (could not tell).
+function recoverSession() {
+  if (!recoveryPromise) {
+    recoveryPromise = (async () => {
+      await resetCsrfToken();
+      const alive = await probeSession();
+      if (alive !== false) return alive;
+      if (!sessionRestorer || Date.now() < restoreBlockedUntil) return false;
+      const restored = await sessionRestorer().catch(() => false);
+      if (restored === false) restoreBlockedUntil = Date.now() + RESTORE_BACKOFF_MS;
+      return restored === true;
+    })().finally(() => {
+      recoveryPromise = null;
+    });
+  }
+  return recoveryPromise;
+}
+
+async function withFreshCsrfToken(url, options = {}) {
+  const token = url.startsWith(BASE_URL) ? await getCsrfToken() : null;
+  if (!token) return options;
+
+  const headers = { ...(options.headers || {}), [CSRF_HEADER]: token };
+  let { body } = options;
+  if (typeof body === "string" && /(^|&)_csrf=/.test(body)) {
+    const params = new URLSearchParams(body);
+    params.set("_csrf", token);
+    body = params.toString();
+  }
+  return { ...options, headers, body };
+}
+
+export async function fetchPesu(url, options) {
+  const response = await fetch(url, options);
+  if (response.status !== 500) return response;
+
+  const recovered = await recoverSession();
+  if (recovered === null) return response;
+  if (recovered) {
+    clearSessionExpired();
+    return fetch(url, await withFreshCsrfToken(url, options));
+  }
+
+  chrome.storage.local.set({ [PESU_SESSION_EXPIRED_KEY]: true });
+  throw new PesuSessionExpiredError();
+}
 
 export const resetCsrfToken = async () => {
   // Clear the result of any previous-session fetch as well as the cached token.
@@ -39,7 +114,7 @@ export const getAllSemesters = async () => {
     headers["X-CSRF-TOKEN"] = csrfToken;
   }
 
-  const response = await fetch(
+  const response = await fetchPesu(
     `${BASE_URL}/s/studentProfile/getStudentSemestersPESU?_=${Date.now()}`,
     {
       method: "GET",
@@ -84,7 +159,7 @@ export const getSemesterDetails = async (semesterId) => {
     headers["X-CSRF-TOKEN"] = csrfToken;
   }
 
-  const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin`, {
+  const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin`, {
     method: "POST",
     credentials: "include",
     headers,
@@ -97,7 +172,7 @@ export const getSemesterDetails = async (semesterId) => {
 
 
 export const getSubjectsCode = async () => {
-  const response = await fetch(`${BASE_URL}/a/g/getSubjectsCode`,{
+  const response = await fetchPesu(`${BASE_URL}/a/g/getSubjectsCode`,{
     method: "GET",
     credentials: "include",
   });
@@ -124,7 +199,7 @@ export const getCourseUnits = async (courseId) => {
       headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -159,7 +234,7 @@ export const getUnitClasses = async (courseId, unitId) => {
       headers["X-CSRF-TOKEN"] = csrfToken;
     }
 
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -184,7 +259,7 @@ export const getUserProfile = async () => {
       _: String(Date.now())
     });
 
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
     });
@@ -213,6 +288,11 @@ export const getCsrfToken = async () => {
       method: "GET",
       credentials: "include",
     });
+
+    // A dead session redirects to the login page, whose _csrf is useless once the user signs back in.
+    if (!response.url.includes(ACADEMY_PROFILE_PATH)) {
+      return null;
+    }
     
     const html = await response.text();
     
@@ -292,7 +372,7 @@ export const getAttendance = async (semesterId) => {
       "X-Requested-With": "XMLHttpRequest"
     };
 
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -334,7 +414,7 @@ export const getSemesterGpa = async (semesterId) => {
 
   
   try {
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin`, {
+    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin`, {
       method: "POST",
       credentials: "include",
       headers,
@@ -376,7 +456,7 @@ export const getCourseMaterials = async (courseId, unitId, classId, classNo, con
       _: String(Date.now())
     });
 
-    const viewResponse = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${viewParams.toString()}`, {
+    const viewResponse = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${viewParams.toString()}`, {
       method: "GET",
       credentials: "include",
       headers
@@ -400,7 +480,7 @@ export const getCourseMaterials = async (courseId, unitId, classId, classNo, con
       _: String(Date.now())
     });
 
-    const response = await fetch(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
+    const response = await fetchPesu(`${BASE_URL}/s/studentProfilePESUAdmin?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers

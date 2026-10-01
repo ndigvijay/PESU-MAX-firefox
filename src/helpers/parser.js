@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import { load } from 'cheerio';
+const TRACKED_RESOURCE_TYPES = [2, 3, 5, 6, 7];
 
 const cleanId = (id) => {
   if (!id) return '';
@@ -155,12 +156,17 @@ export const parseUnitClasses = (data) => {
       || $(row).find('td').first().text().replace(/\s+/g, ' ').trim();
 
     const contentTypes = [];
+    const resourceCounts = {};
     $(row).find('[onclick*="handleclasscoursecontentunit"]').each((linkIndex, link) => {
       const onclick = $(link).attr('onclick') || '';
       const match = onclick.match(/handleclasscoursecontentunit\s*\([^,]+,[^,]+,[^,]+,[^,]+,\s*(\d+)/i);
       const type = Number(match?.[1]);
       if (Number.isInteger(type) && !contentTypes.includes(type)) {
         contentTypes.push(type);
+      }
+      if (TRACKED_RESOURCE_TYPES.includes(type) && $(link).is('td')) {
+        const count = parseInt($(link).find('a').first().text().replace(/\D+/g, ' ').trim(), 10);
+        resourceCounts[type] = Number.isInteger(count) ? count : 0;
       }
     });
 
@@ -171,7 +177,8 @@ export const parseUnitClasses = (data) => {
       classNo: cleanId(rowMatch[4]),
       className,
       classType: 'Lecture',
-      contentTypes
+      contentTypes,
+      resourceCounts
     });
   });
   

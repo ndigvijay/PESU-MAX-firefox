@@ -2,6 +2,9 @@ import { getAllSemesters, getCourseUnits, getUnitClasses, getUserProfile, getSem
 import { parseSemesters, parseCourseUnits, parseUnitClasses, parseUserProfile, parseGpaData, parseSemesterDetails } from "../helpers/parser.js";
 import { save, load } from "../utils/storage.js";
 import { parallelBatch } from "../helpers/MiscControllers.js";
+import { probeSession } from "../helpers/academyAuth.js";
+import { checkCurrentSemesterResources, isResourceCheckDue, markResourceCheckStarted } from "./resourceCheck.js";
+import { RESOURCE_CHECK_RUNNING_KEY } from "../utils/storageKeys.js";
 
 // Save user profile data in chrome ext storage
 export async function saveUserProfileData() {
@@ -291,7 +294,8 @@ const fetchLocks = {
   userProfile: false,
   semesters: false,
   pesuData: false,
-  gpaData: false
+  gpaData: false,
+  resources: false
 };
 
 function needsPesuDataRefresh(pesuData) {
@@ -359,6 +363,19 @@ async function syncMissingData() {
         chrome.storage.local.set({ fetchStatus: { pesuData: false } });
       });
     }
+
+    if (!fetchLocks.resources && await isResourceCheckDue()) {
+      fetchLocks.resources = true;
+      await markResourceCheckStarted();
+      if (await probeSession()) {
+        checkCurrentSemesterResources()
+          .catch((err) => console.error("Error checking for new resources:", err))
+          .finally(() => { fetchLocks.resources = false; });
+      } else {
+        fetchLocks.resources = false;
+      }
+    }
+
     if (semesters?.length && !gpaData && !fetchLocks.gpaData) {
       fetchLocks.gpaData = true;
       chrome.storage.local.set({ fetchStatus: { gpaData: true } });
@@ -398,6 +415,8 @@ export function initializeDataSync() {
       syncMissingData();
     }
   });
+
+  save(RESOURCE_CHECK_RUNNING_KEY, false);
 
   // Run immediately on load
   syncMissingData();

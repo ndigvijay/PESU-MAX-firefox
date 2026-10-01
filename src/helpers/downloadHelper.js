@@ -1,6 +1,12 @@
 import JSZip from 'jszip';
 import { PDFDocument } from 'pdf-lib';
-import { getCourseMaterials, CONTENT_TYPE_NAMES, CONTENT_TYPE_IDS } from './pesuAPI.js';
+import {
+  fetchPesu,
+  getCourseMaterials,
+  CONTENT_TYPE_NAMES,
+  CONTENT_TYPE_IDS,
+  isPesuSessionExpiredError
+} from './pesuAPI.js';
 import { parseDownloadLinks, resolveDownloadUrl } from './parser.js';
 import { parallelBatch } from './MiscControllers.js';
 import { convertMultipleOfficeBlobsToPdfWithILovePdf, isOfficeConvertibleExtension } from './ilovepdfHelper.js';
@@ -384,7 +390,7 @@ async function mergeSubjectContentPdfs(files) {
 // Download a single file from URL
 async function downloadSingleFile(url) {
   try {
-    const response = await fetch(url, {
+    const response = await fetchPesu(url, {
       method: 'GET',
       credentials: 'include'
     });
@@ -398,6 +404,10 @@ async function downloadSingleFile(url) {
     
     return { blob, extension, success: true };
   } catch (error) {
+    if (isPesuSessionExpiredError(error)) {
+      throw error;
+    }
+
     console.error(`Failed to download ${url}:`, error);
     return { success: false, error: error.message };
   }
@@ -441,6 +451,10 @@ async function getClassMaterialFile(subjectId, unitId, classId, classNo, content
             name: link.name || null 
           };
         } catch (err) {
+          if (isPesuSessionExpiredError(err)) {
+            throw err;
+          }
+
           return { success: false, error: err.message, name: link.name || null };
         }
       });
@@ -457,6 +471,10 @@ async function getClassMaterialFile(subjectId, unitId, classId, classNo, content
 
     return [{ success: false, error: `Unknown response type: ${result.type}` }];
   } catch (error) {
+    if (isPesuSessionExpiredError(error)) {
+      throw error;
+    }
+
     console.error(`Failed to get material for class ${classId}:`, error);
     return [{ success: false, error: error.message || 'Unknown error occurred' }];
   }
@@ -519,6 +537,10 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
       }
       return { item, contentType, filesArray };
     } catch (error) {
+      if (isPesuSessionExpiredError(error)) {
+        throw error;
+      }
+
       completed++;
       if (progressCallback) {
         progressCallback({

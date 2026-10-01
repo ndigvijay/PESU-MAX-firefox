@@ -4,6 +4,7 @@ import { SESSION_KEEPER_KEY } from "../utils/storageKeys.js";
 export const ACADEMY_BASE_URL = "https://www.pesuacademy.com/Academy";
 export const ACADEMY_PROFILE_PATH = "/s/studentProfilePESU";
 const ACADEMY_LOGIN_PATH = "/j_spring_security_check";
+const CSRF_META_PATTERN = /<meta\s+name="csrf-token"\s+content="([^"]+)"/i;
 
 
 export async function probeSession() {
@@ -19,6 +20,24 @@ export async function probeSession() {
     const alive = response.url.includes(ACADEMY_PROFILE_PATH);
     controller.abort();
     return alive;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function readSessionToken() {
+  try {
+    const response = await fetch(`${ACADEMY_BASE_URL}${ACADEMY_PROFILE_PATH}`, {
+      credentials: "include",
+      redirect: "follow"
+    });
+
+    if (!response.url.includes(ACADEMY_PROFILE_PATH)) {
+      return { alive: false, csrfToken: null };
+    }
+
+    const match = (await response.text()).match(CSRF_META_PATTERN);
+    return { alive: true, csrfToken: match ? match[1] : null };
   } catch (error) {
     return null;
   }

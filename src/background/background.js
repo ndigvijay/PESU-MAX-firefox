@@ -19,7 +19,11 @@ import {
 
 // get from storage and send to frontend
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "probeAcademySession" || request.action === "restoreAcademySession") {
+  if (
+    request.action === "probeAcademySession" ||
+    request.action === "readAcademySessionToken" ||
+    request.action === "restoreAcademySession"
+  ) {
     handleAcademySession(request.action)
       .then((data) => sendResponse({ data }))
       .catch((error) => sendResponse({ error: error.message }));

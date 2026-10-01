@@ -16,4 +16,5 @@ function requestSession(action) {
 }
 
 export const probeSession = () => requestSession("probeAcademySession");
+export const readSessionToken = () => requestSession("readAcademySessionToken");
 export const loginToAcademy = () => requestSession("restoreAcademySession");

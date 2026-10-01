@@ -11,8 +11,10 @@ import Attendance from '../Pages/Attendance.jsx';
 import GPACalculator from '../Pages/GPACalculator.jsx';
 import PYQ from '../Pages/PYQ.jsx';
 import Settings from '../Pages/Settings.jsx';
+import Notifications from '../Pages/Notifications.jsx';
 const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
 import SettingsIcon from '@mui/icons-material/Settings';
+import ResourceNotificationsButton from './Notifications/ResourceNotificationsButton.jsx';
 
 
 
@@ -87,6 +89,7 @@ const Sidebar = () => {
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <ResourceNotificationsButton />
                         <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: '#333' }}>
                             <SettingsIcon fontSize="large" />
                         </IconButton>
@@ -125,6 +128,7 @@ const Sidebar = () => {
                     {currentPage === "gpaCalculator" && <GPACalculator />}
                     {currentPage === "pyq" && <PYQ />}
                     {currentPage === "settings" && <Settings />}
+                    {currentPage === "notifications" && <Notifications />}
                 </Box>
 
 

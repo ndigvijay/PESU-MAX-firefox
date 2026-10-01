@@ -12,7 +12,8 @@ import {
   captureCredentials,
   forgetStoredCredentials
 } from "../helpers/academyCredentials.js";
-import { loginToAcademy, probeSession } from "../services/academySession.js";
+import { loginToAcademy, readSessionToken } from "../services/academySession.js";
+import { syncPageCsrfToken } from "./csrfSync/csrfSync.js";
 import {
   ACADEMY_APP_PATH_PREFIX,
   LOG_PREFIX,
@@ -70,15 +71,19 @@ async function attemptReLogin(isCurrent) {
 }
 
 async function settleAppPage(isCurrent) {
-  const alive = await probeSession();
-  if (!isCurrent() || alive === null) return;
-  if (alive) {
+  const session = await readSessionToken();
+  if (!isCurrent() || session === null) return;
+  if (session.alive) {
     // User Logged in
+    syncPageCsrfToken(session.csrfToken);
     await captureCredentials(isCurrent);
     return;
   }
 
-  await attemptReLogin(isCurrent);
+  if ((await attemptReLogin(isCurrent)) !== "ok") return;
+
+  const restored = await readSessionToken();
+  if (isCurrent() && restored?.alive) syncPageCsrfToken(restored.csrfToken);
 }
 
 async function settleLoginPage(isCurrent) {

@@ -59,8 +59,10 @@ All users data is stored locally in browser. NO proxy servers or External DB con
 |:----:|:-------:|
 | ![Faculty Menu](https://raw.githubusercontent.com/ndigvijay/PESU-MAX/main/Images/faculty-menu.png) | ![Faculty Profile](https://raw.githubusercontent.com/ndigvijay/PESU-MAX/main/Images/faculty-profile.png) |
 
-### Previous Year Question Papers
-![Previous Year Question Papers](https://raw.githubusercontent.com/ndigvijay/PESU-MAX/main/Images/pyq.png)
+### Previous Year Question Papers and Settings
+| Previous Year Question Papers | Settings |
+|:-----------------------------:|:--------:|
+| <img src="https://raw.githubusercontent.com/ndigvijay/PESU-MAX/main/Images/pyq.png" alt="Previous Year Question Papers" height="560"> | <img src="https://raw.githubusercontent.com/ndigvijay/PESU-MAX/main/Images/settings.png" alt="Settings" height="560"> |
 
 ## DEMO VIDEO
 

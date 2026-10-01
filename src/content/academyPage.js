@@ -12,6 +12,8 @@ export const SIDE_MENU_HIDDEN = "hidden";
 export const ACADEMY_APP_PATH_PREFIX = "/Academy/s/";
 export const ACADEMY_HOME_URL_MARKER = "/Home/";
 export const LOG_PREFIX = "[PESU-MAX]";
+export const CSRF_META_SELECTOR = 'meta[name="csrf-token"]';
+export const CSRF_INPUT_SELECTOR = 'input[name="_csrf"]';
 
 const LOGIN_USERNAME_SELECTOR = 'input[name="j_username"]';
 const LOGIN_PASSWORD_SELECTOR = 'input[name="j_password"]';
