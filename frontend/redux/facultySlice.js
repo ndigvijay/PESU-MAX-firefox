@@ -1,23 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { searchFaculty, fetchFacultyProfile } from "../../src/services/facultyService.js";
 
 export const searchProfessors = createAsyncThunk(
   "faculty/searchProfessors",
   async (searchQuery, { rejectWithValue }) => {
     try {
-      const response = await chrome.runtime.sendMessage({
-        action: "searchProfessors",
-        searchQuery: searchQuery,
-      });
+      const professors = await searchFaculty(searchQuery);
 
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      if (!response.data || response.data.length === 0) {
+      if (!professors || professors.length === 0) {
         throw new Error("No professors found");
       }
 
-      return response.data;
+      return professors;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -28,16 +22,7 @@ export const fetchProfessorDetails = createAsyncThunk(
   "faculty/fetchProfessorDetails",
   async (professorId, { rejectWithValue }) => {
     try {
-      const response = await chrome.runtime.sendMessage({
-        action: "getProfessorDetails",
-        professorId: professorId,
-      });
-
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      return response.data;
+      return await fetchFacultyProfile(professorId);
     } catch (error) {
       return rejectWithValue(error.message);
     }

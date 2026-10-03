@@ -1,117 +1,153 @@
-export function cleanText($, selector) {
-    return $(selector)
-      .clone()
-      .children()
-      .remove()
-      .end()
-      .text()
-      .trim();
-}
+import * as cheerio from "cheerio";
 
-export function extractListItems($, container, cleanWhitespace = false) {
-    const items = [];
-    $(container).find("li p").each((i, el) => {
-      let text = $(el).text().trim();
-      if (cleanWhitespace) {
-        text = text.replace(/\n+/g, " ").replace(/\s+/g, " ");
-      }
-      if (text) items.push(text);
-    });
-    return items;
+const PROSE_LINE_BREAK = " ";
+
+const normalizeText = (value) => (value || "").replace(/\s+/g, " ").trim();
+
+const toAbsoluteUrl = (path, baseUrl) => (path ? new URL(path, baseUrl).href : undefined);
+
+const collectTexts = ($, elements) =>
+  elements
+    .toArray()
+    .map((element) => normalizeText($(element).text()))
+    .filter(Boolean);
+
+export const parseStaffSearchResults = (html, baseUrl) => {
+  const $ = cheerio.load(html);
+  const grid = $("#staffGrid");
+
+  if (grid.length === 0 && $("main .empty-state").length === 0) {
+    throw new Error("Could not read faculty search results");
   }
 
-export function dynamicallyExtractTabs(data) {
-    const tabs = {};
+  const professors = grid
+    .find("a.s-card")
+    .toArray()
+    .map((card) => {
+      const $card = $(card);
+      return {
+        id: $card.attr("href"),
+        name: normalizeText($card.find(".s-body h3").text()),
+        designation: normalizeText($card.find(".s-desig").text()),
+        imageUrl: toAbsoluteUrl($card.find(".s-photo img").attr("src"), baseUrl),
+      };
+    })
+    .filter((professor) => professor.id && professor.name);
 
-    // Find all tab menu items
-    const $ = data
-    $(".tabs-menu li a").each((_, el) => {
-      const tabName = $(el).text().trim().toLowerCase();
-      const tabId = $(el).attr("href"); // e.g., "#tab-bio"
+  const pageNumbers = $("#pagination .page-btn")
+    .toArray()
+    .map((button) => Number.parseInt($(button).text(), 10))
+    .filter(Number.isFinite);
 
-      if (tabId) {
-        const tabContent = $(tabId);
+  return {
+    professors,
+    totalPages: pageNumbers.length > 0 ? Math.max(...pageNumbers) : 1,
+  };
+};
 
-        // Extract main headers and their content
-        const tabData = {};
+const parseBasicInfo = ($, baseUrl) => {
+  const basicInfo = {};
+  const hero = $(".p-hero");
 
-        // Find all h3 headers within this tab (these are main category headers)
-        tabContent.find("h3").each((_, h3El) => {
-          const headerName = $(h3El).text().trim();
+  const name = normalizeText(hero.find(".p-name").text());
+  if (name) basicInfo["Name"] = name;
 
-          if (headerName) {
-            // Find the closest parent container with class "bookings-item"
-            const container = $(h3El).closest(".bookings-item");
+  const designation = normalizeText(hero.find(".p-role").text());
+  if (designation) basicInfo["Designation"] = designation;
 
-            // Extract list items under this header
-            const items = extractListItems($, container, true);
+  const imageUrl = toAbsoluteUrl(hero.find(".p-photo img").attr("src"), baseUrl);
+  if (imageUrl) basicInfo["Image URL"] = imageUrl;
 
-            // Store under header name
-            if (items.length > 0) {
-              tabData[headerName] = items;
-            }
-          }
-        });
+  return basicInfo;
+};
 
-        // Only add tab if it has content
-        if (Object.keys(tabData).length > 0) {
-          tabs[tabName] = tabData;
-        }
-      }
-    });
+const parseContactDetails = ($) => {
+  const details = {};
+  $(".sidebar .contact-row").each((_, row) => {
+    const label = normalizeText($(row).find(".lbl").text());
+    const value = normalizeText($(row).find(".val").text());
+    if (label && value) details[label] = value;
+  });
+  return details;
+};
 
-    return tabs;
+const extractProseLines = ($, prose) => {
+  prose.find("br").replaceWith(PROSE_LINE_BREAK);
+  const paragraphs = prose.find("p").length > 0 ? prose.find("p").toArray() : [prose.get(0)];
+
+  return paragraphs
+    .flatMap((paragraph) => $(paragraph).text().split(PROSE_LINE_BREAK))
+    .map(normalizeText)
+    .filter(Boolean);
+};
+
+const extractTimelineEntries = ($, timeline) =>
+  timeline
+    .children("li")
+    .toArray()
+    .map((entry) =>
+      [".role", ".org", ".yr"]
+        .map((selector) => normalizeText($(entry).find(selector).text()))
+        .filter(Boolean)
+        .join(" · ")
+    )
+    .filter(Boolean);
+
+const extractBlockItems = ($, block) => {
+  if (block.hasClass("num-list")) return collectTexts($, block.find("li .body"));
+  if (block.hasClass("tag-list")) return collectTexts($, block.find("span"));
+  if (block.hasClass("timeline")) return extractTimelineEntries($, block);
+  if (block.hasClass("prose")) return extractProseLines($, block);
+  if (block.hasClass("info-item")) return collectTexts($, block);
+  return [];
+};
+
+const parseSectionGroups = ($, card, sectionTitle) => {
+  const groups = {};
+  let groupTitle = sectionTitle;
+
+  card.children().each((_, child) => {
+    const block = $(child);
+    if (block.hasClass("card-sub")) {
+      groupTitle = normalizeText(block.text()) || sectionTitle;
+      return;
+    }
+
+    const items = extractBlockItems($, block);
+    if (items.length > 0) {
+      groups[groupTitle] = (groups[groupTitle] || []).concat(items);
+    }
+  });
+
+  return groups;
+};
+
+const parseProfileSections = ($) => {
+  const sections = {};
+  $(".profile-layout .content-card").each((_, element) => {
+    const card = $(element);
+    const sectionTitle = normalizeText(card.find(".card-head h2").first().text());
+    if (!sectionTitle) return;
+
+    const groups = parseSectionGroups($, card, sectionTitle);
+    if (Object.keys(groups).length > 0) {
+      sections[sectionTitle.toLowerCase()] = groups;
+    }
+  });
+  return sections;
+};
+
+export const parseStaffProfile = (html, baseUrl) => {
+  const $ = cheerio.load(html);
+  const basicInfo = parseBasicInfo($, baseUrl);
+
+  if (!basicInfo["Name"]) {
+    throw new Error("Could not read faculty profile");
   }
 
-
-  export function dynamicallyExtractSidebar(data) {
-    const sidebarData = {};
-    const $ = data
-    // Find all contact cards in sidebar
-    $(".contat-card").each((_, el) => {
-      const labelEl = $(el).find("span");
-      const label = labelEl.text().trim();
-
-      if (label) {
-        // Remove the span and get remaining text
-        const value = $(el)
-          .clone()
-          .find("span")
-          .remove()
-          .end()
-          .text()
-          .trim()
-          .replace(/\n/g, " ")
-          .replace(/\s+/g, " ");
-
-        if (value) {
-          sidebarData[label] = value;
-        }
-      }
-    });
-
-    return sidebarData;
-  }
-
-  export function dynamicallyExtractBasicInfo(data) {
-    const basicInfo = {};
-    const $ = data
-    // Name
-    const name = $(".agent_card-title h4").text().trim();
-    if (name) basicInfo["Name"] = name;
-
-    // Designation
-    const designation = cleanText($, ".geodir-category-location h5");
-    if (designation) basicInfo["Designation"] = designation;
-
-    // Image URL
-    const imageUrl = $("#full-image").attr("data-bg");
-    if (imageUrl) basicInfo["Image URL"] = imageUrl;
-
-    return basicInfo;
-  }
-
-
-
-  
-
+  return {
+    basicInfo,
+    sidebar: parseContactDetails($),
+    tabs: parseProfileSections($),
+  };
+};
