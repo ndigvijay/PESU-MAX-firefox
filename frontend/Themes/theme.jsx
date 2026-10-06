@@ -8,6 +8,8 @@ const theme = {
     primaryLight: 'rgba(245, 130, 31, 0.12)',
     secondaryLight: 'rgba(35, 58, 118, 0.08)',
     secondaryBorder: 'rgba(35, 58, 118, 0.2)',
+    secondaryOutline: 'rgba(35, 58, 118, 0.25)',
+    secondaryBorderHover: 'rgba(35, 58, 118, 0.45)',
     textMuted: '#666666',
     error: '#d32f2f',
   },

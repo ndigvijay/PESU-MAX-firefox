@@ -1,0 +1,137 @@
+/* Background */
+html[data-pesu-max-theme],
+html[data-pesu-max-theme] body {
+  background-color: var(--pesu-max-bg) !important;
+}
+
+/* Accent */
+html[data-pesu-max-theme] {
+  --link-color: var(--pesu-max-accent-link) !important;
+  --link-hover-color: var(--pesu-max-accent-link-hover) !important;
+}
+
+/* Accent surfaces */
+html[data-pesu-max-theme] .menu-left {
+  background-color: var(--pesu-max-accent) !important;
+}
+
+html[data-pesu-max-theme] .menu-left ul li:hover,
+html[data-pesu-max-theme] .menu-left ul li.active {
+  background-color: var(--pesu-max-accent-bright) !important;
+}
+
+html[data-pesu-max-theme] #pge_menu a,
+html[data-pesu-max-theme] a.lefttogglemenulink {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-theme] .highlight_snackbar a {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-theme] .event-scheduled-info > div:nth-child(even) {
+  background-color: var(--pesu-max-accent) !important;
+}
+
+html[data-pesu-max-theme] .tooltip-inner {
+  background-color: var(--pesu-max-accent) !important;
+}
+
+html[data-pesu-max-theme] .tooltip.top .tooltip-arrow {
+  border-top-color: var(--pesu-max-accent) !important;
+}
+
+html[data-pesu-max-theme] .table-blue thead,
+html[data-pesu-max-theme] .table:not(.table-bordered) thead {
+  background-color: var(--pesu-max-accent) !important;
+}
+
+/* header divider: accent colour */
+html[data-pesu-max-theme] body .table:not(.table-bordered) thead th + th {
+  border-left-color: var(--pesu-max-accent-bright) !important;
+}
+
+/* Accent actions */
+html[data-pesu-max-theme] .btn-primary {
+  background-color: var(--pesu-max-accent-bright) !important;
+  border-color: var(--pesu-max-accent-bright) !important;
+}
+
+html[data-pesu-max-theme] .btn-bg-blue {
+  background-color: var(--pesu-max-accent-bright) !important;
+}
+
+html[data-pesu-max-theme] .btn-bg-white {
+  border-color: var(--pesu-max-accent-bright) !important;
+  color: var(--pesu-max-accent-bright) !important;
+}
+
+html[data-pesu-max-theme] .btn-bg-white:focus,
+html[data-pesu-max-theme] .btn-bg-white:hover {
+  background-color: var(--pesu-max-accent-bright) !important;
+  color: #ffffff !important;
+}
+
+html[data-pesu-max-theme] .progress-bar,
+html[data-pesu-max-theme] .collapse-menu,
+html[data-pesu-max-theme] .highlighted-info {
+  background-color: var(--pesu-max-accent-bright) !important;
+}
+
+/* Accent tabs */
+html[data-pesu-max-theme] .nav-tabs > li.active > a,
+html[data-pesu-max-theme] .nav-tabs > li.active > a:focus,
+html[data-pesu-max-theme] .nav-tabs > li.active > a:hover {
+  background-color: var(--pesu-max-accent-bright) !important;
+  color: #ffffff !important;
+}
+
+html[data-pesu-max-theme] .nav-tabs-white-bg > li.active > a,
+html[data-pesu-max-theme] .nav-tabs-white-bg > li.active > a:focus,
+html[data-pesu-max-theme] .nav-tabs-white-bg > li.active > a:hover {
+  background-color: #ffffff !important;
+  color: var(--pesu-max-accent-bright) !important;
+  border-bottom-color: var(--pesu-max-accent-bright) !important;
+}
+
+/* Accent pagination */
+html[data-pesu-max-theme] .pagination > li > a,
+html[data-pesu-max-theme] .pagination > li > span {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-theme] .pagination > .active > a,
+html[data-pesu-max-theme] .pagination > .active > a:focus,
+html[data-pesu-max-theme] .pagination > .active > a:hover,
+html[data-pesu-max-theme] .pagination > .active > span {
+  background-color: var(--pesu-max-accent-bright) !important;
+  border-color: var(--pesu-max-accent-bright) !important;
+}
+
+/* Accent text and icons */
+html[data-pesu-max-theme] .attnd-info,
+html[data-pesu-max-theme] .fa-blue,
+html[data-pesu-max-theme] .fa-blue:focus,
+html[data-pesu-max-theme] .fa-blue:hover,
+html[data-pesu-max-theme] .sort_active,
+html[data-pesu-max-theme] .coursecontentnotes h4,
+html[data-pesu-max-theme] .coursecontent-navigation-area a,
+html[data-pesu-max-theme] .assessment-navigation-area a:not(.btn),
+html[data-pesu-max-theme] .link-preview {
+  color: var(--pesu-max-accent-bright) !important;
+}
+
+/* Font, leaving the icon fonts alone */
+html[data-pesu-max-font] body > .content-wrapper,
+html[data-pesu-max-font] .menu-left,
+html[data-pesu-max-font] #pge_menu,
+html[data-pesu-max-font] body > .content-wrapper
+  *:not(
+    [class*="icon"],
+    [class*="ico-"],
+    [class*="fa-"],
+    [class~="fa"],
+    [class*="glyphicon"]
+  ) {
+  font-family: var(--pesu-max-font) !important;
+}

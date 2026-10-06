@@ -11,6 +11,7 @@ import Attendance from '../Pages/Attendance.jsx';
 import GPACalculator from '../Pages/GPACalculator.jsx';
 import PYQ from '../Pages/PYQ.jsx';
 import Settings from '../Pages/Settings.jsx';
+import Appearance from '../Pages/Appearance.jsx';
 import Notifications from '../Pages/Notifications.jsx';
 const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -128,6 +129,7 @@ const Sidebar = () => {
                     {currentPage === "gpaCalculator" && <GPACalculator />}
                     {currentPage === "pyq" && <PYQ />}
                     {currentPage === "settings" && <Settings />}
+                    {currentPage === "appearance" && <Appearance />}
                     {currentPage === "notifications" && <Notifications />}
                 </Box>
 

@@ -20,7 +20,6 @@ import {
   SESSION_KEEPER_KEY,
   SIDE_MENU_STATE_KEY,
   START_PAGE_KEY,
-  TOP_BAR_KEY,
 } from "../../src/utils/storageKeys.js";
 import { forgetStoredCredentials } from "../../src/helpers/academyCredentials.js";
 
@@ -70,17 +69,24 @@ const Settings = () => {
           onDisable={forgetStoredCredentials}
         />
 
-        <SettingsSelectRow
-          storageKey={START_PAGE_KEY}
-          title="Set the start page"
-          description="Opens this page instead of Home after login"
-          options={START_PAGE_OPTIONS}
+        <SettingsEditRow
+          title="Appearance"
+          description="Change the way PESU Academy looks"
+          onClick={() => dispatch(setCurrentPage("appearance"))}
+          label="Open"
         />
 
         <SettingsToggleRow
           storageKey={BACK_NAVIGATION_KEY}
           title="Enable back button"
           description="Back returns to your previous page instead of logging you out. persists on the next page load."
+        />
+
+        <SettingsSelectRow
+          storageKey={START_PAGE_KEY}
+          title="Set the start page"
+          description="Opens this page instead of Home after login"
+          options={START_PAGE_OPTIONS}
         />
 
         <SettingsEditRow
@@ -95,12 +101,6 @@ const Settings = () => {
           onClick={handleMenuEdit}
           disabled={!canReorder || isEditing}
           label={isEditing ? "Editing" : "Edit"}
-        />
-
-        <SettingsToggleRow
-          storageKey={TOP_BAR_KEY}
-          title="Remove top bar"
-          description="Hides the PESU Academy header bar"
         />
 
         <SettingsToggleRow

@@ -57,6 +57,22 @@
     },
     {
       "matches": ["https://www.pesuacademy.com/*"],
+      "css": ["content/theme.css"],
+      "js": ["content/themeStart.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.pesuacademy.com/*"],
+      "css": ["content/menuIcons.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.pesuacademy.com/*"],
+      "css": ["content/materialTable.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.pesuacademy.com/*"],
       "js": ["content/content.js"]
     }
   ],

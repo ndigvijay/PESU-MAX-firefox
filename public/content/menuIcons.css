@@ -1,0 +1,7 @@
+html[data-pesu-max-menu-icons] .pesu-max-menu-icon {
+  width: 1.3em;
+  height: 1.3em;
+  display: block;
+  margin: -0.15em auto 0;
+  fill: currentColor;
+}
