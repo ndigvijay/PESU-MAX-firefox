@@ -27,6 +27,8 @@ const DownloadProgressDialog = ({ open, onClose }) => {
   const { downloading, downloadProgress, downloadResult } = useSelector(
     (state) => state.courseMaterial
   );
+  const mergedSources = downloadResult?.stats?.mergedSourceFilesByType || {};
+  const downloaded = downloadResult?.stats?.downloadedFilesByType || {};
   const mergedEntries = Object.entries(downloadResult?.stats?.mergedSubjectsByType || {})
     .filter(([, count]) => count > 0);
 
@@ -106,7 +108,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
           <Box>
             {downloadResult.success ? (
               <Alert severity="success" sx={successAlertSx}>
-                Successfully downloaded {downloadResult.stats?.successful || 0} files!
+                Successfully downloaded {downloadResult.stats?.downloadedFiles ?? downloadResult.stats?.successful ?? 0} files!
                 {mergedEntries.length > 0 && (
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
@@ -116,7 +118,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                       {mergedEntries.map(([contentType, count]) => (
                         <Box component="li" key={contentType} sx={{ mb: 0.25 }}>
                           <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
-                            {contentType}: {count} merged file{count > 1 ? 's' : ''}
+                            {contentType}: {mergedSources[contentType] || 0} of {downloaded[contentType] || 0} files merged into {count} PDF{count > 1 ? 's' : ''}
                           </Typography>
                         </Box>
                       ))}
@@ -126,7 +128,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                 {downloadResult.stats?.failed > 0 && (
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
-                      {downloadResult.stats.failed} files could not be downloaded:
+                      {downloadResult.stats.failed} file{downloadResult.stats.failed > 1 ? 's' : ''} had problems:
                     </Typography>
                     {downloadResult.stats.failedItems?.length > 0 && (
                       <Box 

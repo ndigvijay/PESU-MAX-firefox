@@ -561,6 +561,8 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
   let mergedSlideSources = 0;
   const mergedSubjectsByType = {};
   const mergedSourceFilesByType = {};
+  let downloadedFiles = 0;
+  const downloadedFilesByType = {};
 
   for (const { item, contentType, filesArray } of results) {
     const { subjectName, subjectCode, subjectId, unitNumber, className, classId, classIndex } = item;
@@ -600,6 +602,8 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
       }
 
       if (fileResult.success && fileResult.blob) {
+        downloadedFiles++;
+        downloadedFilesByType[contentTypeName] = (downloadedFilesByType[contentTypeName] || 0) + 1;
         const fileNumber = i + 1;
         const isMergeSelectedType = enabledMergeContentTypeIds.has(contentType);
         const reportedExtension = normalizeExtension(fileResult.extension);
@@ -881,6 +885,8 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
     stats: {
       total: totalOperations,
       successful: totalFiles,
+      downloadedFiles,
+      downloadedFilesByType,
       failed,
       failedItems,
       mergedSubjects,
