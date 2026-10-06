@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
-import WarningIcon from '@mui/icons-material/Warning';
+import StarIcon from '@mui/icons-material/Star';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../redux/sidebarSlice.js";
 import theme from "../Themes/theme.jsx";
@@ -122,36 +123,68 @@ const Home = () => {
                   border: `2px solid ${theme.colors.primary}`
                 }
               }}
-              onClick={() => dispatch(setCurrentPage("pyq"))}
+              onClick={() => {
+                dispatch(setCurrentPage("pyq"));
+              }}
             >
               Download PYQs
             </Button>
-            <Box sx={{ position: "absolute", top: "11px", right: "-30px", transform: "rotate(45deg)", backgroundColor: theme.colors.primary, color: "#fff", fontSize: "9px", fontWeight: 800, letterSpacing: "1px", padding: "2px 32px", lineHeight: 1.4, zIndex: 1, pointerEvents: "none", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "11px",
+                right: "-30px",
+                transform: "rotate(45deg)",
+                backgroundColor: theme.colors.primary,
+                color: "#fff",
+                fontSize: "9px",
+                fontWeight: 800,
+                letterSpacing: "1px",
+                padding: "2px 32px",
+                lineHeight: 1.4,
+                zIndex: 1,
+                pointerEvents: "none",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
+              }}
+            >
               NEW
             </Box>
           </Box>)}
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              gap: '6px',
-              padding: '12px 4px 0',
-              color: '#d32f2f'
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px',
+              border: `1px solid ${theme.colors.primary}`,
+              borderRadius: '8px'
             }}
           >
-            <WarningIcon sx={{ fontSize: '1.2rem', flexShrink: 0 }} />
             <Typography variant="body2" sx={{ textAlign: 'center' }}>
-              Breaking Changes!!! if you had previously installed an older version(&lt;2.0.0), please reinstall the extension.{' '}
-              <a
-                href="https://addons.mozilla.org/en-US/firefox/addon/pesu-max/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: theme.colors.secondaryHover, fontWeight: 600 }}
-              >
-                Install link
-              </a>
+              Enjoying PESU MAX? Show some love by starring the repo on GitHub!
             </Typography>
+            <Button
+              variant="outlined"
+              startIcon={<StarIcon />}
+              endIcon={<GitHubIcon />}
+              component="a"
+              href="https://github.com/ndigvijay/PESU-MAX"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: theme.colors.secondary,
+                borderColor: theme.colors.secondary,
+                textTransform: 'none',
+                fontWeight: 600,
+                "&:hover": {
+                  borderColor: theme.colors.secondaryHover,
+                  backgroundColor: 'rgba(0,0,0,0.04)'
+                }
+              }}
+            >
+              Star on GitHub
+            </Button>
           </Box>
         </Box>
     </Box>
