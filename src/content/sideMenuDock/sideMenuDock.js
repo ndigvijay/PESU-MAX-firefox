@@ -71,7 +71,6 @@ function allButton() {
   return button;
 }
 
-// The Academy link owns the navigation, so the dock clicks it.
 function selectSection(id) {
   if (mounted) mounted.panel.close();
   const item = document.getElementById(id);

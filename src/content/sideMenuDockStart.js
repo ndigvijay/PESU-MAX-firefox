@@ -3,7 +3,6 @@ import { SIDE_MENU_DOCK_KEY } from "../utils/storageKeys.js";
 import { ACADEMY_APP_PATH_PREFIX } from "./academyPage.js";
 import { DOCK_ATTR, readDockMirror } from "./sideMenuDock/dockState.js";
 
-// Runs before the page parses, so the site menu never flashes ahead of the dock.
 const pinDock = () => document.documentElement.setAttribute(DOCK_ATTR, "");
 
 if (location.pathname.startsWith(ACADEMY_APP_PATH_PREFIX)) {
