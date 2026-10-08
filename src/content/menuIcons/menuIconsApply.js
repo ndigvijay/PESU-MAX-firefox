@@ -34,12 +34,13 @@ export const MENU_ICON_BY_ID = {
   menuTab_658: "ConfirmationNumber",
   menuTab_659: "Assignment",
   menuTab_10945123: "Psychology",
-  menuTab_109472: "Work",
+  menuTab_109472: "WorkOutline",
   [TOGGLE_ROW_ID]: "Menu",
 };
 
-// Filled when Outlined is not preferred
-const FILLED_ICONS = new Set(["DirectionsCar"]);
+const FILLED_ICONS = new Set(["DirectionsCar", "WorkOutline"]);
+
+const EVENODD_ICONS = new Set(["WorkOutline"]);
 
 const iconPaths = (name) =>
   MENU_ICON_PATHS[FILLED_ICONS.has(name) ? name : `${name}Outlined`] || null;
@@ -56,6 +57,7 @@ export function buildIcon(name) {
   paths.forEach((data) => {
     const path = document.createElementNS(SVG_NS, "path");
     path.setAttribute("d", data);
+    if (EVENODD_ICONS.has(name)) path.setAttribute("fill-rule", "evenodd");
     svg.appendChild(path);
   });
   return svg;

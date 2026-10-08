@@ -20,6 +20,11 @@ html[data-pesu-max-dock] body .menu-left > ul {
   display: none !important;
 }
 
+/* site app promo footer. */
+html[data-pesu-max-dock] body #footer {
+  display: none !important;
+}
+
 /* Rail stays put and holds the sections without scrolling. */
 html[data-pesu-max-dock] #pesu-max-dock {
   position: sticky;

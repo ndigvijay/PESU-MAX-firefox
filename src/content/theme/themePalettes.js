@@ -51,12 +51,6 @@ export const THEME_OPTIONS = [
     accent: { base: "#96604d", bright: "#b8795f", link: "#a2674f", linkHover: "#845441" }
   },
   {
-    value: "nord-yellow",
-    label: "Nord Yellow",
-    background: "#faf7ef",
-    accent: { base: "#8f7838", bright: "#b39349", link: "#9c7f3d", linkHover: "#7f6a31" }
-  },
-  {
     value: "nord-green",
     label: "Nord Green",
     background: "#f4f7f0",
@@ -69,28 +63,22 @@ export const THEME_OPTIONS = [
     accent: { base: "#7d5f78", bright: "#a07a99", link: "#8f6889", linkHover: "#6f5469" }
   },
   {
+    value: "macaroon-pink",
+    label: "Macaroon Pink",
+    background: "#fdf1f6",
+    accent: { base: "#9a5476", bright: "#c97aa1", link: "#b0668a", linkHover: "#84476a" }
+  },
+  {
     value: "pastel-rose",
     label: "Pastel Rose",
     background: "#faf1f3",
     accent: { base: "#8a5f68", bright: "#a87782", link: "#966672", linkHover: "#7a525b" }
   },
   {
-    value: "pastel-lavender",
-    label: "Pastel Lavender",
-    background: "#f5f3f9",
-    accent: { base: "#615680", bright: "#7f74a0", link: "#6f6390", linkHover: "#564c72" }
-  },
-  {
-    value: "pastel-sage",
-    label: "Pastel Sage",
-    background: "#f3f7f2",
-    accent: { base: "#5f7355", bright: "#7d9370", link: "#6d8060", linkHover: "#546548" }
-  },
-  {
-    value: "pastel-sky",
-    label: "Pastel Sky",
-    background: "#f1f5fa",
-    accent: { base: "#4f6680", bright: "#6a819f", link: "#5b728f", linkHover: "#455a72" }
+    value: "pastel-clay",
+    label: "Pastel Clay",
+    background: "#f8f2f0",
+    accent: { base: "#8a6255", bright: "#a57c6d", link: "#966a5a", linkHover: "#7c5849" }
   },
   {
     value: "pastel-sand",
@@ -99,10 +87,22 @@ export const THEME_OPTIONS = [
     accent: { base: "#8a7355", bright: "#a48b6b", link: "#977c5c", linkHover: "#7c664a" }
   },
   {
-    value: "pastel-clay",
-    label: "Pastel Clay",
-    background: "#f8f2f0",
-    accent: { base: "#8a6255", bright: "#a57c6d", link: "#966a5a", linkHover: "#7c5849" }
+    value: "mustard",
+    label: "Mustard",
+    background: "#f7f6f3",
+    accent: { base: "#6b5f37", bright: "#887843", link: "#746535", linkHover: "#6b5f37" }
+  },
+  {
+    value: "pastel-sage",
+    label: "Pastel Sage",
+    background: "#f3f7f2",
+    accent: { base: "#5f7355", bright: "#7d9370", link: "#6d8060", linkHover: "#546548" }
+  },
+  {
+    value: "pastel-lavender",
+    label: "Pastel Lavender",
+    background: "#f5f3f9",
+    accent: { base: "#615680", bright: "#7f74a0", link: "#6f6390", linkHover: "#564c72" }
   },
   {
     value: "pastel-mist",
