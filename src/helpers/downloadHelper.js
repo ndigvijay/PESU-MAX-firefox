@@ -48,13 +48,17 @@ const ALREADY_COMPRESSED_EXTENSIONS = new Set([
 const MERGEABLE_CONTENT_TYPES = [
   { id: CONTENT_TYPE_IDS.slides, key: 'slides', name: CONTENT_TYPE_NAMES[CONTENT_TYPE_IDS.slides] },
   { id: CONTENT_TYPE_IDS.notes, key: 'notes', name: CONTENT_TYPE_NAMES[CONTENT_TYPE_IDS.notes] },
-  { id: CONTENT_TYPE_IDS.assignments, key: 'assignments', name: CONTENT_TYPE_NAMES[CONTENT_TYPE_IDS.assignments] }
+  { id: CONTENT_TYPE_IDS.assignments, key: 'assignments', name: CONTENT_TYPE_NAMES[CONTENT_TYPE_IDS.assignments] },
+  { id: CONTENT_TYPE_IDS.qb, key: 'qb', name: CONTENT_TYPE_NAMES[CONTENT_TYPE_IDS.qb] },
+  { id: CONTENT_TYPE_IDS.qa, key: 'qa', name: CONTENT_TYPE_NAMES[CONTENT_TYPE_IDS.qa] }
 ];
 
 const DEFAULT_MERGE_OPTIONS = {
   slides: false,
   notes: false,
-  assignments: false
+  assignments: false,
+  qb: false,
+  qa: false
 };
 
 function isAlreadyCompressedExt(extension) {
@@ -355,6 +359,28 @@ async function addFileToZip(zip, filePath, blob, extension) {
   zip.file(filePath, arrayBuffer, fileOptions);
 }
 
+async function hashBlob(blob) {
+  const digest = await crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function removeDuplicateSourceFiles(files) {
+  const seenHashes = new Set();
+  const uniqueFiles = [];
+
+  for (const file of files) {
+    const hash = await hashBlob(file.blob);
+    if (seenHashes.has(hash)) {
+      continue;
+    }
+
+    seenHashes.add(hash);
+    uniqueFiles.push(file);
+  }
+
+  return uniqueFiles;
+}
+
 async function mergeSubjectContentPdfs(files) {
   const mergedPdf = await PDFDocument.create();
   const mergeFailures = [];
@@ -561,6 +587,7 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
   let mergedSlideSources = 0;
   const mergedSubjectsByType = {};
   const mergedSourceFilesByType = {};
+  const duplicateSourceFilesByType = {};
   let downloadedFiles = 0;
   const downloadedFilesByType = {};
 
@@ -693,6 +720,13 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
 
         return first.fileNumber - second.fileNumber;
       });
+
+      const uniqueFiles = await removeDuplicateSourceFiles(subjectGroup.files);
+      const duplicateCount = subjectGroup.files.length - uniqueFiles.length;
+      if (duplicateCount > 0) {
+        duplicateSourceFilesByType[subjectGroup.contentTypeName] = (duplicateSourceFilesByType[subjectGroup.contentTypeName] || 0) + duplicateCount;
+      }
+      subjectGroup.files = uniqueFiles;
 
       for (const sourceFile of subjectGroup.files) {
         if (!sourceFile.isPdf) {
@@ -893,6 +927,7 @@ export async function createBulkDownloadZip(selectedItems, progressCallback, con
       mergedSlideSources,
       mergedSubjectsByType,
       mergedSourceFilesByType,
+      duplicateSourceFilesByType,
       totalMergedFiles,
       contentTypes: contentTypes.map(ct => CONTENT_TYPE_NAMES[ct] || ct)
     }

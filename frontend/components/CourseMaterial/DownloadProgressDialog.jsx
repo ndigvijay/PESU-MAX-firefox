@@ -29,6 +29,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
   );
   const mergedSources = downloadResult?.stats?.mergedSourceFilesByType || {};
   const downloaded = downloadResult?.stats?.downloadedFilesByType || {};
+  const duplicates = downloadResult?.stats?.duplicateSourceFilesByType || {};
   const mergedEntries = Object.entries(downloadResult?.stats?.mergedSubjectsByType || {})
     .filter(([, count]) => count > 0);
 
@@ -118,7 +119,8 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                       {mergedEntries.map(([contentType, count]) => (
                         <Box component="li" key={contentType} sx={{ mb: 0.25 }}>
                           <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
-                            {contentType}: {mergedSources[contentType] || 0} of {downloaded[contentType] || 0} files merged into {count} PDF{count > 1 ? 's' : ''}
+                            {contentType}: {mergedSources[contentType] || 0} of {(downloaded[contentType] || 0) - (duplicates[contentType] || 0)} files merged into {count} PDF{count > 1 ? 's' : ''}
+                            {duplicates[contentType] > 0 && ` (${duplicates[contentType]} repeated cop${duplicates[contentType] > 1 ? 'ies' : 'y'} skipped)`}
                           </Typography>
                         </Box>
                       ))}
