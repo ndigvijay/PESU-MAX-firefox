@@ -38,44 +38,29 @@ export const searchCoursePyqs = ({ query, year, encodedMemberId, encodedPassword
   });
 };
 
-export const loadMoreCoursePyqs = ({ query, year, cursor, loadedCount, encodedMemberId, encodedPassword }) => {
+export const loadMoreCoursePyqs = ({ query, year, cursor, encodedMemberId, encodedPassword }) => {
   return sendRuntimeMessage({
     action: "loadMoreLibraryPyqs",
     query,
     year,
     cursor,
-    loadedCount,
     encodedMemberId,
     encodedPassword
   });
 };
 
-export const downloadCoursePyq = ({
-  downloadPath,
-  title,
-  encodedMemberId,
-  encodedPassword
-}) => {
+export const downloadCoursePyq = ({ downloadPath, title }) => {
   return sendRuntimeMessage({
     action: "downloadLibraryPyq",
     downloadPath,
-    title,
-    encodedMemberId,
-    encodedPassword
+    title
   });
 };
 
-export const downloadSelectedCoursePyqsZip = ({
-  items,
-  query,
-  encodedMemberId,
-  encodedPassword
-}) => {
+export const downloadSelectedCoursePyqsZip = ({ items, query }) => {
   return sendRuntimeMessage({
     action: "downloadLibraryPyqsZip",
     items,
-    query,
-    encodedMemberId,
-    encodedPassword
+    query
   });
 };

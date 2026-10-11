@@ -1,9 +1,13 @@
-import { load, save } from "../utils/storage.js";
+import { load, remove, save } from "../utils/storage.js";
 
-const TTL = 15 * 60 * 1000;
-const STORAGE_KEY = "librarySearchCacheV2";
+const TTL = 24 * 60 * 60 * 1000;
+const STORAGE_KEY = "librarySearchCacheV3";
+const LEGACY_STORAGE_KEYS = ["librarySearchCacheV2", "libraryAuth"];
+const MAX_ENTRIES = 30;
+const MAX_BYTES = 2 * 1024 * 1024;
 const pending = new Map();
-let searchQueue = Promise.resolve();
+let libraryQueue = Promise.resolve();
+let legacyCleanup = null;
 
 export function singleFlight(key, operation) {
   if (!pending.has(key)) {
@@ -13,40 +17,41 @@ export function singleFlight(key, operation) {
   return pending.get(key);
 }
 
-// Serialize WebForms operations so searches cannot race while updating session state.
-export function cachedLibrarySearch(key, operation) {
-  return singleFlight(JSON.stringify(["search", key]), () => {
-    const task = searchQueue.then(async () => {
-      const stored = (await load(STORAGE_KEY)) || {};
-      let cache = Object.fromEntries(Object.entries(stored).filter(
-        ([, entry]) => entry && Date.now() - entry.savedAt < TTL
-      ));
-      if (cache[key]) return cache[key].value;
-      const value = await operation();
-      const latestStored = (await load(STORAGE_KEY)) || {};
-      cache = Object.fromEntries(Object.entries(latestStored).filter(
-        ([, entry]) => entry && Date.now() - entry.savedAt < TTL
-      ));
-      cache[key] = { savedAt: Date.now(), value };
-      const entries = Object.entries(cache).sort((a, b) => b[1].savedAt - a[1].savedAt);
-      const bounded = {};
-      let size = 0;
-      for (const [entryKey, entry] of entries.slice(0, 10)) {
-        size += JSON.stringify(entry).length * 2;
-        if (size > 2 * 1024 * 1024) break;
-        bounded[entryKey] = entry;
-      }
-      // A cache quota failure must not discard a successful library response.
-      await save(STORAGE_KEY, bounded).catch(() => {});
-      return value;
-    });
-    searchQueue = task.catch(() => {});
-    return task;
-  });
+export function serializeLibraryRequest(operation) {
+  const task = libraryQueue.then(operation);
+  libraryQueue = task.catch(() => {});
+  return task;
 }
 
-export function clearLibrarySearchCache() {
-  return save(STORAGE_KEY, {});
+function freshEntries(stored) {
+  return Object.entries(stored || {}).filter(
+    ([, entry]) => entry && Date.now() - entry.savedAt < TTL
+  );
+}
+
+export async function readCachedSearch(key) {
+  const stored = await load(STORAGE_KEY).catch(() => null);
+  const entry = stored?.[key];
+  return entry && Date.now() - entry.savedAt < TTL ? entry.value : null;
+}
+
+export async function writeCachedSearch(key, value) {
+  if (!legacyCleanup) legacyCleanup = remove(LEGACY_STORAGE_KEYS).catch(() => {});
+  try {
+    const entries = freshEntries(await load(STORAGE_KEY))
+      .filter(([entryKey]) => entryKey !== key);
+    entries.unshift([key, { savedAt: Date.now(), value }]);
+    const bounded = {};
+    let size = 0;
+    for (const [entryKey, entry] of entries.slice(0, MAX_ENTRIES)) {
+      size += JSON.stringify(entry).length * 2;
+      if (size > MAX_BYTES) break;
+      bounded[entryKey] = entry;
+    }
+    await save(STORAGE_KEY, bounded);
+  } catch {
+    // A cache quota failure must not discard a successful library response.
+  }
 }
 
 let activeFiles = 0;

@@ -16,20 +16,6 @@ export const clickableRowCardSx = {
   }
 };
 
-export const blueAlertSx = {
-  marginBottom: "10px",
-  fontSize: "12px",
-  backgroundColor: theme.colors.secondaryLight,
-  color: theme.colors.secondary,
-  border: "1px solid rgba(35, 58, 118, 0.18)",
-  "& .MuiAlert-icon": {
-    color: theme.colors.secondary
-  },
-  "& .MuiAlert-message": {
-    color: theme.colors.secondary
-  }
-};
-
 export const errorAlertSx = {
   marginBottom: "10px",
   fontSize: "12px"
@@ -74,8 +60,10 @@ export const checkboxSx = {
 };
 
 export const LOADING_TEXT = "fetching resources from library";
-export const DEFAULT_PYQ_YEAR = String(new Date().getFullYear());
-export const PYQ_YEAR_OPTIONS = Array.from(
-  { length: 5 },
-  (_, index) => String(new Date().getFullYear() - index)
-);
+export const PYQ_YEAR_OPTIONS = [
+  { value: "", label: "All years" },
+  ...Array.from({ length: 5 }, (_, index) => {
+    const year = String(new Date().getFullYear() - index);
+    return { value: year, label: year };
+  })
+];

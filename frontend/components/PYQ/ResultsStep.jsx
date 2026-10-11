@@ -1,9 +1,14 @@
 import React, { useMemo } from "react";
-import { Alert, Box, Paper, Typography } from "@mui/material";
+import { Alert, Box, Button, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   downloadPyq,
   downloadSelectedPyqsZip,
+  searchPyqs,
+  selectCanFilterYearLocally,
+  selectPyqPage,
+  selectVisiblePyqs,
+  setSearchQuery,
   setSelectedPyqs,
   togglePyqSelection
 } from "../../redux/pyqSlice.js";
@@ -14,9 +19,9 @@ import PyqLoading from "./PyqLoading.jsx";
 import PyqPagination from "./PyqPagination.jsx";
 import PyqResultCard from "./PyqResultCard.jsx";
 import PyqSearchBar from "./PyqSearchBar.jsx";
-import { blueAlertSx, emptyStateSx, errorAlertSx, rowCardSx, stepHintSx } from "./pyqStyles.js";
+import { emptyStateSx, errorAlertSx, rowCardSx, stepHintSx } from "./pyqStyles.js";
 
-const TIP_TEXT = "Tip: change the year, then click Search to update the results.";
+const TIP_TEXT = "Tip: choose a year to narrow the results.";
 const tipSx = {
   fontSize: "11px",
   color: theme.colors.primary,
@@ -25,34 +30,43 @@ const tipSx = {
   paddingBottom: "12px"
 };
 
+const alternateSearchButtonSx = {
+  flexShrink: 0,
+  minWidth: 0,
+  padding: "0 4px",
+  fontSize: "11px",
+  fontWeight: 600,
+  textTransform: "none",
+  color: theme.colors.secondary
+};
+
 const ResultsStep = () => {
   const dispatch = useDispatch();
   const {
     selectedCourse,
     selectedPyqs,
     searchQuery,
-    searchResults,
-    pagesByNumber,
+    loadedResults,
     totalResults,
+    resultsComplete,
     lastQuery,
+    lastSearchYear,
+    selectedYear,
     searchLoading,
     searchError,
     loadMoreError,
-    pageNotice,
     downloadingItemId,
     bulkDownloading,
     downloadError,
     bulkDownloadError
   } = useSelector((state) => state.pyq);
-
-  const loadedResults = useMemo(
-    () => Object.values(pagesByNumber).flatMap((page) => page.results || []),
-    [pagesByNumber]
-  );
+  const visibleResults = useSelector(selectVisiblePyqs);
+  const { results: pageResults } = useSelector(selectPyqPage);
+  const canFilterYearLocally = useSelector(selectCanFilterYearLocally);
 
   const selectableResults = useMemo(
-    () => loadedResults.filter((item) => item.downloadPath),
-    [loadedResults]
+    () => visibleResults.filter((item) => item.downloadPath),
+    [visibleResults]
   );
 
   const selectedCount = useMemo(
@@ -60,10 +74,31 @@ const ResultsStep = () => {
     [selectableResults, selectedPyqs]
   );
 
+  const alternateSearch = useMemo(() => {
+    if (!selectedCourse || !lastQuery) {
+      return null;
+    }
+
+    const { searchCode = "", subjectName = "" } = selectedCourse;
+    const searchedQuery = lastQuery.toLowerCase();
+    if (searchCode && subjectName && searchedQuery === searchCode.toLowerCase()) {
+      return { label: "Search by name", query: subjectName };
+    }
+    if (searchCode && subjectName && searchedQuery === subjectName.toLowerCase()) {
+      return { label: "Search by code", query: searchCode };
+    }
+    return null;
+  }, [selectedCourse, lastQuery]);
+
   const allSelectableSelected =
     selectableResults.length > 0 && selectedCount === selectableResults.length;
 
   const busy = searchLoading || bulkDownloading;
+  const shownYear = canFilterYearLocally ? selectedYear : lastSearchYear;
+  const yearSuffix = shownYear ? ` in ${shownYear}` : "";
+  const resultSummary = resultsComplete
+    ? `${visibleResults.length} result${visibleResults.length === 1 ? "" : "s"} for "${lastQuery}"${yearSuffix}`
+    : `${loadedResults.length} of ${totalResults} results for "${lastQuery}"${yearSuffix}`;
 
   const handleDownload = (item) => {
     dispatch(
@@ -109,6 +144,11 @@ const ResultsStep = () => {
     );
   };
 
+  const handleAlternateSearch = () => {
+    dispatch(setSearchQuery(alternateSearch.query));
+    dispatch(searchPyqs({ query: alternateSearch.query, year: selectedYear }));
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
       <Typography sx={stepHintSx}>Search and download PYQs</Typography>
@@ -121,7 +161,6 @@ const ResultsStep = () => {
 
       <PyqSearchBar />
 
-      {pageNotice && <Alert severity="info" sx={blueAlertSx}>{pageNotice}</Alert>}
       {searchError && <Alert severity="error" sx={errorAlertSx}>{searchError}</Alert>}
       {downloadError && <Alert severity="error" sx={errorAlertSx}>{downloadError}</Alert>}
       {bulkDownloadError && <Alert severity="error" sx={errorAlertSx}>{bulkDownloadError}</Alert>}
@@ -129,15 +168,28 @@ const ResultsStep = () => {
       {busy && <PyqLoading compact />}
 
       {!busy && (
-        <Typography sx={{ fontSize: "12px", color: "#666", marginBottom: "8px" }}>
-          {lastQuery
-            ? `${totalResults} result${totalResults === 1 ? "" : "s"} for "${lastQuery}"`
-            : "Search a course code or custom title to view PYQs"}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "8px",
+            marginBottom: "8px"
+          }}
+        >
+          <Typography sx={{ fontSize: "12px", color: "#666" }}>
+            {lastQuery ? resultSummary : "Search a course code or custom title to view PYQs"}
+          </Typography>
+          {alternateSearch && (
+            <Button size="small" onClick={handleAlternateSearch} sx={alternateSearchButtonSx}>
+              {alternateSearch.label}
+            </Button>
+          )}
+        </Box>
       )}
 
       <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto", paddingBottom: "8px" }}>
-        {!busy && searchResults.length > 0 && (
+        {!busy && pageResults.length > 0 && (
           <PyqBulkActionBar
             selectedCount={selectedCount}
             allSelected={allSelectableSelected}
@@ -148,7 +200,7 @@ const ResultsStep = () => {
           />
         )}
 
-        {searchResults.map((item) => (
+        {pageResults.map((item) => (
           <PyqResultCard
             key={item.id}
             item={item}
@@ -160,7 +212,7 @@ const ResultsStep = () => {
           />
         ))}
 
-        {!searchLoading && lastQuery && searchResults.length === 0 && !searchError && (
+        {!searchLoading && lastQuery && pageResults.length === 0 && !searchError && (
           <>
             <Typography sx={emptyStateSx}>No PYQs found for this search.</Typography>
             <Typography sx={tipSx}>{TIP_TEXT}</Typography>
@@ -174,7 +226,7 @@ const ResultsStep = () => {
         )}
       </Box>
 
-      {searchResults.length > 0 && <PyqPagination />}
+      {pageResults.length > 0 && <PyqPagination />}
 
       <Typography sx={tipSx}>{TIP_TEXT}</Typography>
     </Box>

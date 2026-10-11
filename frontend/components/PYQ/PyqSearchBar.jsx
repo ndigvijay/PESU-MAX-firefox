@@ -2,7 +2,12 @@ import React from "react";
 import { Box, Button, FormControl, MenuItem, Select, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
-import { searchPyqs, setSearchQuery, setSelectedYear } from "../../redux/pyqSlice.js";
+import {
+  searchPyqs,
+  selectCanFilterYearLocally,
+  setSearchQuery,
+  setSelectedYear
+} from "../../redux/pyqSlice.js";
 import theme from "../../Themes/theme.jsx";
 import { selectSx } from "../../styles/styles.js";
 import { PYQ_YEAR_OPTIONS } from "./pyqStyles.js";
@@ -21,17 +26,20 @@ const PyqSearchBar = () => {
   const { searchQuery, selectedYear, lastQuery, lastSearchYear, searchLoading } = useSelector(
     (state) => state.pyq
   );
+  const canFilterYearLocally = useSelector(selectCanFilterYearLocally);
 
+  const queryChanged = searchQuery.trim() !== lastQuery;
+  const yearChanged = selectedYear !== lastSearchYear && !canFilterYearLocally;
   const hasPendingSearch = Boolean(
     lastQuery
     && searchQuery.trim()
-    && (searchQuery.trim() !== lastQuery || selectedYear !== lastSearchYear)
+    && (queryChanged || yearChanged)
     && !searchLoading
   );
 
   const handleSearch = () => {
     const query = searchQuery.trim();
-    if (!query) {
+    if (!query || (lastQuery && !queryChanged && !yearChanged)) {
       return;
     }
 
@@ -59,7 +67,7 @@ const PyqSearchBar = () => {
         <FormControl
           size="small"
           sx={{
-            minWidth: "92px",
+            minWidth: "108px",
             ...(hasPendingSearch ? {
               "& .MuiOutlinedInput-root": {
                 backgroundColor: theme.colors.secondaryLight,
@@ -70,12 +78,14 @@ const PyqSearchBar = () => {
         >
           <Select
             value={selectedYear}
+            displayEmpty
+            inputProps={{ "aria-label": "PYQ year" }}
             onChange={(event) => dispatch(setSelectedYear(event.target.value))}
             sx={selectSx}
           >
-            {PYQ_YEAR_OPTIONS.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
+            {PYQ_YEAR_OPTIONS.map((option) => (
+              <MenuItem key={option.label} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
           </Select>

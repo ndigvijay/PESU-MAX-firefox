@@ -2,13 +2,14 @@ import React, { useMemo } from "react";
 import { Box, Paper, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  ALL_PYQ_YEARS,
   searchPyqs,
   setCourseSearch,
   setCurrentStep,
   setSelectedCourse
 } from "../../redux/pyqSlice.js";
 import PyqCourseLabel from "./PyqCourseLabel.jsx";
-import { DEFAULT_PYQ_YEAR, clickableRowCardSx, emptyStateSx, stepHintSx } from "./pyqStyles.js";
+import { clickableRowCardSx, emptyStateSx, stepHintSx } from "./pyqStyles.js";
 
 const CourseStep = () => {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const CourseStep = () => {
   const handleSelectCourse = (course) => {
     dispatch(setSelectedCourse(course));
     dispatch(setCurrentStep("results"));
-    dispatch(searchPyqs({ query: course.subjectName, year: DEFAULT_PYQ_YEAR }));
+    dispatch(searchPyqs({ query: course.searchCode || course.subjectName, year: ALL_PYQ_YEARS }));
   };
 
   return (

@@ -2,17 +2,24 @@ import JSZip from "jszip";
 import * as cheerio from "cheerio";
 import { load, save } from "../utils/storage.js";
 import {
-  cachedLibrarySearch,
-  clearLibrarySearchCache,
+  readCachedSearch,
+  serializeLibraryRequest,
   singleFlight,
-  withFileSlot
+  withFileSlot,
+  writeCachedSearch
 } from "./libraryRequestCache.js";
 
 const LIBRARY_BASE_URL = "http://14.143.33.149";
 const LOGIN_URL = `${LIBRARY_BASE_URL}/MyPage.aspx`;
 const SEARCH_URL = `${LIBRARY_BASE_URL}/Search.aspx`;
 const LIBRARY_GRID_EVENT_TARGET = "GridView1";
-const LIBRARY_AUTH_CACHE_TTL_MS = 15 * 60 * 1000;
+const LIBRARY_AUTH_COOKIE = ".ASPXFORMSAUTH";
+const LOGIN_TOKENS_KEY = "libraryLoginTokens";
+const SEARCH_TOKENS_KEY = "librarySearchTokens";
+const PYQ_CATEGORY = "Digital Library";
+const EAGER_RESULT_LIMIT = 40;
+const EAGER_PAGE_LIMIT = 4;
+const PDF_CACHE_TTL_MS = 15 * 60 * 1000;
 
 let loginInFlight = null;
 const libraryRequestCounts = {};
@@ -152,13 +159,6 @@ function isGuestPage(payload) {
   return extractLoggedInIdentity(payload).toLowerCase() === "guest";
 }
 
-function isAuthenticatedPage(payload) {
-  const normalizedPayload = (payload || "").toLowerCase();
-  const identity = extractLoggedInIdentity(payload);
-  return normalizedPayload.includes("lnklogout")
-    || Boolean(identity && identity.toLowerCase() !== "guest");
-}
-
 function inferSemesterFromCode(code) {
   if (!code) {
     return null;
@@ -185,38 +185,75 @@ function inferSemesterFromCode(code) {
   return sectionMatch[0] === "A" ? baseSemester : baseSemester + 1;
 }
 
+function toLibraryCodeQuery(subjectCode) {
+  const code = normalizeText(subjectCode).toUpperCase();
+  const codeWithoutBatch = code.replace(/^[A-Z]{2}\d{2}(?=[A-Z])/, "");
+  return codeWithoutBatch.length >= 4 ? codeWithoutBatch : code;
+}
+
 async function getLibraryAuthCookie() {
   return new Promise((resolve) => {
     chrome.cookies.get(
-      { url: `${LIBRARY_BASE_URL}/`, name: ".ASPXFORMSAUTH" },
+      { url: `${LIBRARY_BASE_URL}/`, name: LIBRARY_AUTH_COOKIE },
       (cookie) => resolve(cookie || null)
     );
   });
 }
 
-async function saveLibraryAuth(details) {
-  const current = (await load("libraryAuth")) || {};
-  const nextAuth = {
-    ...current,
-    ...details,
-    updatedAt: Date.now()
-  };
-  await save("libraryAuth", nextAuth);
-  return nextAuth;
+function hasFormTokens(tokens) {
+  return Boolean(tokens?.viewState && tokens?.eventValidation);
 }
 
-async function openSearchPage() {
-  const response = await trackedLibraryFetch("search-page", SEARCH_URL, {
-    method: "GET",
-    credentials: "include"
+async function loadFormTokens(storageKey) {
+  const tokens = await load(storageKey).catch(() => null);
+  return hasFormTokens(tokens) ? tokens : null;
+}
+
+function fetchFormTokens(storageKey, url, requestType) {
+  return singleFlight(`tokens:${storageKey}`, async () => {
+    const response = await trackedLibraryFetch(requestType, url, {
+      method: "GET",
+      credentials: "include"
+    });
+    const html = await response.text();
+    if (!response.ok) throw new Error(`Library unavailable (HTTP ${response.status})`);
+
+    const tokens = extractAspNetFields(html);
+    if (!hasFormTokens(tokens)) {
+      throw new Error("Unable to read library form tokens");
+    }
+
+    await save(storageKey, tokens).catch(() => {});
+    return tokens;
+  });
+}
+
+async function getSearchTokens({ refresh = false } = {}) {
+  const cached = refresh ? null : await loadFormTokens(SEARCH_TOKENS_KEY);
+  return cached || fetchFormTokens(SEARCH_TOKENS_KEY, SEARCH_URL, "search-page");
+}
+
+async function submitLogin(tokens, memberId, password) {
+  const response = await trackedLibraryFetch("login-submit", LOGIN_URL, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      __VIEWSTATE: tokens.viewState,
+      __VIEWSTATEGENERATOR: tokens.viewStateGenerator,
+      __EVENTVALIDATION: tokens.eventValidation,
+      txtMemberid: memberId,
+      txtPassword: password,
+      signin: "Sign In"
+    }).toString(),
+    redirect: "manual"
   });
 
-  const html = await response.text();
-  if (!response.ok) throw new Error(`Library unavailable (HTTP ${response.status})`);
-  return {
-    html,
-    fields: extractAspNetFields(html)
-  };
+  const redirected = response.type === "opaqueredirect"
+    || (response.status >= 300 && response.status < 400);
+  return redirected && Boolean((await getLibraryAuthCookie())?.value);
 }
 
 async function loginToLibrary(encodedMemberId, encodedPassword) {
@@ -227,69 +264,20 @@ async function loginToLibrary(encodedMemberId, encodedPassword) {
     throw new Error("Missing library credentials");
   }
 
-  const loginPageResponse = await trackedLibraryFetch("login-page", LOGIN_URL, {
-    method: "GET",
-    credentials: "include"
-  });
-
-  const loginPageHtml = await loginPageResponse.text();
-  const tokens = extractAspNetFields(loginPageHtml);
-
-  if (!tokens.viewState || !tokens.eventValidation) {
-    throw new Error("Unable to read library login tokens");
+  const cachedTokens = await loadFormTokens(LOGIN_TOKENS_KEY);
+  if (cachedTokens && await submitLogin(cachedTokens, memberId, password)) {
+    return;
   }
 
-  const formData = new URLSearchParams({
-    __VIEWSTATE: tokens.viewState,
-    __VIEWSTATEGENERATOR: tokens.viewStateGenerator,
-    __EVENTVALIDATION: tokens.eventValidation,
-    txtMemberid: memberId,
-    txtPassword: password,
-    signin: "Sign In"
-  });
-
-  const loginResponse = await trackedLibraryFetch("login-submit", LOGIN_URL, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: formData.toString(),
-    redirect: "follow"
-  });
-
-  await loginResponse.text();
-  if (!loginResponse.ok) throw new Error(`Library login failed (HTTP ${loginResponse.status})`);
-
-  const searchPage = await openSearchPage();
-  const searchFields = searchPage.fields;
-  const authCookie = await getLibraryAuthCookie();
-  if (!authCookie?.value
-    || !isAuthenticatedPage(searchPage.html)
-    || isGuestPage(searchPage.html)
-    || !searchFields.viewState
-    || !searchFields.eventValidation) {
-    throw new Error("Library login failed");
+  const freshTokens = await fetchFormTokens(LOGIN_TOKENS_KEY, LOGIN_URL, "login-page");
+  if (await submitLogin(freshTokens, memberId, password)) {
+    return;
   }
 
-  const authDetails = {
-    isAuthenticated: true,
-    cookieName: ".ASPXFORMSAUTH",
-    cookieValue: authCookie?.value || "",
-    loginUrl: loginResponse.url,
-    viewState: searchFields.viewState,
-    eventValidation: searchFields.eventValidation,
-    viewStateGenerator: searchFields.viewStateGenerator,
-    loggedInAt: Date.now()
-  };
-
-  const savedAuth = await saveLibraryAuth(authDetails);
-  await clearLibrarySearchCache().catch(() => {});
-
-  return savedAuth;
+  throw new Error("Library login failed");
 }
 
-function loginWithCoalescing(encodedMemberId, encodedPassword) {
+function loginWithCoalescing({ encodedMemberId, encodedPassword }) {
   if (!loginInFlight) {
     loginInFlight = loginToLibrary(encodedMemberId, encodedPassword)
       .finally(() => {
@@ -300,141 +288,108 @@ function loginWithCoalescing(encodedMemberId, encodedPassword) {
   return loginInFlight;
 }
 
-async function ensureLibrarySession(encodedMemberId, encodedPassword) {
-  const existingCookie = await getLibraryAuthCookie();
-  const storedAuth = (await load("libraryAuth")) || {};
-
-  const hasReusableTokens = Boolean(
-    existingCookie?.value
-    && storedAuth.cookieValue === existingCookie.value
-    && storedAuth.viewState
-    && storedAuth.eventValidation
-  );
-
-  if (hasReusableTokens) {
-    return {
-      ...storedAuth,
-      isAuthenticated: true,
-      cookieName: ".ASPXFORMSAUTH",
-      cookieValue: existingCookie.value
-    };
+async function ensureLibraryCookie(credentials) {
+  if (!(await getLibraryAuthCookie())?.value) {
+    await loginWithCoalescing(credentials);
   }
-
-  if (existingCookie?.value) {
-    const searchPage = await openSearchPage();
-
-    if (isAuthenticatedPage(searchPage.html)
-      && !isGuestPage(searchPage.html)
-      && searchPage.fields.viewState
-      && searchPage.fields.eventValidation) {
-      const authDetails = {
-        isAuthenticated: true,
-        cookieName: ".ASPXFORMSAUTH",
-        cookieValue: existingCookie.value,
-        viewState: searchPage.fields.viewState,
-        eventValidation: searchPage.fields.eventValidation,
-        viewStateGenerator: searchPage.fields.viewStateGenerator,
-        loggedInAt: Date.now()
-      };
-
-      return saveLibraryAuth(authDetails);
-    }
-  }
-
-  return loginWithCoalescing(encodedMemberId, encodedPassword);
 }
 
-async function refreshLibrarySession({
-  encodedMemberId,
-  encodedPassword,
-  failedCookieValue,
-  failedLoggedInAt = 0
-}) {
-  if (loginInFlight) {
-    return loginInFlight;
+function classifySearchResponse(response, responseText) {
+  if (/^\d+\|error\|/.test(responseText)
+    || /validation of viewstate|invalid postback|invalid viewstate/i.test(responseText)) {
+    return "stale";
   }
 
-  const [currentCookie, currentAuth] = await Promise.all([
-    getLibraryAuthCookie(),
-    load("libraryAuth")
-  ]);
-  const sessionWasAlreadyRefreshed = Boolean(
-    currentCookie?.value
-    && currentAuth?.cookieValue === currentCookie.value
-    && currentAuth.viewState
-    && currentAuth.eventValidation
-    && (currentCookie.value !== failedCookieValue
-      || (currentAuth.loggedInAt || 0) > failedLoggedInAt)
-  );
-
-  if (sessionWasAlreadyRefreshed) {
-    return currentAuth;
+  if (response.status === 401 || response.status === 403
+    || /mypage\.aspx/i.test(response.url)
+    || /\|pageredirect\|[^|]*\|?[^|]*mypage\.aspx/i.test(responseText)
+    || isGuestPage(responseText)) {
+    return "logged-out";
   }
 
-  return loginWithCoalescing(encodedMemberId, encodedPassword);
+  if (!response.ok) {
+    throw new Error(`Library search failed (HTTP ${response.status})`);
+  }
+
+  if (!/GridView1|id=["']Label2["']|\bLabel2\|/i.test(responseText)) {
+    throw new Error("Unexpected library search response. Please refresh the search.");
+  }
+
+  return "ok";
 }
 
-function isAuthenticationResponse(payload) {
-  const normalizedPayload = (payload || "").toLowerCase();
-  return /\|pageredirect\|[^|]*\|?[^|]*mypage\.aspx/i.test(payload || "")
-    || isGuestPage(payload)
-    || (normalizedPayload.includes("txtmemberid")
-    && normalizedPayload.includes("txtpassword")
-    && !isAuthenticatedPage(payload)
-    && !normalizedPayload.includes("gridview1"));
+async function postLibrarySearch(formData, requestType) {
+  const response = await trackedLibraryFetch(requestType, SEARCH_URL, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "X-Requested-With": "XMLHttpRequest",
+      "X-MicrosoftAjax": "Delta=true"
+    },
+    body: formData.toString()
+  });
+
+  const responseText = await response.text();
+  return { status: classifySearchResponse(response, responseText), responseText };
+}
+
+async function sendSearchPostback(formData, requestType, credentials) {
+  await ensureLibraryCookie(credentials);
+
+  const result = await postLibrarySearch(formData, requestType);
+  if (result.status !== "logged-out") {
+    return result;
+  }
+
+  await loginWithCoalescing(credentials);
+  const retry = await postLibrarySearch(formData, `${requestType}-retry`);
+  if (retry.status === "logged-out") {
+    throw new Error("Library login failed");
+  }
+  return retry;
 }
 
 const pdfCache = new Map();
 let pdfCacheBytes = 0;
 const PDF_CACHE_LIMIT = 20 * 1024 * 1024;
 
-async function fetchLibraryFile(absoluteUrl, encodedMemberId, encodedPassword) {
-  const key = JSON.stringify([encodedMemberId, absoluteUrl]);
+async function fetchLibraryFile(absoluteUrl) {
   for (const [entryKey, entry] of pdfCache) {
-    if (Date.now() - entry.savedAt >= LIBRARY_AUTH_CACHE_TTL_MS) {
+    if (Date.now() - entry.savedAt >= PDF_CACHE_TTL_MS) {
       pdfCacheBytes -= entry.buffer.byteLength;
       pdfCache.delete(entryKey);
     }
   }
-  const cached = pdfCache.get(key);
-  const buffer = cached?.buffer || await singleFlight(`pdf:${key}`, () => withFileSlot(async () => {
-    const originalCookie = (await getLibraryAuthCookie())?.value;
-    const originalAuth = (await load("libraryAuth")) || {};
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      const response = await trackedLibraryFetch(attempt ? "pdf-retry" : "pdf", absoluteUrl, {
-        method: "GET", credentials: "include"
-      });
-      const buffer = await response.arrayBuffer();
-      const prefix = new TextDecoder().decode(buffer.slice(0, 1024));
-      const expired = response.status === 401 || response.status === 403
-        || /mypage\.aspx/i.test(response.url)
-        || isAuthenticationResponse(new TextDecoder().decode(buffer.slice(0, 65536)));
-      if (expired) {
-        if (attempt) throw new Error("Library session expired. Please retry your download.");
-        await refreshLibrarySession({
-          encodedMemberId,
-          encodedPassword,
-          failedCookieValue: originalCookie,
-          failedLoggedInAt: originalAuth.loggedInAt || 0
-        });
-        continue;
-      }
-      if (!response.ok) throw new Error(`Unable to download file (HTTP ${response.status})`);
-      if (!prefix.startsWith("%PDF-")) throw new Error("Library returned an invalid PDF.");
-      if (buffer.byteLength <= PDF_CACHE_LIMIT) {
-        while (pdfCache.size >= 10 || pdfCacheBytes + buffer.byteLength > PDF_CACHE_LIMIT) {
-          const oldestKey = pdfCache.keys().next().value;
-          pdfCacheBytes -= pdfCache.get(oldestKey).buffer.byteLength;
-          pdfCache.delete(oldestKey);
-        }
-        pdfCache.set(key, { buffer, savedAt: Date.now() });
-        pdfCacheBytes += buffer.byteLength;
-      }
-      return buffer;
+
+  const cached = pdfCache.get(absoluteUrl);
+  if (cached) {
+    return cached.buffer;
+  }
+
+  return singleFlight(`pdf:${absoluteUrl}`, () => withFileSlot(async () => {
+    const response = await trackedLibraryFetch("pdf", absoluteUrl, {
+      method: "GET",
+      credentials: "include"
+    });
+    if (!response.ok) throw new Error(`Unable to download file (HTTP ${response.status})`);
+
+    const buffer = await response.arrayBuffer();
+    if (!new TextDecoder().decode(buffer.slice(0, 5)).startsWith("%PDF-")) {
+      throw new Error("Library returned an invalid PDF.");
     }
-    throw new Error("Unable to download PDF.");
+
+    if (buffer.byteLength <= PDF_CACHE_LIMIT) {
+      while (pdfCache.size >= 10 || pdfCacheBytes + buffer.byteLength > PDF_CACHE_LIMIT) {
+        const oldestKey = pdfCache.keys().next().value;
+        pdfCacheBytes -= pdfCache.get(oldestKey).buffer.byteLength;
+        pdfCache.delete(oldestKey);
+      }
+      pdfCache.set(absoluteUrl, { buffer, savedAt: Date.now() });
+      pdfCacheBytes += buffer.byteLength;
+    }
+    return buffer;
   }));
-  return new Response(buffer, { headers: { "Content-Type": "application/pdf" } });
 }
 
 function parseResultRow($, rowElement, index) {
@@ -465,6 +420,7 @@ function parseResultRow($, rowElement, index) {
     .filter((_, el) => normalizeText($(el).text()).startsWith("Year,Ed:"))
     .first();
   const yearEdition = normalizeText(yearLabel.next("span").first().text());
+  const year = Number((yearEdition.match(/\b(?:19|20)\d{2}\b/) || [])[0]) || null;
 
   const idLabel = row
     .find("span")
@@ -498,6 +454,7 @@ function parseResultRow($, rowElement, index) {
     title,
     courseCode,
     yearEdition,
+    year,
     recordId,
     callNo,
     status,
@@ -540,6 +497,23 @@ function parseSearchResults(payload, query) {
   };
 }
 
+function buildSearchFields({ query, year }) {
+  return {
+    txtMemberid: "",
+    txtPassword: "",
+    txtTitle: query,
+    txtAuthor: "",
+    txtYear: year || "",
+    txtSubject: "",
+    txtCallno: "",
+    txtPublisher: "",
+    cmbCategory: PYQ_CATEGORY,
+    txtLocation: "",
+    txtEdition: "",
+    txtAccessNo: ""
+  };
+}
+
 function buildSearchPayload({ query, year, viewState, eventValidation, viewStateGenerator }) {
   return new URLSearchParams({
     ToolkitScriptManager1: "UpdatePanel1|cmdSearch",
@@ -549,40 +523,18 @@ function buildSearchPayload({ query, year, viewState, eventValidation, viewState
     __VIEWSTATEGENERATOR: viewStateGenerator,
     __VIEWSTATEENCRYPTED: "",
     __EVENTVALIDATION: eventValidation,
-    txtMemberid: "",
-    txtPassword: "",
-    txtTitle: query,
-    txtAuthor: "",
-    txtYear: year || "",
-    txtSubject: "",
-    txtCallno: "",
-    txtPublisher: "",
-    cmbCategory: "",
-    txtLocation: "",
-    txtEdition: "",
-    txtAccessNo: "",
+    ...buildSearchFields({ query, year }),
     __ASYNCPOST: "true",
     cmdSearch: "Search"
   });
 }
 
-function buildPaginationPayload({ query, year, viewState, eventValidation, viewStateGenerator, direction = "next" }) {
+function buildPaginationPayload({ query, year, viewState, eventValidation, viewStateGenerator }) {
   return new URLSearchParams({
     ToolkitScriptManager1: `UpdatePanel1|${LIBRARY_GRID_EVENT_TARGET}`,
-    txtMemberid: "",
-    txtPassword: "",
-    txtTitle: query,
-    txtAuthor: "",
-    txtYear: year || "",
-    txtSubject: "",
-    txtCallno: "",
-    txtPublisher: "",
-    cmbCategory: "",
-    txtLocation: "",
-    txtEdition: "",
-    txtAccessNo: "",
+    ...buildSearchFields({ query, year }),
     __EVENTTARGET: LIBRARY_GRID_EVENT_TARGET,
-    __EVENTARGUMENT: direction === "prev" ? "Page$Prev" : "Page$Next",
+    __EVENTARGUMENT: "Page$Next",
     __VIEWSTATE: viewState,
     __VIEWSTATEGENERATOR: viewStateGenerator,
     __VIEWSTATEENCRYPTED: "",
@@ -591,79 +543,96 @@ function buildPaginationPayload({ query, year, viewState, eventValidation, viewS
   });
 }
 
-async function sendLibrarySearchRequest(formData, requestType = "search-submit") {
-  const searchResponse = await trackedLibraryFetch(requestType, SEARCH_URL, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      "X-Requested-With": "XMLHttpRequest",
-      "X-MicrosoftAjax": "Delta=true"
-    },
-    body: formData.toString()
-  });
-
-  const responseText = await searchResponse.text();
-
-  if (searchResponse.status === 401 || searchResponse.status === 403
-    || /mypage\.aspx/i.test(searchResponse.url) || isAuthenticationResponse(responseText)) {
-    throw Object.assign(new Error("Library session expired"), { recoverable: true });
-  }
-  if (/validation of viewstate|invalid postback|invalid viewstate/i.test(responseText)) {
-    throw Object.assign(new Error("Library search state expired"), { recoverable: true });
-  }
-  if (!searchResponse.ok) {
-    throw new Error(`Library search failed (HTTP ${searchResponse.status})`);
-  }
-
-  if (!/GridView1|id=["']Label2["']|\bLabel2\|/i.test(responseText)) {
-    throw new Error("Unexpected library search response. Please refresh the search.");
-  }
-
-  return responseText;
-}
-
-function buildNextCursor({ query, fields, pageIndex, pageSize }) {
-  if (!fields.viewState || !fields.eventValidation) {
-    return null;
-  }
-
-  return {
-    query,
-    viewState: fields.viewState,
-    eventValidation: fields.eventValidation,
-    viewStateGenerator: fields.viewStateGenerator,
-    pageIndex,
-    pageSize
-  };
-}
-
-function buildPaginatedSearchResponse({ query, parsed, fields, pageIndex, loadedCount = 0, pageSize = parsed.results.length }) {
-  const normalizedLoadedCount = Number.isFinite(loadedCount) ? loadedCount : 0;
-  const normalizedPageSize = Number.isFinite(pageSize) && pageSize > 0
-    ? pageSize
-    : parsed.results.length;
-  const loadedAfterPage = normalizedLoadedCount + parsed.results.length;
-  const derivedTotalResults = Math.max(
-    parsed.totalResults || 0,
-    loadedAfterPage + (parsed.hasNextPage ? 1 : 0)
+async function fetchFirstSearchPage({ query, year }, credentials) {
+  const tokens = await getSearchTokens();
+  const result = await sendSearchPostback(
+    buildSearchPayload({ query, year, ...tokens }),
+    "search-submit",
+    credentials
   );
-  const hasMore = Boolean(parsed.hasNextPage && parsed.results.length > 0);
+  if (result.status !== "stale") {
+    return result.responseText;
+  }
+
+  const freshTokens = await getSearchTokens({ refresh: true });
+  const retry = await sendSearchPostback(
+    buildSearchPayload({ query, year, ...freshTokens }),
+    "search-retry",
+    credentials
+  );
+  if (retry.status === "stale") {
+    throw new Error("Library search failed. Please try again.");
+  }
+  return retry.responseText;
+}
+
+async function fetchNextSearchPage({ query, year, cursor }, credentials) {
+  const result = await sendSearchPostback(
+    buildPaginationPayload({ query, year, ...cursor }),
+    "pagination-submit",
+    credentials
+  );
+  if (result.status === "stale") {
+    throw new Error("These search results have expired. Please search again.");
+  }
+  return result.responseText;
+}
+
+function readSearchPage(responseText, query) {
+  const parsed = parseSearchResults(responseText, query);
+  const fields = extractAspNetFieldsFromDelta(responseText);
+  const cursor = parsed.hasNextPage && parsed.results.length > 0 && hasFormTokens(fields)
+    ? fields
+    : null;
 
   return {
-    query,
-    totalResults: derivedTotalResults,
+    totalResults: parsed.totalResults,
     results: parsed.results,
-    hasMore,
-    nextCursor: hasMore
-      ? buildNextCursor({
-          query,
-          fields,
-          pageIndex,
-          pageSize: normalizedPageSize
-        })
-      : null
+    nextCursor: cursor
   };
+}
+
+function appendSearchPage(entry, page) {
+  const seenIds = new Set(entry.results.map((item) => item.id));
+  const freshResults = page.results.filter((item) => !seenIds.has(item.id));
+  const results = [...entry.results, ...freshResults];
+  const complete = !page.nextCursor || freshResults.length === 0;
+
+  return {
+    ...entry,
+    totalResults: Math.max(page.totalResults || 0, results.length),
+    results,
+    complete,
+    nextCursor: complete ? null : page.nextCursor
+  };
+}
+
+function sortByNewestYear(results) {
+  return [...results].sort((first, second) => (second.year || 0) - (first.year || 0));
+}
+
+async function performLibrarySearch({ query, year }, credentials) {
+  const firstPage = readSearchPage(await fetchFirstSearchPage({ query, year }, credentials), query);
+  let entry = appendSearchPage(
+    { query, year, totalResults: 0, results: [], complete: false, nextCursor: null },
+    firstPage
+  );
+
+  if (entry.totalResults <= EAGER_RESULT_LIMIT) {
+    for (let pageCount = 1; pageCount < EAGER_PAGE_LIMIT && !entry.complete; pageCount += 1) {
+      const page = readSearchPage(
+        await fetchNextSearchPage({ query, year, cursor: entry.nextCursor }, credentials),
+        query
+      );
+      entry = appendSearchPage(entry, page);
+    }
+  }
+
+  return entry.complete ? { ...entry, results: sortByNewestYear(entry.results) } : entry;
+}
+
+function searchCacheKey(query, year) {
+  return JSON.stringify([query.toLowerCase(), year]);
 }
 
 function ensurePdfExtension(name) {
@@ -720,6 +689,7 @@ export async function getPyqCourseCatalog() {
         subjectId: subject.id,
         subjectCode,
         subjectName,
+        searchCode: toLibraryCodeQuery(subjectCode),
         semester,
         semesterLabel: `Semester ${semester}`
       });
@@ -754,209 +724,76 @@ export async function getPyqCourseCatalog() {
 }
 
 export async function loginLibraryWithCredentials({ encodedMemberId, encodedPassword }) {
-  return ensureLibrarySession(encodedMemberId, encodedPassword);
+  await ensureLibraryCookie({ encodedMemberId, encodedPassword });
+  return { isAuthenticated: true };
 }
 
-export function searchLibraryPyqs(args) {
-  const key = JSON.stringify([args.encodedMemberId, normalizeText(args.query).toLowerCase(), normalizeText(args.year)]);
-  return cachedLibrarySearch(key, () => performLibrarySearch(args));
-}
-
-async function performLibrarySearch({
-  query,
-  year,
-  encodedMemberId,
-  encodedPassword,
-  allowAuthRetry = true
-}) {
+export async function searchLibraryPyqs({ query, year, encodedMemberId, encodedPassword }) {
   const cleanQuery = normalizeText(query);
   const cleanYear = normalizeText(year);
   if (!cleanQuery) {
     throw new Error("Search query is required");
   }
 
-  let auth = await ensureLibrarySession(encodedMemberId, encodedPassword);
-  let viewState = auth.viewState;
-  let eventValidation = auth.eventValidation;
-  let viewStateGenerator = auth.viewStateGenerator;
-
-  if (!viewState || !eventValidation) {
-    throw new Error("Unable to fetch library search tokens");
+  const cacheKey = searchCacheKey(cleanQuery, cleanYear);
+  const cached = await readCachedSearch(cacheKey);
+  if (cached) {
+    return cached;
   }
 
-  let payload = buildSearchPayload({
-    query: cleanQuery,
-    year: cleanYear,
-    viewState,
-    eventValidation,
-    viewStateGenerator
-  });
-
-  let responseText;
-  try {
-    responseText = await sendLibrarySearchRequest(payload, "search-submit");
-  } catch (error) {
-    if (!error.recoverable || !allowAuthRetry) throw error;
-    auth = await refreshLibrarySession({
-      encodedMemberId,
-      encodedPassword,
-      failedCookieValue: auth.cookieValue,
-      failedLoggedInAt: auth.loggedInAt || 0
-    });
-    viewState = auth.viewState;
-    eventValidation = auth.eventValidation;
-    viewStateGenerator = auth.viewStateGenerator;
-    payload = buildSearchPayload({
-      query: cleanQuery,
-      year: cleanYear,
-      viewState,
-      eventValidation,
-      viewStateGenerator
-    });
-    responseText = await sendLibrarySearchRequest(payload, "search-retry");
-  }
-  const parsed = parseSearchResults(responseText, cleanQuery);
-  const deltaFields = extractAspNetFieldsFromDelta(responseText);
-  const cookie = await getLibraryAuthCookie();
-  const nextFields = {
-    viewState: deltaFields.viewState || viewState,
-    eventValidation: deltaFields.eventValidation || eventValidation,
-    viewStateGenerator: deltaFields.viewStateGenerator || viewStateGenerator
-  };
-
-  await saveLibraryAuth({
-    isAuthenticated: true,
-    cookieName: ".ASPXFORMSAUTH",
-    cookieValue: cookie?.value || auth.cookieValue || "",
-    viewState: nextFields.viewState,
-    eventValidation: nextFields.eventValidation,
-    viewStateGenerator: nextFields.viewStateGenerator,
-    lastQuery: cleanQuery,
-    totalResults: parsed.totalResults
-  });
-
-  return buildPaginatedSearchResponse({
-    query: cleanQuery,
-    parsed,
-    fields: nextFields,
-    pageIndex: 1,
-    loadedCount: 0
-  });
+  return singleFlight(`search:${cacheKey}`, () => serializeLibraryRequest(async () => {
+    const entry = await performLibrarySearch(
+      { query: cleanQuery, year: cleanYear },
+      { encodedMemberId, encodedPassword }
+    );
+    await writeCachedSearch(cacheKey, entry);
+    return entry;
+  }));
 }
 
-export function loadMoreLibraryPyqs(args) {
-  const key = JSON.stringify([args.encodedMemberId, args.query, args.year, args.cursor]);
-  return cachedLibrarySearch(key, () => performLibraryNextPage(args));
-}
-
-async function performLibraryNextPage({
-  query,
-  year,
-  cursor,
-  loadedCount = 0,
-  encodedMemberId,
-  encodedPassword
-}) {
-  const cleanQuery = normalizeText(query || cursor?.query);
+export async function loadMoreLibraryPyqs({ query, year, cursor, encodedMemberId, encodedPassword }) {
+  const cleanQuery = normalizeText(query);
   const cleanYear = normalizeText(year);
   if (!cleanQuery) {
     throw new Error("Search query is required");
   }
 
-  if (!cursor?.viewState || !cursor?.eventValidation) {
+  if (!hasFormTokens(cursor)) {
     throw new Error("No next page is available for this search");
   }
 
-  const auth = (await load("libraryAuth")) || {};
-  const payload = buildPaginationPayload({
-    query: cleanQuery,
-    year: cleanYear,
-    viewState: cursor.viewState,
-    eventValidation: cursor.eventValidation,
-    viewStateGenerator: cursor.viewStateGenerator,
-    direction: "next"
-  });
+  const cacheKey = searchCacheKey(cleanQuery, cleanYear);
+  return singleFlight(`page:${cacheKey}:${cursor.viewState}`, () => serializeLibraryRequest(async () => {
+    const page = readSearchPage(
+      await fetchNextSearchPage(
+        { query: cleanQuery, year: cleanYear, cursor },
+        { encodedMemberId, encodedPassword }
+      ),
+      cleanQuery
+    );
 
-  let responseText;
-  try {
-    responseText = await sendLibrarySearchRequest(payload, "pagination-submit");
-  } catch (error) {
-    if (!error.recoverable) throw error;
-    // An old page cursor cannot safely be replayed under a fresh session.
-    // Restart at page one instead of fetching every intermediate page.
-    await refreshLibrarySession({
-      encodedMemberId,
-      encodedPassword,
-      failedCookieValue: auth.cookieValue,
-      failedLoggedInAt: auth.loggedInAt || 0
-    });
-    return { ...(await performLibrarySearch({
-      query: cleanQuery,
-      year: cleanYear,
-      encodedMemberId,
-      encodedPassword,
-      allowAuthRetry: false
-    })), restarted: true };
-  }
-  const parsed = parseSearchResults(responseText, cleanQuery);
-  const deltaFields = extractAspNetFieldsFromDelta(responseText);
-  const cookie = await getLibraryAuthCookie();
-  const nextFields = {
-    viewState: deltaFields.viewState || cursor.viewState,
-    eventValidation: deltaFields.eventValidation || cursor.eventValidation,
-    viewStateGenerator: deltaFields.viewStateGenerator || cursor.viewStateGenerator
-  };
-  const nextPageIndex = (cursor.pageIndex || 1) + 1;
+    const cached = await readCachedSearch(cacheKey);
+    if (cached?.nextCursor?.viewState === cursor.viewState) {
+      await writeCachedSearch(cacheKey, appendSearchPage(cached, page));
+    }
 
-  await saveLibraryAuth({
-    isAuthenticated: true,
-    cookieName: ".ASPXFORMSAUTH",
-    cookieValue: cookie?.value || auth.cookieValue || "",
-    viewState: nextFields.viewState,
-    eventValidation: nextFields.eventValidation,
-    viewStateGenerator: nextFields.viewStateGenerator,
-    lastQuery: cleanQuery,
-    totalResults: parsed.totalResults
-  });
-
-  return buildPaginatedSearchResponse({
-    query: cleanQuery,
-    parsed,
-    fields: nextFields,
-    pageIndex: nextPageIndex,
-    loadedCount,
-    pageSize: cursor.pageSize || parsed.results.length
-  });
+    return page;
+  }));
 }
 
-export async function downloadLibraryPyq({
-  downloadPath,
-  title,
-  encodedMemberId,
-  encodedPassword
-}) {
+export async function downloadLibraryPyq({ downloadPath, title }) {
   const absoluteUrl = toAbsoluteLibraryUrl(downloadPath);
   if (!absoluteUrl) {
     throw new Error("Invalid download URL");
   }
 
-  const fileResponse = await fetchLibraryFile(
-    absoluteUrl,
-    encodedMemberId,
-    encodedPassword
-  );
+  const fileBuffer = await fetchLibraryFile(absoluteUrl);
 
-  if (!fileResponse.ok) {
-    throw new Error(`Unable to download file (HTTP ${fileResponse.status})`);
-  }
-
-  const fileBlob = await fileResponse.blob();
   const fallbackName = `PYQ_${Date.now()}`;
   const safeName = sanitizeFilename(title || fallbackName) || fallbackName;
-  const hasPdfExtension = safeName.toLowerCase().endsWith(".pdf");
-  const fileName = hasPdfExtension ? safeName : `${safeName}.pdf`;
+  const fileName = ensurePdfExtension(safeName);
   // Firefox blocks data: URLs passed to the downloads API; Blob URLs work in both browsers.
-  const blobUrl = URL.createObjectURL(fileBlob);
+  const blobUrl = URL.createObjectURL(new Blob([fileBuffer], { type: "application/pdf" }));
   let downloadId;
   try {
     downloadId = await triggerBrowserDownload(blobUrl, `PESU_PYQs/${fileName}`);
@@ -971,12 +808,7 @@ export async function downloadLibraryPyq({
   };
 }
 
-export async function downloadLibraryPyqsZip({
-  items,
-  query,
-  encodedMemberId,
-  encodedPassword
-}) {
+export async function downloadLibraryPyqsZip({ items, query }) {
   if (!Array.isArray(items) || items.length === 0) {
     throw new Error("No PYQs selected for ZIP download");
   }
@@ -1006,18 +838,7 @@ export async function downloadLibraryPyqsZip({
             throw new Error("Invalid download URL");
           }
 
-          const fileResponse = await fetchLibraryFile(
-            absoluteUrl,
-            encodedMemberId,
-            encodedPassword
-          );
-
-          if (!fileResponse.ok) {
-            throw new Error(`HTTP ${fileResponse.status}`);
-          }
-
-          const fileBlob = await fileResponse.blob();
-          const fileBuffer = await fileBlob.arrayBuffer();
+          const fileBuffer = await fetchLibraryFile(absoluteUrl);
           const fallbackName = `PYQ_${index + 1}`;
           const safeName = sanitizeFilename(item.title || fallbackName) || fallbackName;
           const fileName = `${String(index + 1).padStart(2, "0")}_${ensurePdfExtension(safeName)}`;

@@ -178,7 +178,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       query: request.query,
       year: request.year,
       cursor: request.cursor,
-      loadedCount: request.loadedCount,
       encodedMemberId: request.encodedMemberId,
       encodedPassword: request.encodedPassword
     })
@@ -190,9 +189,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "downloadLibraryPyq") {
     downloadLibraryPyq({
       downloadPath: request.downloadPath,
-      title: request.title,
-      encodedMemberId: request.encodedMemberId,
-      encodedPassword: request.encodedPassword
+      title: request.title
     })
       .then((data) => sendResponse({ data }))
       .catch((error) => sendResponse({ error: error.message }));
@@ -202,9 +199,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "downloadLibraryPyqsZip") {
     downloadLibraryPyqsZip({
       items: request.items,
-      query: request.query,
-      encodedMemberId: request.encodedMemberId,
-      encodedPassword: request.encodedPassword
+      query: request.query
     })
       .then((data) => sendResponse({ data }))
       .catch((error) => sendResponse({ error: error.message }));

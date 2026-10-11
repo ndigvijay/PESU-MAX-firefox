@@ -1,32 +1,32 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { loadMorePyqs, showPyqPage } from "../../redux/pyqSlice.js";
+import { loadMorePyqs, selectPyqPage, showPyqPage } from "../../redux/pyqSlice.js";
 import theme from "../../Themes/theme.jsx";
 import { paginationButtonSx } from "./pyqStyles.js";
 
 const PyqPagination = () => {
   const dispatch = useDispatch();
   const {
-    currentPage,
-    pagesByNumber,
-    hasMore,
+    resultsComplete,
     nextPageCursor,
     searchLoading,
     loadingMore,
     bulkDownloading
   } = useSelector((state) => state.pyq);
+  const { page, pageCount } = useSelector(selectPyqPage);
 
   const busy = searchLoading || bulkDownloading || loadingMore;
-  const hasCachedNextPage = Boolean(pagesByNumber[currentPage + 1]);
+  const canLoadMore = !resultsComplete && Boolean(nextPageCursor);
+  const hasNextPage = page < pageCount || canLoadMore;
 
   const handleNextPage = () => {
-    if (busy || (!hasCachedNextPage && (!hasMore || !nextPageCursor))) {
+    if (busy || !hasNextPage) {
       return;
     }
 
-    if (hasCachedNextPage) {
-      dispatch(showPyqPage(currentPage + 1));
+    if (page < pageCount) {
+      dispatch(showPyqPage(page + 1));
       return;
     }
 
@@ -34,11 +34,11 @@ const PyqPagination = () => {
   };
 
   const handlePreviousPage = () => {
-    if (currentPage <= 1 || busy) {
+    if (page <= 1 || busy) {
       return;
     }
 
-    dispatch(showPyqPage(currentPage - 1));
+    dispatch(showPyqPage(page - 1));
   };
 
   return (
@@ -55,21 +55,21 @@ const PyqPagination = () => {
         variant="contained"
         size="small"
         onClick={handlePreviousPage}
-        disabled={currentPage <= 1 || busy}
+        disabled={page <= 1 || busy}
         sx={{ ...paginationButtonSx, justifySelf: "start" }}
       >
         Previous
       </Button>
 
       <Typography sx={{ fontSize: "12px", color: theme.colors.secondary, fontWeight: 600 }}>
-        {loadingMore ? "Loading..." : `Page ${currentPage}`}
+        {loadingMore ? "Loading..." : `Page ${page}${resultsComplete ? ` of ${pageCount}` : ""}`}
       </Typography>
 
       <Button
         variant="contained"
         size="small"
         onClick={handleNextPage}
-        disabled={busy || (!hasMore && !hasCachedNextPage)}
+        disabled={busy || !hasNextPage}
         sx={{ ...paginationButtonSx, justifySelf: "end" }}
       >
         Next
