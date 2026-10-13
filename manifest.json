@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "PESU-MAX",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "PESU MAX is an extension that makes best use of PESU Academy website",
   "browser_specific_settings": {
     "gecko": {
