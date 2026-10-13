@@ -19,6 +19,7 @@ import {
 } from "../../src/content/menuReorder";
 import { START_PAGE_OPTIONS } from "../../src/content/startPage";
 import {
+  ACADEMY_CREDENTIAL_KEY,
   BACK_NAVIGATION_KEY,
   SESSION_KEEPER_KEY,
   SIDE_MENU_DOCK_KEY,
@@ -39,6 +40,10 @@ const Settings = () => {
   const dock = useStoredSetting(SIDE_MENU_DOCK_KEY, false, "Side menu style");
   const dockOn = dock.ready && dock.value === true;
   const classicOn = dock.ready && dock.value !== true;
+  const sessionKeeper = useStoredSetting(SESSION_KEEPER_KEY, false, "Keep me signed in");
+  const savedSignIn = useStoredSetting(ACADEMY_CREDENTIAL_KEY, null, "saved sign-in");
+  const awaitingSignIn = sessionKeeper.ready && sessionKeeper.value === true &&
+    savedSignIn.ready && !savedSignIn.value;
   const { canReorder, isEditing } = useSyncExternalStore(
     subscribeToMenuReorder,
     getMenuReorderSnapshot,
@@ -82,6 +87,12 @@ const Settings = () => {
             description="Automatically signs you in when PESU Academy logs you out. "
             onDisable={forgetStoredCredentials}
           />
+
+          {awaitingSignIn && (
+            <Typography variant="body2" sx={settingsHintSx}>
+              Sign out and sign in to PESU Academy once to finish turning this on.
+            </Typography>
+          )}
 
           <SettingsToggleRow
             storageKey={BACK_NAVIGATION_KEY}
