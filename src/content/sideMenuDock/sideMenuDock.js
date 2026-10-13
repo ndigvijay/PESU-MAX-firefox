@@ -20,6 +20,8 @@ export const DOCK_ELSEWHERE_ATTR = "data-pesu-max-dock-elsewhere";
 
 const LIST_SELECTOR = `${SIDE_MENU_SELECTOR} > ul`;
 const ACTIVE_CLASS = "active";
+const TOP_BAR_SELECTOR = "#pge_menu";
+const TOP_BAR_HEIGHT_VAR = "--pesu-max-topbar-h";
 
 let mounted = null;
 let sectionsValue = null;
@@ -27,10 +29,26 @@ let building = false;
 let scheduled = false;
 let railObserver = null;
 let savedWidths = null;
+let topBarObserver = null;
 
 const menuList = () => document.querySelector(LIST_SELECTOR);
 
 export const isDockOn = () => document.documentElement.hasAttribute(DOCK_ATTR);
+
+// Handle Topbar height
+function syncTopBarHeight() {
+  const topBar = document.querySelector(TOP_BAR_SELECTOR);
+  const height = topBar ? Math.round(topBar.getBoundingClientRect().height) : 0;
+  document.documentElement.style.setProperty(TOP_BAR_HEIGHT_VAR, `${height}px`);
+}
+
+function trackTopBarHeight() {
+  syncTopBarHeight();
+  const topBar = document.querySelector(TOP_BAR_SELECTOR);
+  if (!topBar || topBarObserver) return;
+  topBarObserver = new ResizeObserver(syncTopBarHeight);
+  topBarObserver.observe(topBar);
+}
 
 function labelledButton(iconName, label) {
   const button = document.createElement("button");
@@ -224,6 +242,7 @@ function apply(enabled, value) {
 // Off by default.
 export async function initSideMenuDock() {
   storeMenuSections(readMenuSections()).catch(() => { });
+  trackTopBarHeight();
   const [enabled, value] = await Promise.all([
     load(SIDE_MENU_DOCK_KEY),
     load(SIDE_MENU_DOCK_SECTIONS_KEY)

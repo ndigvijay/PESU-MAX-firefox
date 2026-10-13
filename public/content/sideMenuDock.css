@@ -25,14 +25,13 @@ html[data-pesu-max-dock] body #footer {
   display: none !important;
 }
 
-/* Rail stays put and holds the sections without scrolling. */
 html[data-pesu-max-dock] #pesu-max-dock {
   position: sticky;
   top: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  height: 100vh;
+  height: calc(100vh - var(--pesu-max-topbar-h, 0px));
   padding: 10px 0;
   box-sizing: border-box;
   overflow: hidden;
