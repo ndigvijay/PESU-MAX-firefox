@@ -1,0 +1,177 @@
+[
+  {
+    "version": "4.1.2",
+    "date": "Oct 13, 2026",
+    "feats": [
+      "Privacy policy link on the home page"
+    ],
+    "fixes": [
+      "New method for CSRF token refresh",
+      "Side menu visibility when the top bar is enabled",
+      "Mustard and pink accent colours",
+      "Work Outlines icon"
+    ]
+  },
+  {
+    "version": "4.1.1",
+    "date": "Oct 11, 2026",
+    "feats": [],
+    "fixes": [
+      "PYQs",
+      "Library requests"
+    ]
+  },
+  {
+    "version": "4.1.0",
+    "date": "Oct 10, 2026",
+    "feats": [
+      "Improved side menu",
+      "New badge on settings",
+      "Rearranged settings menu"
+    ],
+    "fixes": [
+      "Touching the screen no longer closes PESU MAX",
+      "Better icons disabled in minimal mode"
+    ]
+  },
+  {
+    "version": "4.0.1",
+    "date": "Oct 7, 2026",
+    "feats": [
+      "Merge QA/QB question papers"
+    ],
+    "fixes": []
+  },
+  {
+    "version": "4.0.0",
+    "date": "Oct 6, 2026",
+    "feats": [
+      "Appearance settings: accent colour, font, icons and redesigned material table",
+      "Timetable icon changed to a clock"
+    ],
+    "fixes": [
+      "Theme applied to hard-coded inline styles",
+      "Theme applied on the login page",
+      "Header divider painted according to theme",
+      "Material legend markup preserved",
+      "Same-width pills",
+      "Back button setting labels"
+    ]
+  },
+  {
+    "version": "3.1.x",
+    "date": "Oct 4 to 5, 2026",
+    "feats": [],
+    "fixes": [
+      "Scrolling in settings",
+      "Large messages split into chunks so the message broker does not break"
+    ]
+  },
+  {
+    "version": "3.0.8 to 3.0.9",
+    "date": "Oct 1 to 2, 2026",
+    "feats": [
+      "Refactored PYQs"
+    ],
+    "fixes": [
+      "Moved to new faculty API endpoints",
+      "Removed popup on the sign-in page"
+    ]
+  },
+  {
+    "version": "3.0.6 to 3.0.7",
+    "date": "Sep 29 to 30, 2026",
+    "feats": [
+      "Back button disabler",
+      "New resources check"
+    ],
+    "fixes": [
+      "Keep alive with CSRF refresh",
+      "Switching back between sidebar pages",
+      "UI tweaks"
+    ]
+  },
+  {
+    "version": "3.0.4 to 3.0.5",
+    "date": "Sep 24 to 27, 2026",
+    "feats": [
+      "Keep me signed in with silent re-login (off by default)",
+      "Remove the PESU Academy top bar from settings",
+      "Side menu collapsed state kept across sessions",
+      "Set a start page",
+      "Re-order material columns"
+    ],
+    "fixes": [
+      "Dialog to refresh an invalid session",
+      "Top bar and side menu state applied before page load",
+      "Menu order save failures surfaced"
+    ]
+  },
+  {
+    "version": "3.0.0 to 3.0.3",
+    "date": "Sep 18 to 23, 2026",
+    "feats": [
+      "Re-order the PESU Academy side menu by drag and drop",
+      "Settings page",
+      "Reworked PYQs with a new tag"
+    ],
+    "fixes": [
+      "Library auth token refresh",
+      "Menu reorder state stabilised",
+      "Fewer library requests and pagination fix",
+      "Success snackbar bugs",
+      "Message for no results"
+    ]
+  },
+  {
+    "version": "2.0.x",
+    "date": "Aug 10 to Sep 18, 2026",
+    "feats": [
+      "Resource refetch",
+      "Parallel PDF conversions with converted file count",
+      "GitHub and Firefox links"
+    ],
+    "fixes": [
+      "New endpoints for downloading slides",
+      "Semester fetch API change",
+      "Attendance API partially failing",
+      "Table UI bugs",
+      "Status line colour and duplicate status line"
+    ]
+  },
+  {
+    "version": "1.0.x",
+    "date": "Mar to Jul, 2026",
+    "feats": [
+      "PYQs with bulk download",
+      "Enhanced search filters for materials and PYQs",
+      "Merge slides",
+      "Show PDF"
+    ],
+    "fixes": [
+      "Library auth",
+      "Doc file recognition",
+      "Pagination",
+      "Navigation",
+      "CSRF token cached to avoid refetching",
+      "Only necessary courses fetched"
+    ]
+  },
+  {
+    "version": "Initial release",
+    "date": "Dec 2025 to Jan 2026",
+    "feats": [
+      "Download all course materials with filters and search",
+      "Attendance calculator",
+      "GPA calculator",
+      "Know Your Faculty"
+    ],
+    "fixes": [
+      "Slides parsing for all class PDFs",
+      "BBA course codes and BCom branch",
+      "Downloads across semesters",
+      "GPA fetch from last semester",
+      "F grade point value"
+    ]
+  }
+]
