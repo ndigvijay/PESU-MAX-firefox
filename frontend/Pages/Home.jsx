@@ -6,6 +6,13 @@ import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../redux/sidebarSlice.js";
 import theme from "../Themes/theme.jsx";
 
+const footerLinkSx = {
+  color: theme.colors.secondary,
+  textDecorationColor: theme.colors.secondary,
+  fontStyle: 'italic',
+  fontSize: '15px'
+};
+
 const Home = () => {
   const dispatch = useDispatch();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -160,24 +167,36 @@ const Home = () => {
             </Button>
           </Box>
         </Box>
-        <Link
-          href="https://pesu-max.onrender.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          underline="hover"
-          variant="body2"
+        <Box
           sx={{
             marginTop: 'auto',
-            alignSelf: 'flex-start',
-            padding: '0 16px 24px',
-            color: theme.colors.secondary,
-            textDecorationColor: theme.colors.secondary,
-            fontStyle: 'italic',
-            fontSize: '15px'
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            padding: '0 16px 24px'
           }}
         >
-          Privacy Policy
-        </Link>
+          <Link
+            href="https://pesu-max.onrender.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="hover"
+            variant="body2"
+            sx={footerLinkSx}
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            component="button"
+            type="button"
+            underline="hover"
+            variant="body2"
+            onClick={() => dispatch(setCurrentPage("changelog"))}
+            sx={footerLinkSx}
+          >
+            Changelog
+          </Link>
+        </Box>
     </Box>
    );
 }

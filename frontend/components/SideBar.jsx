@@ -14,6 +14,7 @@ import PYQ from '../Pages/PYQ.jsx';
 import Settings from '../Pages/Settings.jsx';
 import Appearance from '../Pages/Appearance.jsx';
 import Notifications from '../Pages/Notifications.jsx';
+import Changelog from '../Pages/Changelog.jsx';
 const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
 import SettingsIcon from '@mui/icons-material/Settings';
 import ResourceNotificationsButton from './Notifications/ResourceNotificationsButton.jsx';
@@ -133,6 +134,7 @@ const Sidebar = () => {
                     {currentPage === "settings" && <Settings />}
                     {currentPage === "appearance" && <Appearance />}
                     {currentPage === "notifications" && <Notifications />}
+                    {currentPage === "changelog" && <Changelog />}
                 </Box>
 
 
