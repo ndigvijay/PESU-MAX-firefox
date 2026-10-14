@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Link } from "@mui/material";
 import StarIcon from '@mui/icons-material/Star';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useDispatch } from "react-redux";
@@ -25,7 +25,7 @@ const Home = () => {
   }, []);
 
   return ( 
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         <Box sx={{ 
           display: 'flex',
           flexDirection: 'column',
@@ -160,6 +160,24 @@ const Home = () => {
             </Button>
           </Box>
         </Box>
+        <Link
+          href="https://pesu-max.onrender.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          underline="hover"
+          variant="body2"
+          sx={{
+            marginTop: 'auto',
+            alignSelf: 'flex-start',
+            padding: '0 16px 24px',
+            color: theme.colors.secondary,
+            textDecorationColor: theme.colors.secondary,
+            fontStyle: 'italic',
+            fontSize: '15px'
+          }}
+        >
+          Privacy Policy
+        </Link>
     </Box>
    );
 }
