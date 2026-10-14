@@ -12,13 +12,29 @@ import theme from "../../Themes/theme.jsx";
 import { selectSx } from "../../styles/styles.js";
 import { PYQ_YEAR_OPTIONS } from "./pyqStyles.js";
 
+const CONTROL_HEIGHT = "40px";
+
+const searchFieldSx = {
+  "& .MuiOutlinedInput-root": { ...selectSx, height: CONTROL_HEIGHT }
+};
+
 const pendingFieldSx = {
   "& .MuiOutlinedInput-root": {
     backgroundColor: theme.colors.secondaryLight,
-    "& fieldset": { borderColor: theme.colors.secondary, borderWidth: "2px" },
-    "&:hover fieldset": { borderColor: theme.colors.secondary },
-    "&.Mui-focused fieldset": { borderColor: theme.colors.secondary }
+    "& .MuiOutlinedInput-notchedOutline": { borderColor: theme.colors.secondary, borderWidth: "2px" },
+    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: theme.colors.secondary },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: theme.colors.secondary }
   }
+};
+
+const searchButtonSx = {
+  minWidth: "46px",
+  height: CONTROL_HEIGHT,
+  borderRadius: "8px",
+  boxShadow: "none",
+  backgroundColor: theme.colors.primary,
+  color: "#fff",
+  "&:hover": { backgroundColor: theme.colors.primaryHover, boxShadow: "none" }
 };
 
 const PyqSearchBar = () => {
@@ -54,7 +70,7 @@ const PyqSearchBar = () => {
 
   return (
     <>
-      <Box sx={{ display: "flex", gap: "8px", marginBottom: "10px", alignItems: "stretch" }}>
+      <Box sx={{ display: "flex", gap: "8px", marginBottom: "10px", alignItems: "center" }}>
         <TextField
           fullWidth
           size="small"
@@ -62,26 +78,18 @@ const PyqSearchBar = () => {
           value={searchQuery}
           onChange={(event) => dispatch(setSearchQuery(event.target.value))}
           onKeyDown={handleSearchKey}
-          sx={hasPendingSearch ? pendingFieldSx : undefined}
+          sx={[searchFieldSx, hasPendingSearch && pendingFieldSx]}
         />
         <FormControl
           size="small"
-          sx={{
-            minWidth: "108px",
-            ...(hasPendingSearch ? {
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: theme.colors.secondaryLight,
-                "& fieldset": { borderColor: theme.colors.secondary, borderWidth: "2px" }
-              }
-            } : {})
-          }}
+          sx={[{ minWidth: "108px", flexShrink: 0 }, hasPendingSearch && pendingFieldSx]}
         >
           <Select
             value={selectedYear}
             displayEmpty
             inputProps={{ "aria-label": "PYQ year" }}
             onChange={(event) => dispatch(setSelectedYear(event.target.value))}
-            sx={selectSx}
+            sx={{ ...selectSx, height: CONTROL_HEIGHT }}
           >
             {PYQ_YEAR_OPTIONS.map((option) => (
               <MenuItem key={option.label} value={option.value}>
@@ -95,12 +103,7 @@ const PyqSearchBar = () => {
           aria-label="Search PYQs"
           onClick={handleSearch}
           disabled={searchLoading || !searchQuery.trim()}
-          sx={{
-            minWidth: "46px",
-            backgroundColor: theme.colors.primary,
-            color: "#fff",
-            "&:hover": { backgroundColor: theme.colors.primaryHover }
-          }}
+          sx={searchButtonSx}
         >
           <SearchIcon fontSize="small" />
         </Button>
