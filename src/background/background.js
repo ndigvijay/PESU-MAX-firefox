@@ -12,7 +12,7 @@ import {
   downloadLibraryPyqsZip,
   getPyqCourseCatalog,
   loadMoreLibraryPyqs,
-  loginLibraryWithCredentials,
+  openLibraryPyq,
   searchLibraryPyqs
 } from "../services/libraryPyq.js";
 
@@ -145,16 +145,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 
-  if (request.action === "libraryLogin") {
-    loginLibraryWithCredentials({
-      encodedMemberId: request.encodedMemberId,
-      encodedPassword: request.encodedPassword
-    })
-      .then((data) => sendResponse({ data }))
-      .catch((error) => sendResponse({ error: error.message }));
-    return true;
-  }
-
   if (request.action === "getPYQCourseCatalog") {
     getPyqCourseCatalog()
       .then((data) => sendResponse({ data }))
@@ -165,9 +155,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "searchLibraryPyqs") {
     searchLibraryPyqs({
       query: request.query,
-      year: request.year,
-      encodedMemberId: request.encodedMemberId,
-      encodedPassword: request.encodedPassword
+      year: request.year
     })
       .then((data) => sendResponse({ data }))
       .catch((error) => sendResponse({ error: error.message }));
@@ -178,9 +166,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     loadMoreLibraryPyqs({
       query: request.query,
       year: request.year,
-      cursor: request.cursor,
-      encodedMemberId: request.encodedMemberId,
-      encodedPassword: request.encodedPassword
+      cursor: request.cursor
     })
       .then((data) => sendResponse({ data }))
       .catch((error) => sendResponse({ error: error.message }));
@@ -188,10 +174,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === "downloadLibraryPyq") {
-    downloadLibraryPyq({
-      downloadPath: request.downloadPath,
-      title: request.title
-    })
+    downloadLibraryPyq(request.paper || {})
+      .then((data) => sendResponse({ data }))
+      .catch((error) => sendResponse({ error: error.message }));
+    return true;
+  }
+
+  if (request.action === "openLibraryPyq") {
+    openLibraryPyq(request.paper || {})
       .then((data) => sendResponse({ data }))
       .catch((error) => sendResponse({ error: error.message }));
     return true;

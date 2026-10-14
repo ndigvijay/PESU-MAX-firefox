@@ -4,6 +4,12 @@ import { save, load } from "../utils/storage.js";
 import { parallelBatch } from "../helpers/MiscControllers.js";
 import { probeSession } from "../helpers/academyAuth.js";
 import { checkCurrentSemesterResources, isResourceCheckDue, markResourceCheckStarted } from "./resourceCheck.js";
+import {
+  LIBRARY_PAPER_CHECK_ALARM,
+  checkLibraryPaperLinks,
+  isFirstLibraryPaperCheckPending,
+  scheduleLibraryPaperCheck
+} from "./libraryPaperCheck.js";
 import { RESOURCE_CHECK_RUNNING_KEY } from "../utils/storageKeys.js";
 
 // Save user profile data in chrome ext storage
@@ -387,6 +393,11 @@ async function syncMissingData() {
         chrome.storage.local.set({ fetchStatus: { gpaData: false } });
       });
     }
+
+    if (pesuData?.subjects && await isFirstLibraryPaperCheckPending()) {
+      checkLibraryPaperLinks()
+        .catch((err) => console.error("Error checking library paper links:", err));
+    }
   }
 }
 
@@ -394,10 +405,12 @@ async function syncMissingData() {
 export function initializeDataSync() {
   chrome.runtime.onInstalled.addListener(() => {
     chrome.alarms.create("syncData", { periodInMinutes: 1 });
+    scheduleLibraryPaperCheck();
   });
 
   chrome.runtime.onStartup.addListener(() => {
     chrome.alarms.create("syncData", { periodInMinutes: 1 });
+    scheduleLibraryPaperCheck();
   });
 
   // Handle alarm - runs every 1 minute
@@ -405,6 +418,11 @@ export function initializeDataSync() {
     if (alarm.name === "syncData") {
       console.log("Syncing data");
       syncMissingData();
+    }
+
+    if (alarm.name === LIBRARY_PAPER_CHECK_ALARM) {
+      checkLibraryPaperLinks()
+        .catch((err) => console.error("Error checking library paper links:", err));
     }
   });
 

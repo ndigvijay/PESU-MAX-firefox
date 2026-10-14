@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   downloadPyq,
   downloadSelectedPyqsZip,
+  openPyq,
   searchPyqs,
   selectCanFilterYearLocally,
   selectPyqPage,
@@ -56,6 +57,7 @@ const ResultsStep = () => {
     searchError,
     loadMoreError,
     downloadingItemId,
+    openingItemId,
     bulkDownloading,
     downloadError,
     bulkDownloadError
@@ -65,7 +67,7 @@ const ResultsStep = () => {
   const canFilterYearLocally = useSelector(selectCanFilterYearLocally);
 
   const selectableResults = useMemo(
-    () => visibleResults.filter((item) => item.downloadPath),
+    () => visibleResults.filter((item) => item.canDownload),
     [visibleResults]
   );
 
@@ -101,13 +103,11 @@ const ResultsStep = () => {
     : `${loadedResults.length} of ${totalResults} results for "${lastQuery}"${yearSuffix}`;
 
   const handleDownload = (item) => {
-    dispatch(
-      downloadPyq({
-        itemId: item.id,
-        downloadPath: item.downloadPath,
-        title: item.title
-      })
-    );
+    dispatch(downloadPyq(item));
+  };
+
+  const handleOpen = (item) => {
+    dispatch(openPyq(item));
   };
 
   const handleToggleSelectAll = () => {
@@ -124,13 +124,7 @@ const ResultsStep = () => {
   };
 
   const handleBulkDownload = () => {
-    const selectedItems = selectableResults
-      .filter((item) => selectedPyqs[item.id])
-      .map((item) => ({
-        id: item.id,
-        title: item.title,
-        downloadPath: item.downloadPath
-      }));
+    const selectedItems = selectableResults.filter((item) => selectedPyqs[item.id]);
 
     if (selectedItems.length === 0) {
       return;
@@ -206,8 +200,10 @@ const ResultsStep = () => {
             item={item}
             selected={Boolean(selectedPyqs[item.id])}
             downloading={downloadingItemId === item.id}
+            opening={openingItemId === item.id}
             busy={busy}
             onToggleSelection={(itemId) => dispatch(togglePyqSelection(itemId))}
+            onOpen={handleOpen}
             onDownload={handleDownload}
           />
         ))}

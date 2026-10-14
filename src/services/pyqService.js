@@ -16,44 +16,38 @@ function sendRuntimeMessage(message) {
   });
 }
 
-export const initializeLibraryLogin = ({ encodedMemberId, encodedPassword }) => {
-  return sendRuntimeMessage({
-    action: "libraryLogin",
-    encodedMemberId,
-    encodedPassword
-  });
-};
-
 export const fetchPyqCatalog = () => {
   return sendRuntimeMessage({ action: "getPYQCourseCatalog" });
 };
 
-export const searchCoursePyqs = ({ query, year, encodedMemberId, encodedPassword }) => {
+export const searchCoursePyqs = ({ query, year }) => {
   return sendRuntimeMessage({
     action: "searchLibraryPyqs",
     query,
-    year,
-    encodedMemberId,
-    encodedPassword
+    year
   });
 };
 
-export const loadMoreCoursePyqs = ({ query, year, cursor, encodedMemberId, encodedPassword }) => {
+export const loadMoreCoursePyqs = ({ query, year, cursor }) => {
   return sendRuntimeMessage({
     action: "loadMoreLibraryPyqs",
     query,
     year,
-    cursor,
-    encodedMemberId,
-    encodedPassword
+    cursor
   });
 };
 
-export const downloadCoursePyq = ({ downloadPath, title }) => {
+export const downloadCoursePyq = (paper) => {
   return sendRuntimeMessage({
     action: "downloadLibraryPyq",
-    downloadPath,
-    title
+    paper
+  });
+};
+
+export const openCoursePyq = (paper) => {
+  return sendRuntimeMessage({
+    action: "openLibraryPyq",
+    paper
   });
 };
 

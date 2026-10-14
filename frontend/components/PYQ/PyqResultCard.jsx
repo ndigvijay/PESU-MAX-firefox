@@ -35,7 +35,7 @@ const downloadButtonSx = {
   "&:hover": { backgroundColor: theme.colors.secondaryHover }
 };
 
-const PyqResultCard = ({ item, selected, downloading, busy, onToggleSelection, onDownload }) => (
+const PyqResultCard = ({ item, selected, downloading, opening, busy, onToggleSelection, onOpen, onDownload }) => (
   <Paper elevation={0} sx={rowCardSx}>
     <Box sx={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
       <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -59,25 +59,26 @@ const PyqResultCard = ({ item, selected, downloading, busy, onToggleSelection, o
         <Checkbox
           size="small"
           checked={selected}
-          disabled={!item.downloadPath || busy}
+          disabled={!item.canDownload || busy}
           onChange={() => onToggleSelection(item.id)}
           sx={{ ...checkboxSx, padding: "2px" }}
         />
 
         <Button
-          component="a"
-          href={item.downloadUrl}
-          target="_blank"
-          rel="noopener noreferrer"
           variant="contained"
           size="small"
-          aria-label="View PYQ"
-          disabled={!item.downloadUrl}
+          aria-label={opening ? "Opening PYQ" : "View PYQ"}
+          onClick={() => onOpen(item)}
+          disabled={!item.canDownload || opening}
           disableRipple
           disableElevation
           sx={viewButtonSx}
         >
-          <VisibilityIcon fontSize="small" sx={{ color: "#fff" }} />
+          {opening ? (
+            <CircularProgress size={16} sx={{ color: "#fff" }} />
+          ) : (
+            <VisibilityIcon fontSize="small" sx={{ color: "#fff" }} />
+          )}
         </Button>
 
         <Button
@@ -85,7 +86,7 @@ const PyqResultCard = ({ item, selected, downloading, busy, onToggleSelection, o
           size="small"
           aria-label={downloading ? "Downloading PYQ" : "Download PYQ"}
           onClick={() => onDownload(item)}
-          disabled={!item.downloadPath || downloading || busy}
+          disabled={!item.canDownload || downloading || busy}
           sx={downloadButtonSx}
         >
           {downloading ? (
