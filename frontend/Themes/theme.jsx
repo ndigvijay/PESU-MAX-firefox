@@ -27,6 +27,7 @@ const theme = {
     textSoft: token("text-soft"),
     textFaint: token("text-faint"),
     textDisabled: token("text-disabled"),
+    icon: token("icon"),
     focusRing: token("focus-ring"),
     success: token("success"),
     successTint: token("success-tint"),

@@ -18,7 +18,7 @@ const ThemeModeButton = () => {
       aria-label={label}
       title={label}
       size="large"
-      sx={{ color: theme.colors.text }}
+      sx={{ color: theme.colors.icon }}
     >
       {darkOn ? <LightModeIcon fontSize="large" /> : <DarkModeIcon fontSize="large" />}
     </IconButton>

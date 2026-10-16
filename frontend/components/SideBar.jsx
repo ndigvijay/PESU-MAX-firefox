@@ -84,7 +84,7 @@ const Sidebar = () => {
                     <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
                         <ThemeModeButton />
                         <ResourceNotificationsButton />
-                        <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: theme.colors.text }}>
+                        <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: theme.colors.secondary }}>
                             <Badge badgeContent="NEW" overlap="circular" sx={newBadgeSx}>
                                 <SettingsIcon fontSize="large" />
                             </Badge>

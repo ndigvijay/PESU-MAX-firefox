@@ -20,6 +20,7 @@
   --pesu-max-ui-text-soft: #6f6f6f;
   --pesu-max-ui-text-faint: #767676;
   --pesu-max-ui-text-disabled: #6a6a6a;
+  --pesu-max-ui-icon: #333333;
   --pesu-max-ui-focus-ring: #233a76;
 
   /* Brand and solid fills */
@@ -122,6 +123,7 @@ html[data-pesu-max-dark] {
   --pesu-max-ui-text-soft: #c1c1c1;
   --pesu-max-ui-text-faint: #b0b0b0;
   --pesu-max-ui-text-disabled: #b6b6b6;
+  --pesu-max-ui-icon: #c1c1c1;
   --pesu-max-ui-focus-ring: #8ab4f8;
 
   --pesu-max-ui-primary: #8ab4f8;
