@@ -9,7 +9,12 @@ import SettingsSelectRow from "../components/Settings/SettingsSelectRow.jsx";
 import SettingsToggleRow from "../components/Settings/SettingsToggleRow.jsx";
 import useStoredSetting from "../components/Settings/useStoredSetting.js";
 import { settingsHintSx } from "../styles/styles.js";
-import { DARK_ACCENT_OPTIONS, FONT_OPTIONS, THEME_OPTIONS } from "../../src/content/theme";
+import {
+  DARK_ACCENT_OPTIONS,
+  DEFAULT_DARK_ACCENT,
+  FONT_OPTIONS,
+  THEME_OPTIONS,
+} from "../../src/content/theme";
 import {
   MATERIAL_TABLE_KEY,
   MENU_ICONS_KEY,
@@ -52,16 +57,12 @@ const Appearance = () => {
       </Box>
 
       <Stack spacing="8px">
-        <SettingsToggleRow
-          storageKey={THEME_DARK_KEY}
-          title="Dark mode"
-        />
-
         {darkOn ? (
           <SettingsAccentRow
             storageKey={THEME_DARK_ACCENT_KEY}
             title="Dark Mode Accent"
             options={DARK_ACCENT_OPTIONS}
+            fallback={DEFAULT_DARK_ACCENT}
             tone="dark"
             columns={4}
           />

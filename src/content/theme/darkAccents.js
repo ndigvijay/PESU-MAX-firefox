@@ -1,11 +1,7 @@
-export const DEFAULT_DARK_ACCENT = "graphite";
+export const DEFAULT_DARK_ACCENT = "frost";
 
 export const DARK_ACCENT_OPTIONS = [
-  {
-    value: DEFAULT_DARK_ACCENT,
-    label: "Graphite",
-    swatch: "var(--pesu-max-dark-accent-graphite)"
-  },
+  { value: "white", label: "White", swatch: "var(--pesu-max-dark-accent-white)" },
   { value: "cherry", label: "Cherry", swatch: "var(--pesu-max-dark-accent-cherry)" },
   { value: "ember", label: "Ember", swatch: "var(--pesu-max-dark-accent-ember)" },
   { value: "sand", label: "Sand", swatch: "var(--pesu-max-dark-accent-sand)" },

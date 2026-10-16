@@ -122,11 +122,11 @@ html[data-pesu-max-dark] {
   --pesu-max-ui-text-soft: #c1c1c1;
   --pesu-max-ui-text-faint: #b0b0b0;
   --pesu-max-ui-text-disabled: #b6b6b6;
-  --pesu-max-ui-focus-ring: #e5e5e5;
+  --pesu-max-ui-focus-ring: #8ab4f8;
 
-  --pesu-max-ui-primary: #dcdcdc;
-  --pesu-max-ui-primary-hover: #ededed;
-  --pesu-max-ui-primary-tint: rgba(255, 255, 255, 0.12);
+  --pesu-max-ui-primary: #8ab4f8;
+  --pesu-max-ui-primary-hover: #9fc2f9;
+  --pesu-max-ui-primary-tint: rgba(138, 180, 248, 0.16);
   --pesu-max-ui-solid: #333333;
   --pesu-max-ui-solid-hover: #3e3e3e;
   --pesu-max-ui-on-solid: #dadada;
@@ -184,13 +184,13 @@ html[data-pesu-max-dark] {
   --pesu-max-dock-on-bright: #f1f1f1;
   --pesu-max-dock-line: rgba(255, 255, 255, 0.18);
   --pesu-max-dock-line-strong: rgba(255, 255, 255, 0.5);
-  --pesu-max-dock-outline: var(--pesu-max-dock-line);
+  --pesu-max-dock-outline: rgba(138, 180, 248, 0.6);
   --pesu-max-dock-hover: rgba(255, 255, 255, 0.1);
   --pesu-max-dock-focus: rgba(255, 255, 255, 0.75);
   --pesu-max-dock-scrim: rgba(0, 0, 0, 0.5);
   --pesu-max-dock-panel-shadow: 0 22px 56px rgba(0, 0, 0, 0.5);
   --pesu-max-dock-tail-shadow: -6px 6px 12px rgba(0, 0, 0, 0.35);
-  --pesu-max-material-accent: #dadada;
+  --pesu-max-material-accent: #8ab4f8;
 
   --pesu-max-mark-plate: #1e1e1e;
   --pesu-max-mark-ring: #e5e5e5;
@@ -208,10 +208,10 @@ html[data-pesu-max-dark] {
   --pesu-max-text: #dadada;
   --pesu-max-text-soft: #c9c9c9;
   --pesu-max-text-mute: #c1c1c1;
-  --pesu-max-accent: #333333;
-  --pesu-max-accent-bright: #dadada;
-  --pesu-max-accent-link: #ededed;
-  --pesu-max-accent-link-hover: #f5f5f5;
+  --pesu-max-accent: #3a4557;
+  --pesu-max-accent-bright: #8ab4f8;
+  --pesu-max-accent-link: #a4c4fa;
+  --pesu-max-accent-link-hover: #bbd4fb;
   --pesu-max-on-accent: #1e1e1e;
   --pesu-max-ok-bg: #3c473f;
   --pesu-max-ok-line: rgba(163, 190, 140, 0.45);
@@ -224,13 +224,13 @@ html[data-pesu-max-dark] {
 
 /* Dock */
 html[data-pesu-max-dark][data-pesu-max-dock] {
-  --pesu-max-dock-active-fill: #3e3e3e;
-  --pesu-max-dock-marker: #dadada;
+  --pesu-max-dock-active-fill: #414e64;
+  --pesu-max-dock-marker: #8ab4f8;
 }
 
-/* Dark accents. Default: Graphite. */
+/* Dark accents. Default: Frost. */
 :root {
-  --pesu-max-dark-accent-graphite: #dadada;
+  --pesu-max-dark-accent-white: #dadada;
   --pesu-max-dark-accent-cherry: #f28b82;
   --pesu-max-dark-accent-ember: #f2a97a;
   --pesu-max-dark-accent-sand: #dcc19c;
@@ -242,6 +242,22 @@ html[data-pesu-max-dark][data-pesu-max-dock] {
   --pesu-max-dark-accent-violet: #c0a8f5;
   --pesu-max-dark-accent-orchid: #d9a8f0;
   --pesu-max-dark-accent-rose: #f29bad;
+}
+
+/* White */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="white"] {
+  --pesu-max-ui-primary: #dcdcdc;
+  --pesu-max-ui-primary-hover: #ededed;
+  --pesu-max-ui-primary-tint: rgba(255, 255, 255, 0.12);
+  --pesu-max-ui-focus-ring: #e5e5e5;
+  --pesu-max-accent: #3e3e3e;
+  --pesu-max-accent-bright: #dadada;
+  --pesu-max-accent-link: #ededed;
+  --pesu-max-accent-link-hover: #f5f5f5;
+  --pesu-max-material-accent: #dadada;
+  --pesu-max-dock-active-fill: #3e3e3e;
+  --pesu-max-dock-marker: #dadada;
+  --pesu-max-dock-outline: var(--pesu-max-dock-line);
 }
 
 /* Cherry */
@@ -354,22 +370,6 @@ html[data-pesu-max-dark][data-pesu-max-dark-accent="sky"] {
   --pesu-max-dock-active-fill: #415860;
   --pesu-max-dock-marker: var(--pesu-max-dark-accent-sky);
   --pesu-max-dock-outline: rgba(138, 212, 236, 0.6);
-}
-
-/* Frost */
-html[data-pesu-max-dark][data-pesu-max-dark-accent="frost"] {
-  --pesu-max-ui-primary: var(--pesu-max-dark-accent-frost);
-  --pesu-max-ui-primary-hover: #9fc2f9;
-  --pesu-max-ui-primary-tint: rgba(138, 180, 248, 0.16);
-  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-frost);
-  --pesu-max-accent: #3a4557;
-  --pesu-max-accent-bright: var(--pesu-max-dark-accent-frost);
-  --pesu-max-accent-link: #a4c4fa;
-  --pesu-max-accent-link-hover: #bbd4fb;
-  --pesu-max-material-accent: var(--pesu-max-dark-accent-frost);
-  --pesu-max-dock-active-fill: #414e64;
-  --pesu-max-dock-marker: var(--pesu-max-dark-accent-frost);
-  --pesu-max-dock-outline: rgba(138, 180, 248, 0.6);
 }
 
 /* Violet */

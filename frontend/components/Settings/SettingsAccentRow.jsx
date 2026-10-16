@@ -71,12 +71,13 @@ const dotSx = (option, selected) => ({
 });
 
 // Accent row: "grid of dots" picker
-const SettingsAccentRow = ({ storageKey, title, description, options, tone, columns = 6 }) => {
-  const setting = useStoredSetting(storageKey, options[0].value, title);
+const SettingsAccentRow = ({ storageKey, title, description, options, fallback, tone, columns = 6 }) => {
+  const initial = fallback || options[0].value;
+  const setting = useStoredSetting(storageKey, initial, title);
   const [anchor, setAnchor] = useState(null);
   const selected = options.some((option) => option.value === setting.value)
     ? setting.value
-    : options[0].value;
+    : initial;
   const current = options.find((option) => option.value === selected) || options[0];
 
 
