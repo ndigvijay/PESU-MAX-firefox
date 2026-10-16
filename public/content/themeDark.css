@@ -1,0 +1,1138 @@
+/* Page roots */
+html[data-pesu-max-dark],
+html[data-pesu-max-dark] body,
+html[data-pesu-max-dark] .content-wrapper,
+html[data-pesu-max-dark] .content-right,
+html[data-pesu-max-dark] .content-right-wrapper,
+html[data-pesu-max-dark] #footer {
+  background-color: var(--pesu-max-bg) !important;
+}
+
+html[data-pesu-max-dark] body,
+html[data-pesu-max-dark] .content-wrapper,
+html[data-pesu-max-dark] .content-right,
+html[data-pesu-max-dark] .content-right-wrapper,
+html[data-pesu-max-dark] #footer {
+  color: var(--pesu-max-text) !important;
+}
+
+/* Set a readable default across the page; semantic colours below take precedence. */
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .menu-left, #footer,
+         .modal, .modal-content, .dropdown-menu, .popover, .tooltip, .fc-widget-content)
+  :where(div, span, p, td, th, li, dt, dd, label, b, strong, i, em, font, small, h1, h2, h3, h4, h5,
+         h6, a, button, legend, caption, blockquote, cite, time, summary, address, pre, code) {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .fcltlist {
+  color: var(--pesu-max-text-soft) !important;
+}
+
+html[data-pesu-max-dark] .text-muted,
+html[data-pesu-max-dark] .lbl-title-light,
+html[data-pesu-max-dark] .published-date,
+html[data-pesu-max-dark] .help-block,
+html[data-pesu-max-dark] small,
+html[data-pesu-max-dark] .small {
+  color: var(--pesu-max-text-mute) !important;
+}
+
+/* Links */
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  a:where(:not(.btn, .lefttogglemenulink)) {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  a:where(:not(.btn)):hover,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  a:where(:not(.btn)):focus {
+  color: var(--pesu-max-accent-link-hover) !important;
+}
+
+/* Panels, cards and wells */
+html[data-pesu-max-dark] .panel,
+html[data-pesu-max-dark] .panel-default,
+html[data-pesu-max-dark] .panel-heading,
+html[data-pesu-max-dark] .panel-body,
+html[data-pesu-max-dark] .panel-footer,
+html[data-pesu-max-dark] .bg-white,
+html[data-pesu-max-dark] .elem-info-wrapper,
+html[data-pesu-max-dark] .dashboard-info-bar,
+html[data-pesu-max-dark] .well,
+html[data-pesu-max-dark] .list-group-item,
+html[data-pesu-max-dark] .thumbnail,
+html[data-pesu-max-dark] .panel-std-generic,
+html[data-pesu-max-dark] .events-announcements,
+html[data-pesu-max-dark] .event-scheduled-info {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .panel-heading.flat-panel,
+html[data-pesu-max-dark] .panel-heading,
+html[data-pesu-max-dark] .list-group-item:nth-child(even) {
+  background-color: var(--pesu-max-surface-alt) !important;
+}
+
+/* Cards lift by surface */
+html[data-pesu-max-dark] .elem-info-wrapper,
+html[data-pesu-max-dark] .dashboard-info-bar,
+html[data-pesu-max-dark] .panel,
+html[data-pesu-max-dark] .well,
+html[data-pesu-max-dark] .thumbnail {
+  box-shadow: none !important;
+}
+
+/* Side menu */
+html[data-pesu-max-dark] .menu-left {
+  background-color: var(--pesu-max-surface) !important;
+}
+
+html[data-pesu-max-dark] .menu-left ul li a,
+html[data-pesu-max-dark] .menu-left ul li span,
+html[data-pesu-max-dark] .menu-left .menu-name {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .menu-left ul li:hover,
+html[data-pesu-max-dark] .menu-left ul li.active {
+  background-color: var(--pesu-max-raised) !important;
+}
+
+html[data-pesu-max-dark] .menu-left ul li:hover a,
+html[data-pesu-max-dark] .menu-left ul li:hover span,
+html[data-pesu-max-dark] .menu-left ul li.active a,
+html[data-pesu-max-dark] .menu-left ul li.active span {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] #pge_menu a,
+html[data-pesu-max-dark] a.lefttogglemenulink,
+html[data-pesu-max-dark] .highlight_snackbar a {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+/* Top bar */
+html[data-pesu-max-dark] .navbar,
+html[data-pesu-max-dark] .navbar-default,
+html[data-pesu-max-dark] .navbar-collapse,
+html[data-pesu-max-dark] .navbar-nav,
+html[data-pesu-max-dark] .navbar-form,
+html[data-pesu-max-dark] .navbar-header {
+  background-color: var(--pesu-max-surface) !important;
+  background-image: none !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .navbar :where(span, a, b, strong, font, li, ul, label, p) {
+  background-color: transparent !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .navbar .dropdown-menu {
+  background-color: var(--pesu-max-surface) !important;
+}
+
+html[data-pesu-max-dark] .navbar .dropdown-menu :where(a, span, b, strong) {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .navbar .dropdown-menu :where(a):hover,
+html[data-pesu-max-dark] .navbar .dropdown-menu > .active > a {
+  background-color: var(--pesu-max-raised) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .navbar .icon-bar {
+  background-color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .navbar-toggle {
+  border-color: var(--pesu-max-line-control) !important;
+}
+
+/* Rich text pasted into notices carries its own white highlight wrappers */
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(
+    [style*="background-color:#fff" i],
+    [style*="background-color: #fff" i],
+    [style*="background-color:white" i],
+    [style*="background-color: white" i],
+    [style*="background-color:rgb(255, 255, 255)" i],
+    [style*="background-color: rgb(255, 255, 255)" i],
+    [style*="background:#fff" i],
+    [style*="background: #fff" i],
+    [style*="background:white" i],
+    [style*="background: white" i]
+  ) {
+  background-color: transparent !important;
+}
+
+/* Dashboard bars, pills and placeholders */
+html[data-pesu-max-dark] .dark-text,
+html[data-pesu-max-dark] .f-size-semi-big,
+html[data-pesu-max-dark] .f-size-big,
+html[data-pesu-max-dark] .sbj_row,
+html[data-pesu-max-dark] .sbj_row span {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .profile-pic {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text-mute) !important;
+}
+
+html[data-pesu-max-dark] button.accordion,
+html[data-pesu-max-dark] .accordion {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .panel-body .accordion,
+html[data-pesu-max-dark] .panel-body button.accordion {
+  background-color: var(--pesu-max-surface-alt) !important;
+}
+
+html[data-pesu-max-dark] .tabs > button,
+html[data-pesu-max-dark] .online-payment-container button,
+html[data-pesu-max-dark] .tab-wrapper button {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .event-scheduled-info,
+html[data-pesu-max-dark] .event-scheduled-info > div,
+html[data-pesu-max-dark] .event-scheduled-info > div:nth-child(even),
+html[data-pesu-max-dark] .event-scheduled-info > div:nth-child(odd) {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+/* Tables */
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .table,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  table {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  th {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .menteepanel,
+html[data-pesu-max-dark] .form-group,
+html[data-pesu-max-dark] .content-right td,
+html[data-pesu-max-dark] .content-right table {
+  background-color: transparent !important;
+}
+
+html[data-pesu-max-dark] .fc-list-table td,
+html[data-pesu-max-dark] .fc-list-item td,
+html[data-pesu-max-dark] .fc-list-item-time,
+html[data-pesu-max-dark] .fc-list-item-title {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] .table-blue thead,
+html[data-pesu-max-dark] .table:not(.table-bordered) thead {
+  background-color: var(--pesu-max-accent) !important;
+}
+
+html[data-pesu-max-dark] .table > thead > tr > th,
+html[data-pesu-max-dark] .table-bordered > thead > tr > th,
+html[data-pesu-max-dark] .table-bordered > thead > tr > td {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body .table:not(.table-bordered) thead th + th {
+  border-left-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] .table > tbody > tr > td,
+html[data-pesu-max-dark] .table > tbody > tr > th,
+html[data-pesu-max-dark] .table > tfoot > tr > td,
+html[data-pesu-max-dark] .table-bordered {
+  border-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] .table-striped > tbody > tr:nth-of-type(odd),
+html[data-pesu-max-dark] .table-hover > tbody > tr:hover,
+html[data-pesu-max-dark] .dataTables_wrapper .odd {
+  background-color: var(--pesu-max-surface-alt) !important;
+}
+
+html[data-pesu-max-dark] .table-hover > tbody > tr:hover > td,
+html[data-pesu-max-dark] .table-hover > tbody > tr:hover > th {
+  color: var(--pesu-max-text) !important;
+}
+
+/* Forms */
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .form-control,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(input, select, textarea):not([type="checkbox"], [type="radio"], [type="submit"],
+         [type="button"], [type="hidden"], [type="file"]),
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .input-group-addon,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .bootstrap-select > .dropdown-toggle {
+  background-color: var(--pesu-max-field) !important;
+  border-color: var(--pesu-max-line-control) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(input, textarea)::placeholder {
+  color: var(--pesu-max-text-mute) !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .form-control:focus,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(input, select, textarea):focus {
+  border-color: var(--pesu-max-accent-bright) !important;
+  box-shadow: none !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .form-control[disabled],
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .form-control[readonly],
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  fieldset[disabled] .form-control,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(input, select, textarea)[disabled] {
+  background-color: var(--pesu-max-raised) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text-mute) !important;
+  opacity: 1 !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .has-error .form-control,
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  .has-error .control-label {
+  border-color: var(--pesu-max-danger-text) !important;
+  color: var(--pesu-max-danger-text) !important;
+}
+
+/* Buttons, tabs and pagination filled with the accent need dark labels */
+html[data-pesu-max-dark] .btn-bg-blue,
+html[data-pesu-max-dark] .btn-primary,
+html[data-pesu-max-dark] body .nav-tabs > li.active > a,
+html[data-pesu-max-dark] body .nav-tabs-responsive > li.active > a,
+html[data-pesu-max-dark] body ul.nav-tabs-white-bg > li.active > a,
+html[data-pesu-max-dark] .pagination > .active > a,
+html[data-pesu-max-dark] .pagination > .active > span,
+html[data-pesu-max-dark] .label,
+html[data-pesu-max-dark] .badge,
+html[data-pesu-max-dark] .highlighted-info,
+html[data-pesu-max-dark] .collapse-menu,
+html[data-pesu-max-dark] .progress-bar,
+html[data-pesu-max-dark] .highlighted-info a,
+html[data-pesu-max-dark] .collapse-menu a {
+  color: var(--pesu-max-on-accent) !important;
+}
+
+html[data-pesu-max-dark] .btn-primary,
+html[data-pesu-max-dark] .btn-bg-blue,
+html[data-pesu-max-dark] .progress-bar,
+html[data-pesu-max-dark] .collapse-menu,
+html[data-pesu-max-dark] .highlighted-info,
+html[data-pesu-max-dark] .event-scheduled-info > div:nth-child(even) {
+  background-color: var(--pesu-max-accent-bright) !important;
+  border-color: var(--pesu-max-accent-bright) !important;
+}
+
+html[data-pesu-max-dark] .btn-default {
+  background-color: var(--pesu-max-raised) !important;
+  border-color: var(--pesu-max-line-control) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body .btn-default:hover,
+html[data-pesu-max-dark] body .btn-default:focus,
+html[data-pesu-max-dark] body .btn-default:active,
+html[data-pesu-max-dark] body .btn-default.active,
+html[data-pesu-max-dark] body .pagination > li > a:hover,
+html[data-pesu-max-dark] body .pagination > li > a:focus,
+html[data-pesu-max-dark] body .pagination > li > span:hover,
+html[data-pesu-max-dark] body .pagination > li > span:focus,
+html[data-pesu-max-dark] body .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+html[data-pesu-max-dark] body .dataTables_wrapper .dataTables_paginate .paginate_button:focus {
+  background-color: var(--pesu-max-raised) !important;
+  border-color: var(--pesu-max-line-control) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .btn-bg-white {
+  background-color: transparent !important;
+  border-color: var(--pesu-max-accent-bright) !important;
+  color: var(--pesu-max-accent-bright) !important;
+}
+
+html[data-pesu-max-dark] .btn-bg-white:focus,
+html[data-pesu-max-dark] .btn-bg-white:hover {
+  background-color: var(--pesu-max-accent-bright) !important;
+  color: var(--pesu-max-on-accent) !important;
+}
+
+html[data-pesu-max-dark] .btn-link {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+/* Tab strips sit inside the container, and each tab reads as a bordered cell */
+html[data-pesu-max-dark] .nav-tabs,
+html[data-pesu-max-dark] .nav-tabs > li,
+html[data-pesu-max-dark] .nav-tabs > li > a,
+html[data-pesu-max-dark] .nav-tabs-responsive > li > a {
+  background-color: transparent !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text-soft) !important;
+}
+
+html[data-pesu-max-dark] .nav-tabs > li > a:hover,
+html[data-pesu-max-dark] .nav-tabs > li > a:focus {
+  background-color: var(--pesu-max-surface-alt) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body .nav-tabs > li.active > a,
+html[data-pesu-max-dark] body .nav-tabs-responsive > li.active > a {
+  background-color: var(--pesu-max-accent-bright) !important;
+  border-color: var(--pesu-max-accent-bright) !important;
+  color: var(--pesu-max-on-accent) !important;
+}
+
+/* Outlined strips keep a transparent label and a bottom rule instead */
+html[data-pesu-max-dark] body .nav-tabs-white-bg > li.active,
+html[data-pesu-max-dark] body #StudentProfilePESUContent .nav-tabs-white-bg > li.active,
+html[data-pesu-max-dark] body #courseContentCategory > li.active,
+html[data-pesu-max-dark] body #courselistunit > li.active {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+html[data-pesu-max-dark] body .nav-tabs-white-bg,
+html[data-pesu-max-dark] body .nav-tabs-white-bg.nav-tabs-responsive,
+html[data-pesu-max-dark] body .course-info-content > .nav-tabs {
+  background-color: var(--pesu-max-surface) !important;
+  border-bottom-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] body .nav-tabs-white-bg > li {
+  margin-right: -1px !important;
+}
+
+html[data-pesu-max-dark] body .nav-tabs-white-bg > li > a,
+html[data-pesu-max-dark] body .nav-tabs-white-bg > li > a:active {
+  background-color: transparent !important;
+  border: 1px solid var(--pesu-max-line) !important;
+  color: var(--pesu-max-text-soft) !important;
+}
+
+html[data-pesu-max-dark] body .nav-tabs-white-bg > li > a:hover,
+html[data-pesu-max-dark] body .nav-tabs-white-bg > li > a:focus {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  border-bottom-color: var(--pesu-max-accent-bright) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body ul.nav-tabs-white-bg > li.active > a,
+html[data-pesu-max-dark] body ul.nav-tabs-white-bg > li.active > a:hover,
+html[data-pesu-max-dark] body ul.nav-tabs-white-bg > li.active > a:focus,
+html[data-pesu-max-dark] body ul.nav-tabs-white-bg > li.active > a:active {
+  background-color: transparent !important;
+  border-color: var(--pesu-max-line) !important;
+  border-bottom-color: var(--pesu-max-accent-bright) !important;
+  border-bottom-width: 3px !important;
+  color: var(--pesu-max-text) !important;
+}
+
+/* Course page: the tab strips carry id-level rules, so match that weight */
+html[data-pesu-max-dark] body #StudentProfilePESUContent .nav-tabs-white-bg,
+html[data-pesu-max-dark] body #StudentProfilePESUContent .nav-tabs-white-bg.nav-tabs-responsive,
+html[data-pesu-max-dark] body #courseContentCategory,
+html[data-pesu-max-dark] body #courselistunit {
+  background-color: var(--pesu-max-surface) !important;
+  border-bottom-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] body #StudentProfilePESUContent .nav-tabs-white-bg > li > a,
+html[data-pesu-max-dark] body #courseContentCategory > li > a,
+html[data-pesu-max-dark] body #courselistunit > li > a {
+  background-color: transparent !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text-soft) !important;
+}
+
+html[data-pesu-max-dark] body #StudentProfilePESUContent .nav-tabs-white-bg > li > a:hover,
+html[data-pesu-max-dark] body #courseContentCategory > li > a:hover,
+html[data-pesu-max-dark] body #courselistunit > li > a:hover {
+  background-color: var(--pesu-max-surface-alt) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body #StudentProfilePESUContent .nav-tabs-white-bg > li.active > a,
+html[data-pesu-max-dark] body #courseContentCategory > li.active > a,
+html[data-pesu-max-dark] body #courselistunit > li.active > a {
+  background-color: transparent !important;
+  border-color: var(--pesu-max-line) !important;
+  border-bottom-color: var(--pesu-max-accent-bright) !important;
+  border-bottom-width: 3px !important;
+  color: var(--pesu-max-text) !important;
+}
+
+/* Modals, dropdowns and the small controls around tables */
+html[data-pesu-max-dark] .modal-content,
+html[data-pesu-max-dark] .dropdown-menu,
+html[data-pesu-max-dark] .popover,
+html[data-pesu-max-dark] .popover-title,
+html[data-pesu-max-dark] .select2-dropdown,
+html[data-pesu-max-dark] .select2-container .select2-selection,
+html[data-pesu-max-dark] .select2-container--default .select2-selection--single {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .modal-header {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .modal-footer {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] .modal .close {
+  background-color: transparent !important;
+  color: var(--pesu-max-text-mute) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html[data-pesu-max-dark] .modal-backdrop.in {
+  opacity: 0.7 !important;
+}
+
+html[data-pesu-max-dark] .dropdown-menu > li > a,
+html[data-pesu-max-dark] .dropdown-menu > li > a:visited,
+html[data-pesu-max-dark] .popover-content,
+html[data-pesu-max-dark] .select2-results__option {
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .dropdown-menu > li > a:hover,
+html[data-pesu-max-dark] .dropdown-menu > li > a:focus,
+html[data-pesu-max-dark] .dropdown-menu > .active > a,
+html[data-pesu-max-dark] .select2-results__option--highlighted {
+  background-color: var(--pesu-max-raised) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .dropdown-menu .divider {
+  background-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark] .popover.top > .arrow::after,
+html[data-pesu-max-dark] .popover.bottom > .arrow::after {
+  border-top-color: var(--pesu-max-surface) !important;
+  border-bottom-color: var(--pesu-max-surface) !important;
+}
+
+html[data-pesu-max-dark] .tooltip-inner {
+  background-color: var(--pesu-max-raised) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .tooltip.top .tooltip-arrow {
+  border-top-color: var(--pesu-max-raised) !important;
+}
+
+html[data-pesu-max-dark] .pagination > li > a,
+html[data-pesu-max-dark] .pagination > li > span,
+html[data-pesu-max-dark] .dataTables_wrapper .dataTables_paginate .paginate_button {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .dataTables_wrapper .dataTables_length select,
+html[data-pesu-max-dark] .dataTables_wrapper .dataTables_filter input,
+html[data-pesu-max-dark] .dataTables_info,
+html[data-pesu-max-dark] .dataTables_length,
+html[data-pesu-max-dark] .dataTables_filter {
+  color: var(--pesu-max-text-soft) !important;
+}
+
+html[data-pesu-max-dark] .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background-color: var(--pesu-max-accent-bright) !important;
+  border-color: var(--pesu-max-accent-bright) !important;
+  color: var(--pesu-max-on-accent) !important;
+}
+
+/* Status colours, alerts and progress */
+html[data-pesu-max-dark] .alert,
+html[data-pesu-max-dark] .alert-success,
+html[data-pesu-max-dark] .alert-info,
+html[data-pesu-max-dark] .alert-warning,
+html[data-pesu-max-dark] .alert-danger {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+  text-shadow: none !important;
+}
+
+html[data-pesu-max-dark] .alert-success,
+html[data-pesu-max-dark] .highlight_snackbar,
+html[data-pesu-max-dark] .highlight_snackbar1 {
+  background-color: var(--pesu-max-ok-bg) !important;
+  border-color: var(--pesu-max-ok-line) !important;
+  color: var(--pesu-max-ok-text) !important;
+}
+
+html[data-pesu-max-dark] .highlight_snackbar p,
+html[data-pesu-max-dark] .highlight_snackbar strong,
+html[data-pesu-max-dark] .highlight_snackbar span,
+html[data-pesu-max-dark] .highlight_snackbar1 p,
+html[data-pesu-max-dark] .highlight_snackbar1 strong,
+html[data-pesu-max-dark] .highlight_snackbar1 span {
+  color: var(--pesu-max-ok-text) !important;
+}
+
+html[data-pesu-max-dark] .alert-info,
+html[data-pesu-max-dark] .text-info,
+html[data-pesu-max-dark] .fa-info-circle {
+  color: var(--pesu-max-info-text) !important;
+}
+
+html[data-pesu-max-dark] .alert-danger,
+html[data-pesu-max-dark] .text-danger,
+html[data-pesu-max-dark] span.title,
+html[data-pesu-max-dark] .text-danger:hover {
+  color: var(--pesu-max-danger-text) !important;
+}
+
+html[data-pesu-max-dark] .text-success,
+html[data-pesu-max-dark] .alert-success {
+  color: var(--pesu-max-ok-text) !important;
+}
+
+html[data-pesu-max-dark] .progress {
+  background-color: var(--pesu-max-raised) !important;
+  box-shadow: none !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(code, kbd, pre) {
+  background-color: var(--pesu-max-code-bg) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-code-text) !important;
+}
+
+/* Calendar */
+html[data-pesu-max-dark] .fc-widget-header,
+html[data-pesu-max-dark] .fc-day-header,
+html[data-pesu-max-dark] .fc-list-heading td {
+  background-color: var(--pesu-max-surface-alt) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .fc-widget-content,
+html[data-pesu-max-dark] .fc-list-item-time,
+html[data-pesu-max-dark] .fc-list-item-title a {
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .fc-button {
+  background-color: var(--pesu-max-raised) !important;
+  background-image: none !important;
+  border-color: var(--pesu-max-line-control) !important;
+  box-shadow: none !important;
+  color: var(--pesu-max-text) !important;
+  text-shadow: none !important;
+}
+
+html[data-pesu-max-dark] .fc-button:hover,
+html[data-pesu-max-dark] .fc-state-active,
+html[data-pesu-max-dark] .fc-state-disabled {
+  background-color: var(--pesu-max-surface-alt) !important;
+  color: var(--pesu-max-text) !important;
+  opacity: 1 !important;
+}
+
+/* Course page and Material table  */
+html[data-pesu-max-dark] body .tab-content,
+html[data-pesu-max-dark] body #CourseContentId,
+html[data-pesu-max-dark] body #CourseContentId table,
+html[data-pesu-max-dark] body #CourseContentId tbody,
+html[data-pesu-max-dark] body #CourseContentId tr,
+html[data-pesu-max-dark] body #CourseContentId .table-rowlink,
+html[data-pesu-max-dark] body .course-info-content .table-rowlink {
+  background-color: var(--pesu-max-surface) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body .tab-content .tab-pane,
+html[data-pesu-max-dark] body .tab-content > .tab-pane {
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body #CourseContentId table,
+html[data-pesu-max-dark] body #CourseContentId .table-bordered {
+  border: none !important;
+}
+
+html[data-pesu-max-dark] body #CourseContentId td,
+html[data-pesu-max-dark] body #CourseContentId th,
+html[data-pesu-max-dark] body #CourseContentId .table-rowlink td {
+  background-color: transparent !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body #CourseContentId thead th,
+html[data-pesu-max-dark] body #CourseContentId thead td {
+  background-color: var(--pesu-max-surface-alt) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] body #CourseContentId tbody tr:hover {
+  background-color: var(--pesu-max-surface-alt) !important;
+}
+
+html[data-pesu-max-dark] body #CourseContentId a,
+html[data-pesu-max-dark] body #CourseContentId a:link,
+html[data-pesu-max-dark] body #CourseContentId a:visited,
+html[data-pesu-max-dark] body #CourseContentId a[data-pesu-max-material-pill],
+html[data-pesu-max-dark] body #CourseContentId a[data-pesu-max-material-pill]:visited,
+html[data-pesu-max-dark] body #CourseContentId .pesu-max-material-count,
+html[data-pesu-max-dark] body #CourseContentId .pesu-max-material-count:visited {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-dark] body #CourseContentId .pesu-max-material-icon svg,
+html[data-pesu-max-dark] body #CourseContentId a[data-pesu-max-material-pill] svg {
+  fill: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .coursecontent-navigation-area,
+html[data-pesu-max-dark] .assessment-navigation-area {
+  background-color: var(--pesu-max-surface) !important;
+  border-color: var(--pesu-max-line) !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .cmc_breadcrum {
+  background-color: transparent !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .cmc_breadcrum .back_link {
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-dark] .link-preview,
+html[data-pesu-max-dark] .coursecontentnotes,
+html[data-pesu-max-dark] .coursecontentnotes > div,
+html[data-pesu-max-dark] .coursecontentnotes .row > div {
+  background-color: transparent !important;
+  color: var(--pesu-max-text) !important;
+}
+
+html[data-pesu-max-dark] .link-preview {
+  background-color: var(--pesu-max-surface-alt) !important;
+  color: var(--pesu-max-accent-link) !important;
+}
+
+html[data-pesu-max-dark] .coursecontentnotes h4,
+html[data-pesu-max-dark] .coursecontent-navigation-area a,
+html[data-pesu-max-dark] .assessment-navigation-area a:not(.btn),
+html[data-pesu-max-dark] .course-info-content .nav-tabs > li > a {
+  color: var(--pesu-max-text) !important;
+}
+
+/* Images, logos and icons are never inverted. */
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  img {
+  background-color: transparent;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  :is(iframe, embed, object) {
+  background-color: var(--pesu-max-bg) !important;
+  border-color: var(--pesu-max-line) !important;
+}
+
+html[data-pesu-max-dark]
+  :where(.content-wrapper, .content-right, .content-right-wrapper, #pge_menu, .navbar,
+         .menu-left, #footer, .modal, .modal-content, .dropdown-menu, .popover,
+         .tooltip, .fc-widget-content)
+  hr {
+  border-color: var(--pesu-max-line) !important;
+}
+
+/* Scrollbars and selection */
+html[data-pesu-max-dark] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html[data-pesu-max-dark] ::-webkit-scrollbar-track {
+  background-color: var(--pesu-max-bg);
+}
+
+html[data-pesu-max-dark] ::-webkit-scrollbar-thumb {
+  background-color: var(--pesu-max-line-control);
+  border-radius: 5px;
+}
+
+html[data-pesu-max-dark] ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--pesu-max-text-mute);
+}
+
+html[data-pesu-max-dark] ::selection {
+  background-color: var(--pesu-max-text);
+  color: var(--pesu-max-bg);
+}
+
+html[data-pesu-max-dark] #pesu-max-root > button.MuiIconButton-root {
+  border-color: var(--pesu-max-ui-border);
+}
+
+/* PESU-MAX panel */
+
+html[data-pesu-max-dark] .MuiDrawer-paper {
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiPaper-root {
+  background-color: var(--pesu-max-ui-surface);
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiDialog-paper,
+html[data-pesu-max-dark] .MuiPopover-paper,
+html[data-pesu-max-dark] .MuiMenu-paper,
+html[data-pesu-max-dark] .MuiSnackbarContent-root,
+html[data-pesu-max-dark] .MuiAccordion-root {
+  background-color: var(--pesu-max-ui-surface);
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiBackdrop-root {
+  background-color: var(--pesu-max-ui-scrim);
+}
+
+html[data-pesu-max-dark] .MuiAccordionSummary-root,
+html[data-pesu-max-dark] .MuiAccordionDetails-root {
+  background-color: transparent;
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiAccordionSummary-expandIconWrapper,
+html[data-pesu-max-dark] .MuiAccordion-rounded {
+  color: var(--pesu-max-ui-text-soft);
+}
+
+html[data-pesu-max-dark] .MuiDivider-root {
+  border-color: var(--pesu-max-ui-line);
+}
+
+html[data-pesu-max-dark] .MuiTableCell-root {
+  border-bottom-color: var(--pesu-max-ui-line);
+}
+
+html[data-pesu-max-dark] .MuiTableHead-root .MuiTableCell-root {
+  color: var(--pesu-max-ui-table-head-text);
+}
+
+html[data-pesu-max-dark] .MuiTableBody-root .MuiTableCell-root {
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiTableRow-root.MuiTableRow-hover:hover,
+html[data-pesu-max-dark] .MuiTableRow-root:hover {
+  background-color: var(--pesu-max-ui-raised);
+}
+
+html[data-pesu-max-dark] .MuiTablePagination-root,
+html[data-pesu-max-dark] .MuiTablePagination-selectLabel,
+html[data-pesu-max-dark] .MuiTablePagination-displayedRows,
+html[data-pesu-max-dark] .MuiTablePagination-select,
+html[data-pesu-max-dark] .MuiTablePagination-actions {
+  color: var(--pesu-max-ui-text-muted);
+}
+
+html[data-pesu-max-dark] .MuiTablePagination-selectIcon {
+  color: var(--pesu-max-ui-text-muted);
+}
+
+html[data-pesu-max-dark] .MuiOutlinedInput-notchedOutline,
+html[data-pesu-max-dark] .MuiInputBase-root.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--pesu-max-ui-border);
+}
+
+html[data-pesu-max-dark] .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--pesu-max-ui-border-strong);
+}
+
+html[data-pesu-max-dark] .MuiInputBase-input,
+html[data-pesu-max-dark] .MuiInputBase-inputSizeSmall,
+html[data-pesu-max-dark] .MuiSelect-select {
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiInputBase-input::placeholder {
+  color: var(--pesu-max-ui-text-faint);
+  opacity: 1;
+}
+
+html[data-pesu-max-dark] .MuiInputLabel-root,
+html[data-pesu-max-dark] .MuiFormLabel-root,
+html[data-pesu-max-dark] .MuiFormHelperText-root,
+html[data-pesu-max-dark] .MuiSelect-icon,
+html[data-pesu-max-dark] .MuiInputAdornment-root {
+  color: var(--pesu-max-ui-text-muted);
+}
+
+html[data-pesu-max-dark] .MuiInputBase-root.Mui-disabled,
+html[data-pesu-max-dark] .MuiInputBase-input.Mui-disabled,
+html[data-pesu-max-dark] .MuiInputLabel-root.Mui-disabled,
+html[data-pesu-max-dark] .MuiFormLabel-root.Mui-disabled {
+  color: var(--pesu-max-ui-text-disabled);
+  -webkit-text-fill-color: var(--pesu-max-ui-text-disabled);
+}
+
+html[data-pesu-max-dark] .MuiIconButton-root {
+  color: var(--pesu-max-ui-text-soft);
+}
+
+html[data-pesu-max-dark] .MuiIconButton-root:hover {
+  background-color: var(--pesu-max-ui-raised);
+}
+
+html[data-pesu-max-dark] .MuiIconButton-root.Mui-disabled,
+html[data-pesu-max-dark] .MuiButtonBase-root.Mui-disabled {
+  color: var(--pesu-max-ui-text-disabled);
+}
+
+html[data-pesu-max-dark] .MuiMenuItem-root,
+html[data-pesu-max-dark] .MuiListItemText-primary,
+html[data-pesu-max-dark] .MuiListItemText-secondary,
+html[data-pesu-max-dark] .MuiListSubheader-root {
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiListItemText-secondary,
+html[data-pesu-max-dark] .MuiListSubheader-root {
+  color: var(--pesu-max-ui-text-muted);
+}
+
+html[data-pesu-max-dark] .MuiMenuItem-root:hover,
+html[data-pesu-max-dark] .MuiMenuItem-root.Mui-focusVisible {
+  background-color: var(--pesu-max-ui-raised);
+}
+
+html[data-pesu-max-dark] .MuiMenuItem-root.Mui-selected,
+html[data-pesu-max-dark] .MuiMenuItem-root.Mui-selected:hover {
+  background-color: var(--pesu-max-ui-primary-tint);
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiCheckbox-root,
+html[data-pesu-max-dark] .MuiRadio-root,
+html[data-pesu-max-dark] .MuiSvgIcon-root.MuiCheckbox-root {
+  color: var(--pesu-max-ui-text-soft);
+}
+
+html[data-pesu-max-dark] .MuiAlert-root {
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiAlert-standardSuccess {
+  background-color: var(--pesu-max-ui-success-tint);
+  color: var(--pesu-max-ui-success);
+}
+
+html[data-pesu-max-dark] .MuiAlert-standardError {
+  background-color: var(--pesu-max-ui-danger-tint);
+  color: var(--pesu-max-ui-danger);
+}
+
+html[data-pesu-max-dark] .MuiAlert-standardWarning {
+  background-color: var(--pesu-max-ui-warning-tint);
+  color: var(--pesu-max-ui-warning);
+}
+
+html[data-pesu-max-dark] .MuiAlert-standardInfo {
+  background-color: var(--pesu-max-ui-info-tint);
+  color: var(--pesu-max-ui-info);
+}
+
+html[data-pesu-max-dark] .MuiAlert-outlinedSuccess,
+html[data-pesu-max-dark] .MuiAlert-outlinedError,
+html[data-pesu-max-dark] .MuiAlert-outlinedWarning,
+html[data-pesu-max-dark] .MuiAlert-outlinedInfo {
+  background-color: transparent;
+}
+
+html[data-pesu-max-dark] .MuiAlert-icon,
+html[data-pesu-max-dark] .MuiAlert-action .MuiIconButton-root {
+  color: inherit;
+}
+
+html[data-pesu-max-dark] .MuiAlert-action .MuiIconButton-root:hover {
+  background-color: transparent;
+}
+
+html[data-pesu-max-dark] .MuiLinearProgress-root {
+  background-color: var(--pesu-max-ui-raised);
+}
+
+html[data-pesu-max-dark] .MuiCircularProgress-root {
+  color: var(--pesu-max-ui-text-soft);
+}
+
+html[data-pesu-max-dark] .MuiTooltip-tooltip {
+  background-color: var(--pesu-max-ui-raised);
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiTooltip-arrow {
+  color: var(--pesu-max-ui-raised);
+}
+
+html[data-pesu-max-dark] .MuiToggleButton-root {
+  color: var(--pesu-max-ui-text-soft);
+  border-color: var(--pesu-max-ui-border);
+}
+
+html[data-pesu-max-dark] .MuiToggleButton-root.Mui-selected {
+  background-color: var(--pesu-max-ui-primary-tint);
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiTabs-indicator {
+  background-color: var(--pesu-max-ui-primary);
+}
+
+html[data-pesu-max-dark] .MuiTab-root {
+  color: var(--pesu-max-ui-text-muted);
+}
+
+html[data-pesu-max-dark] .MuiTab-root.Mui-selected {
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiAvatar-root {
+  background-color: var(--pesu-max-ui-raised);
+  color: var(--pesu-max-ui-text);
+}
+
+html[data-pesu-max-dark] .MuiTypography-root {
+  color: inherit;
+}
+
+html[data-pesu-max-dark] .MuiTypography-colorTextSecondary,
+html[data-pesu-max-dark] .MuiFormControlLabel-label {
+  color: var(--pesu-max-ui-text-muted);
+}
+
+/* Dashed outline takes the accent */
+html[data-pesu-max-dark][data-pesu-max-dock]
+  #pesu-max-dock-all:not([data-pesu-max-dock-open]):not([data-pesu-max-dock-elsewhere]) {
+  border-color: var(--pesu-max-dock-outline) !important;
+}

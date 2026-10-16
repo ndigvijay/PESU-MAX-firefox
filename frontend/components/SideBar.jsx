@@ -5,6 +5,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { closeSidebar, openSidebar, setCurrentPage } from '../redux/sidebarSlice.js';
 import theme from '../Themes/theme.jsx';
 import { newBadgeSx } from '../styles/styles.js';
+import PesuMaxMark from './PesuMaxMark.jsx';
 import Home from '../Pages/Home.jsx';
 import CourseMaterial from '../Pages/CourseMaterial.jsx';
 import KnowYourFaculty from '../Pages/KnowYourFaculty.jsx';
@@ -15,7 +16,6 @@ import Settings from '../Pages/Settings.jsx';
 import Appearance from '../Pages/Appearance.jsx';
 import Notifications from '../Pages/Notifications.jsx';
 import Changelog from '../Pages/Changelog.jsx';
-const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
 import SettingsIcon from '@mui/icons-material/Settings';
 import ResourceNotificationsButton from './Notifications/ResourceNotificationsButton.jsx';
 
@@ -48,7 +48,7 @@ const Sidebar = () => {
                     width: "400px",
                     borderTopLeftRadius: "32px",
                     borderBottomLeftRadius: "32px",
-                    backgroundColor: "rgba(255, 255, 255, 0.85)",
+                    backgroundColor: theme.colors.panel,
                     backdropFilter: "blur(5px)",
                 },
             }}
@@ -76,39 +76,30 @@ const Sidebar = () => {
                     }}
                 >
                     <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <img
-                            src={logoUrl}
-                            alt="PESU Logo"
-                            style={{
-                                width: "48px",
-                                height: "48px",
-                                borderRadius: "50%",
-                                pointerEvents: "none",
-                            }}
-                        />
+                        <PesuMaxMark size={48} />
                         <Typography sx={{ fontWeight: 'bold', color: theme.colors.secondary, fontSize: '18px' }}>
                             PESU-MAX
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
                         <ResourceNotificationsButton />
-                        <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: '#333' }}>
+                        <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: theme.colors.text }}>
                             <Badge badgeContent="NEW" overlap="circular" sx={newBadgeSx}>
                                 <SettingsIcon fontSize="large" />
                             </Badge>
                         </IconButton>
-                        <IconButton onClick={HandleClose} aria-label="Close PESU-MAX" size="large" sx={{ color: '#333' }}>
+                        <IconButton onClick={HandleClose} aria-label="Close PESU-MAX" size="large" sx={{ color: theme.colors.text }}>
                             <ExitToAppIcon fontSize="large" />
                         </IconButton>
                     </Box>
                 </Box>
-                <Divider 
-                    sx={{ 
+                <Divider
+                    sx={{
                         marginLeft: "-15px",
                         marginRight: "-15px",
                         borderColor: theme.colors.secondary,
                         borderWidth: "1.5px",
-                    }} 
+                    }}
                 />
                 {/* content */}
                 <Box

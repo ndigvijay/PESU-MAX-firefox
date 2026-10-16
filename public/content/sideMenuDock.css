@@ -2,13 +2,6 @@
 html[data-pesu-max-dock] {
   --pesu-max-dock-width: 90px;
   --pesu-max-dock-bright: var(--pesu-max-accent-bright, #0091cd);
-  --pesu-max-dock-ink: #1c2433;
-  --pesu-max-dock-muted: #5b6472;
-  --pesu-max-dock-surface: #ffffff;
-  --pesu-max-dock-tile: #f1f4f9;
-  --pesu-max-dock-field: #f3f5f8;
-  --pesu-max-dock-line: rgba(255, 255, 255, 0.5);
-  --pesu-max-dock-hover: rgba(255, 255, 255, 0.14);
 }
 
 /* Original sidemenu is kept in DOM. */
@@ -52,7 +45,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item {
   border: 0;
   border-radius: 14px;
   background-color: transparent;
-  color: #ffffff;
+  color: var(--pesu-max-dock-on-bright) !important;
   font-family: inherit;
   font-size: 24px;
   line-height: 1;
@@ -71,12 +64,13 @@ html[data-pesu-max-dock] .pesu-max-dock-item:hover {
 }
 
 html[data-pesu-max-dock] .pesu-max-dock-item:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline: 2px solid var(--pesu-max-dock-focus);
   outline-offset: 2px;
 }
 
 html[data-pesu-max-dock] .pesu-max-dock-item[data-pesu-max-dock-active] {
-  background-color: var(--pesu-max-dock-bright);
+  background-color: var(--pesu-max-dock-active-fill);
+  color: var(--pesu-max-dock-on-bright) !important;
 }
 
 
@@ -90,7 +84,7 @@ html[data-pesu-max-dock] #pesu-max-dock-all[data-pesu-max-dock-open]::before {
   width: 4px;
   height: 64%;
   border-radius: 0 4px 4px 0;
-  background-color: var(--pesu-max-bg, #ffffff);
+  background-color: var(--pesu-max-dock-marker);
   transform: translateY(-50%);
 }
 
@@ -101,8 +95,13 @@ html[data-pesu-max-dock] #pesu-max-dock-all {
 
 html[data-pesu-max-dock] #pesu-max-dock-all[data-pesu-max-dock-elsewhere],
 html[data-pesu-max-dock] #pesu-max-dock-all[data-pesu-max-dock-open] {
-  background-color: var(--pesu-max-dock-bright);
-  border-color: rgba(255, 255, 255, 0.72);
+  background-color: var(--pesu-max-dock-active-fill);
+  border-color: var(--pesu-max-dock-line-strong);
+}
+
+html[data-pesu-max-dock] .pesu-max-dock-label,
+html[data-pesu-max-dock] .pesu-max-dock-glyph {
+  color: inherit !important;
 }
 
 html[data-pesu-max-dock] .pesu-max-dock-label {
@@ -142,7 +141,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
   flex-direction: column;
   border-radius: 24px;
   background-color: var(--pesu-max-dock-surface);
-  box-shadow: 0 22px 56px rgba(15, 23, 42, 0.26);
+  box-shadow: var(--pesu-max-dock-panel-shadow);
   font-family: var(--pesu-max-font, inherit);
   transform-origin: left bottom;
   animation: pesu-max-dock-pop 0.18s ease-out;
@@ -159,7 +158,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
   height: 14px;
   border-radius: 3px;
   background-color: var(--pesu-max-dock-surface);
-  box-shadow: -6px 6px 12px rgba(15, 23, 42, 0.12);
+  box-shadow: var(--pesu-max-dock-tail-shadow);
   transform: rotate(45deg);
 }
 
@@ -170,7 +169,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
   bottom: 0;
   left: var(--pesu-max-dock-width, 90px);
   z-index: 1034;
-  background-color: rgba(15, 23, 42, 0.28);
+  background-color: var(--pesu-max-dock-scrim);
   animation: pesu-max-dock-fade 0.18s ease-out;
 }
 
@@ -319,7 +318,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
 }
 
 #pesu-max-all-sections .pesu-max-dock-field input::placeholder {
-  color: #757575;
+  color: var(--pesu-max-dock-placeholder);
 }
 
 #pesu-max-all-sections .pesu-max-dock-body {
@@ -368,7 +367,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
 }
 
 #pesu-max-all-sections .pesu-max-dock-entry:hover {
-  background-color: #f7f9fc;
+  background-color: var(--pesu-max-dock-entry-hover);
 }
 
 #pesu-max-all-sections .pesu-max-dock-entry[data-pesu-max-active]::before {
@@ -398,8 +397,8 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
 }
 
 #pesu-max-all-sections .pesu-max-dock-entry[data-pesu-max-active] .pesu-max-dock-tile {
-  background-color: var(--pesu-max-dock-bright);
-  color: #ffffff;
+  background-color: var(--pesu-max-dock-active-fill);
+  color: var(--pesu-max-dock-on-bright);
 }
 
 #pesu-max-all-sections .pesu-max-dock-empty {

@@ -13,13 +13,13 @@ import {
 } from "@mui/material";
 import theme from "../../Themes/theme.jsx";
 import { clearDownloadResult } from "../../redux/courseMaterialSlice.js";
-import { 
-  dialogPaperSx, 
-  dialogTitleSx, 
-  primaryButtonSx, 
+import {
+  dialogPaperSx,
+  dialogTitleSx,
+  primaryButtonSx,
   progressBarSx,
   successAlertSx,
-  errorAlertSx 
+  errorAlertSx
 } from "../../styles/styles.js";
 
 const DownloadProgressDialog = ({ open, onClose }) => {
@@ -41,8 +41,8 @@ const DownloadProgressDialog = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
@@ -56,7 +56,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
           <Box sx={{ width: '100%' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
               {downloadProgress.status !== 'zipping' && (
-                <Typography variant="body2" sx={{ color: '#666', fontSize: '12px' }}>
+                <Typography variant="body2" sx={{ color: theme.colors.textMuted, fontSize: '12px' }}>
                   {downloadProgress.status === 'merging'
                     ? `Merging ${downloadProgress.mergeContentType ? downloadProgress.mergeContentType.toLowerCase() : 'files'} ${downloadProgress.current} of ${downloadProgress.total}`
                     : downloadProgress.status === 'converting'
@@ -65,23 +65,23 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                 </Typography>
               )}
               <Typography variant="body2" sx={{ color: theme.colors.primary, fontSize: '12px', fontWeight: '500' }}>
-                {downloadProgress.total > 0 
-                  ? `${Math.round((downloadProgress.current / downloadProgress.total) * 100)}%` 
+                {downloadProgress.total > 0
+                  ? `${Math.round((downloadProgress.current / downloadProgress.total) * 100)}%`
                   : '0%'}
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={downloadProgress.total > 0 
-                ? (downloadProgress.current / downloadProgress.total) * 100 
+            <LinearProgress
+              variant="determinate"
+              value={downloadProgress.total > 0
+                ? (downloadProgress.current / downloadProgress.total) * 100
                 : 0}
               sx={progressBarSx}
             />
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                mt: 1, 
-                color: downloadProgress.status === 'zipping' ? theme.colors.secondary : '#888', 
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 1,
+                color: downloadProgress.status === 'zipping' ? theme.colors.secondary : theme.colors.textSoft,
                 fontSize: '11px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -112,13 +112,13 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                 Successfully downloaded {downloadResult.stats?.downloadedFiles ?? downloadResult.stats?.successful ?? 0} files!
                 {mergedEntries.length > 0 && (
                   <Box sx={{ mt: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
+                    <Typography variant="body2" sx={{ fontSize: '11px', color: theme.colors.onSolid }}>
                       Created {downloadResult.stats?.totalMergedFiles || 0} subject-wise merged PDF{downloadResult.stats?.totalMergedFiles > 1 ? 's' : ''}.
                     </Typography>
-                    <Box component="ul" sx={{ mt: 0.5, pl: 2, mb: 0, color: '#ffffff', fontSize: '11px' }}>
+                    <Box component="ul" sx={{ mt: 0.5, pl: 2, mb: 0, color: theme.colors.onSolid, fontSize: '11px' }}>
                       {mergedEntries.map(([contentType, count]) => (
                         <Box component="li" key={contentType} sx={{ mb: 0.25 }}>
-                          <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
+                          <Typography variant="body2" sx={{ fontSize: '11px', color: theme.colors.onSolid }}>
                             {contentType}: {mergedSources[contentType] || 0} of {(downloaded[contentType] || 0) - (duplicates[contentType] || 0)} files merged into {count} PDF{count > 1 ? 's' : ''}
                             {duplicates[contentType] > 0 && ` (${duplicates[contentType]} repeated cop${duplicates[contentType] > 1 ? 'ies' : 'y'} skipped)`}
                           </Typography>
@@ -129,35 +129,35 @@ const DownloadProgressDialog = ({ open, onClose }) => {
                 )}
                 {downloadResult.stats?.failed > 0 && (
                   <Box sx={{ mt: 1 }}>
-                    <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
+                    <Typography variant="body2" sx={{ fontSize: '11px', color: theme.colors.onSolid }}>
                       {downloadResult.stats.failed} file{downloadResult.stats.failed > 1 ? 's' : ''} had problems:
                     </Typography>
                     {downloadResult.stats.failedItems?.length > 0 && (
-                      <Box 
-                        component="ul" 
-                        sx={{ 
-                          mt: 0.5, 
-                          pl: 2, 
-                          mb: 0, 
-                          color: '#ffffff',
+                      <Box
+                        component="ul"
+                        sx={{
+                          mt: 0.5,
+                          pl: 2,
+                          mb: 0,
+                          color: theme.colors.onSolid,
                           fontSize: '11px'
                         }}
                       >
                         {downloadResult.stats.failedItems.map((item, index) => (
-                          <Box 
-                            component="li" 
+                          <Box
+                            component="li"
                             key={item.classId || `${item.subjectId || 'failed'}-${index}`}
                             sx={{ mb: 0.5 }}
                           >
-                            <Typography variant="body2" sx={{ fontSize: '11px', color: '#ffffff' }}>
-                              {(item.subjectName && item.subjectName !== item.className) 
-                                ? `${item.subjectName} – ${item.className}` 
+                            <Typography variant="body2" sx={{ fontSize: '11px', color: theme.colors.onSolid }}>
+                              {(item.subjectName && item.subjectName !== item.className)
+                                ? `${item.subjectName} – ${item.className}`
                                 : (item.className || 'Unknown class')}
                             </Typography>
                             {item.error && (
-                              <Typography 
-                                variant="body2" 
-                                sx={{ fontSize: '10px', color: 'rgba(255,255,255,0.8)' }}
+                              <Typography
+                                variant="body2"
+                                sx={{ fontSize: '10px', color: theme.colors.onSolidMuted }}
                               >
                                 Reason: {item.error}
                               </Typography>
@@ -178,7 +178,7 @@ const DownloadProgressDialog = ({ open, onClose }) => {
         )}
       </DialogContent>
       <DialogActions sx={{ padding: '8px 24px 16px' }}>
-        <Button 
+        <Button
           variant="contained"
           onClick={handleClose}
           disabled={downloading}

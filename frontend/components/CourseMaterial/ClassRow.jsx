@@ -29,7 +29,7 @@ const ClassRow = ({ subject, unit, cls, index }) => {
         />
       </TableCell>
       <TableCell sx={{ ...cellSx }} />
-      <TableCell sx={{ ...cellSx, fontSize: '11px', color: '#555' }}>
+      <TableCell sx={{ ...cellSx, fontSize: '11px', color: theme.colors.textMuted }}>
         {cls.className}
       </TableCell>
     </TableRow>

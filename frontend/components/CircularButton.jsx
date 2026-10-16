@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import { toggleSidebar } from "../redux/sidebarSlice.js";
 import theme from "../Themes/theme.jsx";
-
-const logoUrl = chrome.runtime.getURL("icons/Pes_logo_square_ui.png");
+import PesuMaxMark from "./PesuMaxMark.jsx";
 
 const CircularButton = () => {
   const dispatch = useDispatch();
@@ -72,23 +71,14 @@ const CircularButton = () => {
               cursor: "pointer",
               "&:hover": {
                 transform: "scale(1.15)",
-                boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15)`,
+                boxShadow: theme.colors.shadow,
               },
               "&:active": {
                 transform: "scale(1.1)",
               },
             }}
           >
-            <img
-              src={logoUrl}
-              alt="PESU Logo"
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                pointerEvents: "none",
-              }}
-            />
+            <PesuMaxMark size="100%" />
           </IconButton>
         </>
       )}

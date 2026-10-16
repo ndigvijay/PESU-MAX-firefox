@@ -25,7 +25,7 @@ const SGPACalculator = () => {
 
   const validateCourse = (course) => {
     const errors = {};
-    
+
     if (course.credits === '') {
       errors.credits = 'Required';
     } else {
@@ -36,11 +36,11 @@ const SGPACalculator = () => {
         errors.credits = 'Max 12';
       }
     }
-    
+
     if (!course.grade) {
       errors.grade = 'Required';
     }
-    
+
     return errors;
   };
 
@@ -52,7 +52,7 @@ const SGPACalculator = () => {
     courses.forEach((course) => {
       const courseError = validateCourse(course);
       errors[course.id] = courseError;
-      
+
       if (Object.keys(courseError).length > 0) {
         valid = false;
       } else {
@@ -170,13 +170,13 @@ const SGPACalculator = () => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px',
                       '& fieldset': {
-                        borderColor: errors.credits ? '#e53935' : theme.colors.secondaryLight,
+                        borderColor: errors.credits ? theme.colors.danger : theme.colors.secondaryLight,
                       },
                       '&:hover fieldset': {
-                        borderColor: errors.credits ? '#e53935' : theme.colors.secondary,
+                        borderColor: errors.credits ? theme.colors.danger : theme.colors.secondary,
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: errors.credits ? '#e53935' : theme.colors.primary,
+                        borderColor: errors.credits ? theme.colors.danger : theme.colors.primary,
                       },
                     },
                   }}
@@ -185,7 +185,7 @@ const SGPACalculator = () => {
                   <Typography
                     sx={{
                       fontSize: '11px',
-                      color: '#e53935',
+                      color: theme.colors.danger,
                       marginTop: '2px',
                       marginLeft: '4px',
                     }}
@@ -206,7 +206,7 @@ const SGPACalculator = () => {
                   <Typography
                     sx={{
                       fontSize: '11px',
-                      color: '#e53935',
+                      color: theme.colors.danger,
                       marginTop: '2px',
                       marginLeft: '4px',
                     }}
@@ -222,10 +222,10 @@ const SGPACalculator = () => {
                 onClick={() => handleRemoveCourse(course.id)}
                 disabled={courses.length === 1}
                 sx={{
-                  color: courses.length === 1 ? '#ccc' : '#e53935',
+                  color: courses.length === 1 ? theme.colors.textDisabled : theme.colors.danger,
                   padding: '8px',
                   '&:hover': {
-                    backgroundColor: courses.length === 1 ? 'transparent' : 'rgba(229, 57, 53, 0.1)',
+                    backgroundColor: courses.length === 1 ? 'transparent' : theme.colors.dangerTint,
                   },
                 }}
               >
@@ -260,7 +260,7 @@ const SGPACalculator = () => {
       >
         <Typography
           sx={{
-            color: '#999',
+            color: theme.colors.textFaint,
             fontSize: '14px',
             marginBottom: '4px',
           }}
@@ -271,7 +271,7 @@ const SGPACalculator = () => {
           sx={{
             fontSize: '32px',
             fontWeight: 600,
-            color: isValid ? theme.colors.secondary : '#ccc',
+            color: isValid ? theme.colors.secondary : theme.colors.textDisabled,
             lineHeight: 1.2,
           }}
         >
@@ -279,7 +279,7 @@ const SGPACalculator = () => {
         </Typography>
         <Typography
           sx={{
-            color: '#666',
+            color: theme.colors.textMuted,
             fontSize: '12px',
             marginTop: '8px',
           }}

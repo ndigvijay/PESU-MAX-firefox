@@ -5,34 +5,35 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import theme from "../../Themes/theme.jsx";
 import { checkboxSx, rowCardSx } from "./pyqStyles.js";
 
-const metaSx = { fontSize: "11px", color: "#666" };
+const metaSx = { fontSize: "11px", color: theme.colors.textMuted };
 
 const viewButtonSx = {
-  backgroundColor: theme.colors.secondary,
-  color: "#fff",
+  backgroundColor: theme.colors.solid,
+  color: theme.colors.onSolid,
   minWidth: "40px",
   width: "40px",
   boxShadow: "none",
   transition: "none",
-  "& .MuiSvgIcon-root": { color: "#fff" },
+  "& .MuiSvgIcon-root": { color: theme.colors.onSolid },
   "&:hover": {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.solid,
     boxShadow: "none",
     transform: "none",
-    color: "#fff"
+    color: theme.colors.onSolid
   },
   "&:focus, &:focus-visible": {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.solid,
     boxShadow: "none",
-    color: "#fff"
+    color: theme.colors.onSolid
   }
 };
 
 const downloadButtonSx = {
-  backgroundColor: theme.colors.secondary,
+  backgroundColor: theme.colors.solid,
+  color: theme.colors.onSolid,
   minWidth: "40px",
   width: "40px",
-  "&:hover": { backgroundColor: theme.colors.secondaryHover }
+  "&:hover": { backgroundColor: theme.colors.solidHover }
 };
 
 const PyqResultCard = ({ item, selected, downloading, opening, busy, onToggleSelection, onOpen, onDownload }) => (
@@ -75,9 +76,9 @@ const PyqResultCard = ({ item, selected, downloading, opening, busy, onToggleSel
           sx={viewButtonSx}
         >
           {opening ? (
-            <CircularProgress size={16} sx={{ color: "#fff" }} />
+            <CircularProgress size={16} sx={{ color: theme.colors.onSolid }} />
           ) : (
-            <VisibilityIcon fontSize="small" sx={{ color: "#fff" }} />
+            <VisibilityIcon fontSize="small" sx={{ color: theme.colors.onSolid }} />
           )}
         </Button>
 
@@ -90,7 +91,7 @@ const PyqResultCard = ({ item, selected, downloading, opening, busy, onToggleSel
           sx={downloadButtonSx}
         >
           {downloading ? (
-            <CircularProgress size={16} sx={{ color: "#fff" }} />
+            <CircularProgress size={16} sx={{ color: theme.colors.onSolid }} />
           ) : (
             <DownloadIcon fontSize="small" />
           )}

@@ -16,7 +16,7 @@ export const headerCellSx = {
 export const cellSx = {
   padding: '8px 12px',
   fontSize: '12px',
-  borderBottom: `1px solid ${theme.colors.secondaryLight}`
+  borderBottom: `1px solid ${theme.colors.line}`
 };
 
 // Row background style generator based on index
@@ -30,7 +30,7 @@ export const getRowSx = (index) => ({
 
 // Unit row background style (slightly different opacity)
 export const getUnitRowSx = (index) => ({
-  backgroundColor: index % 2 === 0 ? 'rgba(245, 130, 31, 0.05)' : 'rgba(35, 58, 118, 0.04)',
+  backgroundColor: index % 2 === 0 ? theme.table.rowEvenSoft : theme.table.rowOddSoft,
   '&:hover': {
     backgroundColor: theme.colors.primaryLight
   },
@@ -39,9 +39,9 @@ export const getUnitRowSx = (index) => ({
 
 // Class row background style (even lighter opacity)
 export const getClassRowSx = (index) => ({
-  backgroundColor: index % 2 === 0 ? 'rgba(245, 130, 31, 0.03)' : 'rgba(35, 58, 118, 0.02)',
+  backgroundColor: index % 2 === 0 ? theme.table.rowEvenFaint : theme.table.rowOddFaint,
   '&:hover': {
-    backgroundColor: 'rgba(245, 130, 31, 0.1)'
+    backgroundColor: theme.colors.primaryLight
   },
   transition: 'background-color 0.2s ease'
 });
@@ -69,19 +69,20 @@ export const expandButtonSx = {
 // Dialog button styles
 export const primaryButtonSx = {
   backgroundColor: theme.colors.primary,
+  color: theme.colors.onPrimary,
   fontSize: '12px',
   textTransform: 'none',
   '&:hover': { backgroundColor: theme.colors.primaryHover },
-  '&.Mui-disabled': { backgroundColor: theme.colors.secondaryLight, color: '#999' }
+  '&.Mui-disabled': { backgroundColor: theme.colors.raised, color: theme.colors.textDisabled }
 };
 
 export const secondaryButtonSx = {
-  backgroundColor: theme.colors.secondary,
-  borderColor: theme.colors.secondaryLight,
-  color: "white",
+  backgroundColor: theme.colors.solid,
+  borderColor: theme.colors.line,
+  color: theme.colors.onSolid,
   fontSize: '12px',
   textTransform: 'none',
-  '&:hover': { borderColor: theme.colors.secondary, backgroundColor: theme.colors.secondaryHover }
+  '&:hover': { borderColor: theme.colors.secondary, backgroundColor: theme.colors.solidHover }
 };
 
 // Search input styles
@@ -91,7 +92,7 @@ export const searchInputSx = {
     borderRadius: '8px',
     fontSize: '13px',
     '& fieldset': {
-      borderColor: theme.colors.secondaryLight
+      borderColor: theme.colors.line
     },
     '&:hover fieldset': {
       borderColor: theme.colors.secondary
@@ -107,7 +108,7 @@ export const selectSx = {
   borderRadius: '8px',
   fontSize: '13px',
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.colors.secondaryLight
+    borderColor: theme.colors.line
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
     borderColor: theme.colors.secondary
@@ -120,6 +121,7 @@ export const selectSx = {
 // Download button styles
 export const downloadButtonSx = {
   backgroundColor: theme.colors.primary,
+  color: theme.colors.onPrimary,
   borderRadius: '8px',
   fontSize: '12px',
   textTransform: 'none',
@@ -129,8 +131,8 @@ export const downloadButtonSx = {
     backgroundColor: theme.colors.primaryHover
   },
   '&.Mui-disabled': {
-    backgroundColor: theme.colors.secondaryLight,
-    color: '#999'
+    backgroundColor: theme.colors.raised,
+    color: theme.colors.textDisabled
   }
 };
 
@@ -139,12 +141,12 @@ export const tableContainerSx = {
   flex: 1,
   overflow: 'auto',
   borderRadius: '8px',
-  border: `1px solid ${theme.colors.secondaryLight}`
+  border: `1px solid ${theme.colors.line}`
 };
 
 // Pagination styles
 export const paginationSx = {
-  borderTop: `1px solid ${theme.colors.secondaryLight}`,
+  borderTop: `1px solid ${theme.colors.line}`,
   '& .MuiTablePagination-toolbar': {
     minHeight: '48px',
     padding: '0 16px',
@@ -175,7 +177,9 @@ export const paginationSx = {
 // Dialog paper styles
 export const dialogPaperSx = {
   borderRadius: '12px',
-  padding: '8px'
+  padding: '8px',
+  backgroundColor: theme.colors.surface,
+  color: theme.colors.text
 };
 
 // Dialog title styles
@@ -190,7 +194,7 @@ export const dialogTitleSx = {
 export const progressBarSx = {
   height: 8,
   borderRadius: 4,
-  backgroundColor: theme.colors.secondaryLight,
+  backgroundColor: theme.colors.sunken,
   '& .MuiLinearProgress-bar': {
     backgroundColor: theme.colors.primary,
     borderRadius: 4
@@ -200,22 +204,22 @@ export const progressBarSx = {
 // Alert styles for download results
 export const successAlertSx = {
   fontSize: '13px',
-  backgroundColor: theme.colors.secondary,
-  color: '#ffffff',
+  backgroundColor: theme.colors.solid,
+  color: theme.colors.onSolid,
   display: 'flex',
   flexDirection: 'column',
   gap: 1,
   '& .MuiAlert-icon': {
-    color: '#ffffff'
+    color: theme.colors.onSolid
   }
 };
 
 export const errorAlertSx = {
   fontSize: '13px',
-  backgroundColor: theme.colors.secondary,
-  color: '#ffffff',
+  backgroundColor: theme.colors.solid,
+  color: theme.colors.onSolid,
   '& .MuiAlert-icon': {
-    color: '#ffffff'
+    color: theme.colors.onSolid
   }
 };
 
@@ -243,15 +247,15 @@ export const switchSx = {
     width: 20,
     height: 20,
     boxShadow: "none",
-    backgroundColor: "rgba(35, 58, 118, 0.35)",
+    backgroundColor: theme.colors.switchThumb,
   },
   "& .Mui-checked .MuiSwitch-thumb": {
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.colors.switchThumbOn,
   },
   "& .MuiSwitch-track": {
     borderRadius: 999,
-    border: "1.5px solid rgba(35, 58, 118, 0.25)",
-    backgroundColor: "#ffffff",
+    border: `1.5px solid ${theme.colors.switchBorder}`,
+    backgroundColor: theme.colors.switchTrack,
     opacity: 1,
   },
 };
@@ -289,7 +293,7 @@ export const settingsRowDescriptionSx = {
 // Row action button
 export const settingsActionButtonSx = {
   backgroundColor: theme.colors.primary,
-  color: '#ffffff',
+  color: theme.colors.onPrimary,
   textTransform: 'none',
   fontSize: '12.5px',
   fontWeight: 500,
@@ -299,9 +303,8 @@ export const settingsActionButtonSx = {
   whiteSpace: 'nowrap',
   '&:hover': { backgroundColor: theme.colors.primaryHover },
   '&.Mui-disabled': {
-    backgroundColor: theme.colors.primary,
-    color: '#ffffff',
-    opacity: 0.55,
+    backgroundColor: theme.colors.raised,
+    color: theme.colors.textDisabled,
   },
 };
 
@@ -337,7 +340,7 @@ export const newRibbonSx = {
   right: '-32px',
   transform: 'rotate(45deg)',
   backgroundColor: theme.colors.primary,
-  color: theme.colors.onSolid,
+  color: theme.colors.onPrimary,
   fontSize: '8px',
   fontWeight: 800,
   letterSpacing: '1px',
@@ -345,13 +348,13 @@ export const newRibbonSx = {
   lineHeight: 1.4,
   zIndex: 1,
   pointerEvents: 'none',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+  boxShadow: theme.colors.shadowSoft,
 };
 
 export const newBadgeSx = {
   '& .MuiBadge-badge': {
     backgroundColor: theme.colors.primary,
-    color: theme.colors.onSolid,
+    color: theme.colors.onPrimary,
     fontSize: '8px',
     fontWeight: 800,
     letterSpacing: '0.5px',
@@ -359,13 +362,13 @@ export const newBadgeSx = {
     minWidth: 'auto',
     padding: '0 4px',
     borderRadius: '7px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+    boxShadow: theme.colors.shadowSoft,
   },
 };
 
 // Row hint and warning
 export const settingsHintSx = {
-  color: theme.colors.secondary,
+  color: theme.colors.textMuted,
 };
 
 export const settingsWarningSx = {
@@ -373,12 +376,11 @@ export const settingsWarningSx = {
 };
 
 const popupButtonSx = {
-  color: theme.colors.onSolid,
   borderRadius: '8px',
   padding: '6px 14px',
   fontWeight: 500,
   '&.Mui-focusVisible': {
-    outline: `2px solid ${theme.colors.secondary}`,
+    outline: `2px solid ${theme.colors.focusRing}`,
     outlineOffset: '2px',
   },
 };
@@ -387,9 +389,8 @@ export const popupPrimaryButtonSx = {
   ...primaryButtonSx,
   ...popupButtonSx,
   '&.Mui-disabled': {
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.onSolid,
-    opacity: 0.55,
+    backgroundColor: theme.colors.raised,
+    color: theme.colors.textDisabled,
   },
 };
 
@@ -397,8 +398,7 @@ export const popupSecondaryButtonSx = {
   ...secondaryButtonSx,
   ...popupButtonSx,
   '&.Mui-disabled': {
-    backgroundColor: theme.colors.secondary,
-    color: theme.colors.onSolid,
-    opacity: 0.55,
+    backgroundColor: theme.colors.raised,
+    color: theme.colors.textDisabled,
   },
 };

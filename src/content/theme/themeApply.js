@@ -1,6 +1,9 @@
+import { DEFAULT_DARK_ACCENT, darkAccentValue } from "./darkAccents.js";
 import { DEFAULT_THEME_VALUE, FONT_OPTIONS, THEME_OPTIONS } from "./themePalettes.js";
 
 export const THEME_ATTR = "data-pesu-max-theme";
+export const DARK_ATTR = "data-pesu-max-dark";
+export const DARK_ACCENT_ATTR = "data-pesu-max-dark-accent";
 export const FONT_ATTR = "data-pesu-max-font";
 
 const optionFor = (options, value) =>
@@ -12,6 +15,8 @@ const asValue = (options, value) =>
 export const themeValues = (source) => ({
   theme: asValue(THEME_OPTIONS, source && source.theme),
   font: asValue(FONT_OPTIONS, source && source.font),
+  dark: Boolean(source && source.dark),
+  darkAccent: darkAccentValue(source && source.darkAccent),
 });
 
 const setVars = (root, vars) => {
@@ -24,9 +29,17 @@ const setVars = (root, vars) => {
 export function applyTheme(values) {
   const root = document.documentElement;
 
-  const palette = optionFor(THEME_OPTIONS, values.theme);
+
+  const dark = values.dark === true;
+  const palette = dark ? null : optionFor(THEME_OPTIONS, values.theme);
   if (palette) root.setAttribute(THEME_ATTR, palette.value);
   else root.removeAttribute(THEME_ATTR);
+  if (dark) root.setAttribute(DARK_ATTR, "");
+  else root.removeAttribute(DARK_ATTR);
+
+  const darkAccent = dark ? darkAccentValue(values.darkAccent) : DEFAULT_DARK_ACCENT;
+  if (darkAccent !== DEFAULT_DARK_ACCENT) root.setAttribute(DARK_ACCENT_ATTR, darkAccent);
+  else root.removeAttribute(DARK_ACCENT_ATTR);
   setVars(root, {
     "--pesu-max-bg": palette && palette.background,
     "--pesu-max-accent": palette && palette.accent.base,

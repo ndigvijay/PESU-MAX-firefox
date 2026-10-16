@@ -18,13 +18,13 @@ import { headerCellSx, tableContainerSx, paginationSx } from "../../styles/style
 
 const CourseMaterialTable = () => {
   const dispatch = useDispatch();
-  const { 
-    pesuData, 
-    loading, 
-    page, 
-    rowsPerPage, 
+  const {
+    pesuData,
+    loading,
+    page,
+    rowsPerPage,
     search,
-    isFetchingInBackground 
+    isFetchingInBackground
   } = useSelector((state) => state.courseMaterial);
 
   const effectiveRowsPerPage = pesuData?.pagination?.limit || rowsPerPage;
@@ -59,16 +59,16 @@ const CourseMaterialTable = () => {
           </TableHead>
           <TableBody>
             {pesuData?.items?.map((subject, subjectIndex) => (
-              <SubjectRow 
-                key={subject.id} 
-                subject={subject} 
-                index={subjectIndex} 
+              <SubjectRow
+                key={subject.id}
+                subject={subject}
+                index={subjectIndex}
               />
             ))}
 
             {(!pesuData?.items || pesuData.items.length === 0) && (
               <TableRow>
-                <TableCell colSpan={4} sx={{ textAlign: 'center', padding: '24px', color: '#666' }}>
+                <TableCell colSpan={4} sx={{ textAlign: 'center', padding: '24px', color: theme.colors.textMuted }}>
                   {isFetchingInBackground ? (
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
                       <CircularProgress size={16} sx={{ color: theme.colors.primary }} />

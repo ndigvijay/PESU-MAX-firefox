@@ -9,11 +9,13 @@ import SettingsSelectRow from "../components/Settings/SettingsSelectRow.jsx";
 import SettingsToggleRow from "../components/Settings/SettingsToggleRow.jsx";
 import useStoredSetting from "../components/Settings/useStoredSetting.js";
 import { settingsHintSx } from "../styles/styles.js";
-import { FONT_OPTIONS, THEME_OPTIONS } from "../../src/content/theme";
+import { DARK_ACCENT_OPTIONS, FONT_OPTIONS, THEME_OPTIONS } from "../../src/content/theme";
 import {
   MATERIAL_TABLE_KEY,
   MENU_ICONS_KEY,
   SIDE_MENU_DOCK_KEY,
+  THEME_DARK_ACCENT_KEY,
+  THEME_DARK_KEY,
   THEME_FONT_KEY,
   THEME_PALETTE_KEY,
   TOP_BAR_KEY,
@@ -23,6 +25,8 @@ const Appearance = () => {
   const dispatch = useDispatch();
   const dock = useStoredSetting(SIDE_MENU_DOCK_KEY, false, "Side menu style");
   const dockOn = dock.ready && dock.value === true;
+  const dark = useStoredSetting(THEME_DARK_KEY, false, "Dark mode");
+  const darkOn = dark.ready && dark.value === true;
 
   const handleBack = () => {
     dispatch(setCurrentPage("settings"));
@@ -48,17 +52,31 @@ const Appearance = () => {
       </Box>
 
       <Stack spacing="8px">
-        <SettingsAccentRow
-          storageKey={THEME_PALETTE_KEY}
-          title="Accent"
-          description="Accent colour of the site, with a matching background."
-          options={THEME_OPTIONS}
+        <SettingsToggleRow
+          storageKey={THEME_DARK_KEY}
+          title="Dark mode"
         />
+
+        {darkOn ? (
+          <SettingsAccentRow
+            storageKey={THEME_DARK_ACCENT_KEY}
+            title="Dark Mode Accent"
+            options={DARK_ACCENT_OPTIONS}
+            tone="dark"
+            columns={4}
+          />
+        ) : (
+          <SettingsAccentRow
+            storageKey={THEME_PALETTE_KEY}
+            title="Theme colour"
+            options={THEME_OPTIONS}
+          />
+        )}
 
         <SettingsSelectRow
           storageKey={THEME_FONT_KEY}
           title="Font"
-          description="Typeface used across the site."
+          description="Typeface used across the site"
           options={FONT_OPTIONS}
         />
 

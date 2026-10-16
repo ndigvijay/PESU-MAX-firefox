@@ -33,7 +33,7 @@ const searchButtonSx = {
   borderRadius: "8px",
   boxShadow: "none",
   backgroundColor: theme.colors.primary,
-  color: "#fff",
+  color: theme.colors.onPrimary,
   "&:hover": { backgroundColor: theme.colors.primaryHover, boxShadow: "none" }
 };
 

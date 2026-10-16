@@ -148,7 +148,7 @@ const KnowYourFaculty = () => {
       {/* Search Results List */}
       {searchResults.length > 0 && !professorData && !loading && !detailsLoading && (
         <Box sx={{ flex: 1, overflowY: "auto" }}>
-          <Typography variant="body2" sx={{ color: "#666", marginBottom: "8px" }}>
+          <Typography variant="body2" sx={{ color: theme.colors.textMuted, marginBottom: "8px" }}>
             {searchResults.length} result{searchResults.length > 1 ? "s" : ""} found
           </Typography>
           <List sx={{ padding: 0 }}>
@@ -159,6 +159,8 @@ const KnowYourFaculty = () => {
                 sx={{
                   marginBottom: "8px",
                   cursor: "pointer",
+                  backgroundColor: theme.colors.surface,
+                  color: theme.colors.text,
                   "&:hover": {
                     backgroundColor: theme.colors.primaryLight,
                   },
@@ -213,13 +215,13 @@ const KnowYourFaculty = () => {
               >
                 {professorData.basicInfo?.Name}
               </Typography>
-              <Typography variant="body2" sx={{ color: "#666" }}>
+              <Typography variant="body2" sx={{ color: theme.colors.textMuted }}>
                 {professorData.basicInfo?.Designation}
               </Typography>
-              <Typography variant="body2" sx={{ color: "#888", marginTop: "4px" }}>
+              <Typography variant="body2" sx={{ color: theme.colors.textSoft, marginTop: "4px" }}>
                 {professorData.sidebar?.Department}
               </Typography>
-              <Typography variant="body2" sx={{ color: "#888" }}>
+              <Typography variant="body2" sx={{ color: theme.colors.textSoft }}>
                 {professorData.sidebar?.Campus}
               </Typography>
             </Box>
@@ -295,7 +297,7 @@ const KnowYourFaculty = () => {
                                 primary={item}
                                 primaryTypographyProps={{
                                   variant: "body2",
-                                  sx: { color: "#333" },
+                                  sx: { color: theme.colors.text },
                                 }}
                               />
                             </ListItem>
@@ -318,7 +320,7 @@ const KnowYourFaculty = () => {
             justifyContent: "center",
             alignItems: "center",
             flex: 1,
-            color: "#888",
+            color: theme.colors.textSoft,
           }}
         >
           <Typography>Search for a faculty member to see their details</Typography>

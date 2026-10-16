@@ -69,7 +69,7 @@ const CourseMaterialFilters = ({ onDownloadClick }) => {
                   padding: '4px',
                   color: theme.colors.primary,
                   '&:hover': {
-                    backgroundColor: 'rgba(245, 130, 31, 0.1)'
+                    backgroundColor: theme.colors.primaryLight
                   }
                 }}
               >

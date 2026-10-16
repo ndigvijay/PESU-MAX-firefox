@@ -21,7 +21,7 @@ const Home = () => {
     chrome.storage.local.get("userProfile", (result) => {
       setIsLoggedIn(!!result.userProfile);
     });
-    
+
     const listener = (changes) => {
       if (changes.userProfile) {
         setIsLoggedIn(!!changes.userProfile.newValue);
@@ -31,9 +31,9 @@ const Home = () => {
     return () => chrome.storage.onChanged.removeListener(listener);
   }, []);
 
-  return ( 
+  return (
     <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-        <Box sx={{ 
+        <Box sx={{
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
@@ -41,10 +41,10 @@ const Home = () => {
         }}>
           {!isLoggedIn && (
             <>
-            <Button 
-              variant="contained" 
+            <Button
+              variant="contained"
               sx={{
-                backgroundColor: theme.colors.secondary,
+                backgroundColor: theme.colors.solid,
                 width: '100%',
                 textAlign: 'center',
                 padding: '12px'
@@ -60,10 +60,10 @@ const Home = () => {
             </Typography>
             </>
           )}
-          {isLoggedIn && (<Button 
-            variant="contained" 
+          {isLoggedIn && (<Button
+            variant="contained"
             sx={{
-              backgroundColor: theme.colors.secondary,
+              backgroundColor: theme.colors.solid,
               width: '100%',
               textAlign: 'center',
               padding: '12px'
@@ -77,7 +77,7 @@ const Home = () => {
           {isLoggedIn && (<Button
             variant="contained"
             sx={{
-              backgroundColor: theme.colors.secondary,
+              backgroundColor: theme.colors.solid,
               width: '100%',
               textAlign: 'center',
               padding: '12px'
@@ -91,7 +91,7 @@ const Home = () => {
           {isLoggedIn && (<Button
             variant="contained"
             sx={{
-              backgroundColor: theme.colors.secondary,
+              backgroundColor: theme.colors.solid,
               width: '100%',
               textAlign: 'center',
               padding: '12px'
@@ -105,7 +105,7 @@ const Home = () => {
           {isLoggedIn && (<Button
             variant="contained"
             sx={{
-              backgroundColor: theme.colors.secondary,
+              backgroundColor: theme.colors.solid,
               width: '100%',
               textAlign: 'center',
               padding: '12px'
@@ -119,7 +119,7 @@ const Home = () => {
           {isLoggedIn && (<Button
             variant="contained"
             sx={{
-              backgroundColor: theme.colors.secondary,
+              backgroundColor: theme.colors.solid,
               width: '100%',
               textAlign: 'center',
               padding: '12px'
@@ -159,7 +159,7 @@ const Home = () => {
                 fontWeight: 600,
                 "&:hover": {
                   borderColor: theme.colors.secondaryHover,
-                  backgroundColor: 'rgba(0,0,0,0.04)'
+                  backgroundColor: theme.colors.sunken
                 }
               }}
             >
@@ -200,5 +200,5 @@ const Home = () => {
     </Box>
    );
 }
- 
+
 export default Home;

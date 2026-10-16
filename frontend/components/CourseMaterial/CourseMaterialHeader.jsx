@@ -97,18 +97,18 @@ const CourseMaterialHeader = () => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <IconButton 
+      <IconButton
         onClick={handleBack}
-        sx={{ 
+        sx={{
           color: theme.colors.secondary,
           padding: '4px'
         }}
       >
         <KeyboardBackspaceIcon />
       </IconButton>
-      <Typography 
-        variant="h6" 
-        sx={{ 
+      <Typography
+        variant="h6"
+        sx={{
           color: theme.colors.secondary,
           fontWeight: 'bold'
         }}
@@ -121,7 +121,7 @@ const CourseMaterialHeader = () => {
         startIcon={<RefreshIcon sx={{ fontSize: '18px' }} />}
         sx={{
           backgroundColor: theme.colors.primary,
-          color: '#ffffff',
+          color: theme.colors.onPrimary,
           textTransform: 'none',
           fontSize: '12px',
           fontWeight: 500,
@@ -134,7 +134,7 @@ const CourseMaterialHeader = () => {
           },
           '&.Mui-disabled': {
             backgroundColor: theme.colors.primary,
-            color: '#ffffff',
+            color: theme.colors.onPrimary,
             opacity: 0.55
           }
         }}

@@ -6,32 +6,48 @@ import useStoredSetting from "./useStoredSetting.js";
 import { popupSecondaryButtonSx } from "../../styles/styles.js";
 import theme from "../../Themes/theme.jsx";
 
+// Dark accents carry a swatch token; light palettes carry their own background and accent.
+const dotColor = (option) => option.swatch || option.accent.bright;
+const dotRing = (option) => option.background || theme.colors.surface;
+
 const dotStyle = (option) => ({
   display: "inline-block",
   width: "16px",
   height: "16px",
   borderRadius: "50%",
-  backgroundColor: option.accent.bright,
-  border: `3px solid ${option.background}`,
+  backgroundColor: dotColor(option),
+  border: `3px solid ${dotRing(option)}`,
   boxShadow: `0 0 0 1px ${theme.colors.secondaryOutline}`,
 });
 
-const pickerSx = {
-  minWidth: "140px",
-  flexShrink: 0,
-  justifyContent: "flex-start",
-  gap: "8px",
-  padding: "5px 8px",
-  border: "1.5px solid",
-  borderColor: theme.colors.primary,
-  borderRadius: "8px",
-  backgroundColor: theme.colors.onSolid,
-  color: theme.colors.secondary,
-  fontSize: "12.5px",
-  fontWeight: 400,
-  whiteSpace: "nowrap",
-  textTransform: "none",
-  "&:hover": { borderColor: theme.colors.primaryHover, backgroundColor: theme.colors.onSolid },
+const pickerSx = (tone, current) => {
+  const dark = tone === "dark";
+  return {
+    minWidth: "140px",
+    flexShrink: 0,
+    justifyContent: "flex-start",
+    gap: "8px",
+    padding: "5px 8px",
+    border: "1.5px solid",
+    borderColor: dark ? dotColor(current) : theme.colors.primary,
+    borderRadius: "8px",
+    backgroundColor: dark ? theme.colors.surface : theme.colors.onSolid,
+    color: theme.colors.secondary,
+    fontSize: "12.5px",
+    fontWeight: 400,
+    whiteSpace: "nowrap",
+    textTransform: "none",
+    "&:hover": {
+      borderColor: dark ? dotColor(current) : theme.colors.primaryHover,
+      backgroundColor: dark ? theme.colors.raised : theme.colors.onSolid,
+    },
+    "&.Mui-disabled": {
+      backgroundColor: theme.colors.raised,
+      borderColor: theme.colors.line,
+      color: theme.colors.textDisabled,
+      "& span": { filter: "grayscale(1)" },
+    },
+  };
 };
 
 const dotSx = (option, selected) => ({
@@ -40,22 +56,22 @@ const dotSx = (option, selected) => ({
   minWidth: "22px",
   padding: 0,
   borderRadius: "50% !important",
-  border: `3px solid ${option.background} !important`,
-  backgroundColor: `${option.accent.bright} !important`,
+  border: `3px solid ${dotRing(option)} !important`,
+  backgroundColor: `${dotColor(option)} !important`,
   boxShadow: selected
     ? `0 0 0 2px ${theme.colors.primary}`
     : `0 0 0 2px ${theme.colors.secondaryBorder}`,
   "&:hover": {
-    backgroundColor: `${option.accent.bright} !important`,
+    backgroundColor: `${dotColor(option)} !important`,
     boxShadow: selected
       ? `0 0 0 2px ${theme.colors.primaryHover}`
       : `0 0 0 2px ${theme.colors.secondaryBorderHover}`,
   },
-  "&.Mui-selected": { backgroundColor: `${option.accent.bright} !important` },
+  "&.Mui-selected": { backgroundColor: `${dotColor(option)} !important` },
 });
 
 // Accent row: "grid of dots" picker
-const SettingsAccentRow = ({ storageKey, title, description, options }) => {
+const SettingsAccentRow = ({ storageKey, title, description, options, tone, columns = 6 }) => {
   const setting = useStoredSetting(storageKey, options[0].value, title);
   const [anchor, setAnchor] = useState(null);
   const selected = options.some((option) => option.value === setting.value)
@@ -75,7 +91,7 @@ const SettingsAccentRow = ({ storageKey, title, description, options }) => {
           onClick={(event) => setAnchor(event.currentTarget)}
           disabled={!setting.ready || setting.saving}
           endIcon={<ArrowDropDownIcon sx={{ marginLeft: "auto" }} />}
-          sx={pickerSx}
+          sx={pickerSx(tone, current)}
           aria-label={title}
         >
           <Box component="span" sx={dotStyle(current)} />
@@ -89,13 +105,22 @@ const SettingsAccentRow = ({ storageKey, title, description, options }) => {
         onClose={() => setAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
-        slotProps={{ paper: { sx: { marginTop: "6px", borderRadius: "10px" } } }}
+        slotProps={{
+          paper: {
+            sx: {
+              marginTop: "6px",
+              borderRadius: "10px",
+              backgroundColor: theme.colors.surface,
+              border: `1px solid ${theme.colors.line}`,
+            },
+          },
+        }}
       >
         <Box
           sx={{
             padding: "12px",
             display: "grid",
-            gridTemplateColumns: "repeat(6, 22px)",
+            gridTemplateColumns: `repeat(${columns}, 22px)`,
             gap: "12px",
           }}
         >

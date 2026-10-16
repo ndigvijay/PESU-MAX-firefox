@@ -26,17 +26,17 @@ import theme from "../Themes/theme.jsx";
 import { selectSx } from "../styles/styles.js";
 
 const getPercentageColor = (percentage) => {
-  if (percentage === null) return "#999";
-  if (percentage < 75) return "#e53935";
-  if (percentage <= 85) return "#ffa000";
-  return "#43a047";
+  if (percentage === null) return theme.colors.textFaint;
+  if (percentage < 75) return theme.colors.danger;
+  if (percentage <= 85) return theme.colors.warning;
+  return theme.colors.success;
 };
 
 const getProgressBarColor = (percentage) => {
-  if (percentage === null) return "#e0e0e0";
-  if (percentage < 75) return "#e53935";
-  if (percentage <= 85) return "#ffa000";
-  return "#43a047";
+  if (percentage === null) return theme.colors.line;
+  if (percentage < 75) return theme.colors.danger;
+  if (percentage <= 85) return theme.colors.warning;
+  return theme.colors.success;
 };
 
 const Attendance = () => {
@@ -167,7 +167,7 @@ const Attendance = () => {
                 borderRadius: "12px",
                 backgroundColor: theme.colors.secondaryLight,
                 marginBottom: "12px",
-                border: `1px solid rgba(35, 58, 118, 0.12)`,
+                border: `1px solid ${theme.colors.line}`,
               }}
             >
               {/* Course Code */}
@@ -208,7 +208,7 @@ const Attendance = () => {
                 <Typography
                   sx={{
                     fontSize: "12px",
-                    color: "#666",
+                    color: theme.colors.textMuted,
                   }}
                 >
                   {course.classesText === "NA"
@@ -243,7 +243,7 @@ const Attendance = () => {
                       sx={{
                         height: 8,
                         borderRadius: 4,
-                        backgroundColor: "rgba(0,0,0,0.08)",
+                        backgroundColor: theme.colors.sunken,
                         "& .MuiLinearProgress-bar": {
                           backgroundColor: getProgressBarColor(course.percentage),
                           borderRadius: 4,
@@ -267,7 +267,7 @@ const Attendance = () => {
                 <Typography
                   sx={{
                     fontSize: "12px",
-                    color: "#999",
+                    color: theme.colors.textFaint,
                     fontStyle: "italic",
                   }}
                 >
@@ -287,7 +287,7 @@ const Attendance = () => {
             justifyContent: "center",
             alignItems: "center",
             flex: 1,
-            color: "#888",
+            color: theme.colors.textSoft,
           }}
         >
           <Typography>No attendance data available for this semester</Typography>

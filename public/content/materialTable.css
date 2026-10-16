@@ -6,7 +6,7 @@ html[data-pesu-max-material-table] #CourseContentId a[data-pesu-max-material-pil
   z-index: 0;
   padding: 3px 11px;
   border-radius: 999px;
-  color: var(--pesu-max-accent, #0091cd);
+  color: var(--pesu-max-material-accent, var(--pesu-max-accent, #0091cd));
   font-weight: 600;
   line-height: 1;
   vertical-align: middle;
@@ -70,7 +70,7 @@ html[data-pesu-max-material-table] #CourseContentId [data-pesu-max-material-lege
   height: 9px;
   margin-right: 4px;
   border-radius: 50%;
-  background: var(--pesu-max-accent, #0091cd);
+  background: var(--pesu-max-material-accent, var(--pesu-max-accent, #0091cd));
   vertical-align: middle;
   font-size: 0;
   line-height: 0;

@@ -185,7 +185,7 @@ const MaterialColumnsDialog = ({ open, onClose }) => {
                   padding: "4px 8px",
                   borderRadius: "10px",
                   border: `1px solid ${theme.colors.secondaryLight}`,
-                  backgroundColor: column.hidden ? "rgba(255, 255, 255, 0.6)" : "#ffffff",
+                  backgroundColor: column.hidden ? theme.colors.surfaceAlt : theme.colors.surface,
                   cursor: column.pinned ? "default" : "grab",
                   opacity: dragged === column.id ? 0.45 : 1,
                   transition: "opacity 0.15s ease"

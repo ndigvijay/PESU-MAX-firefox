@@ -37,7 +37,7 @@ const ResourceNotificationsButton = () => {
             height: "10px",
             borderRadius: "50%",
             backgroundColor: theme.colors.primary,
-            border: "2px solid #fff",
+            border: `2px solid ${theme.colors.surface}`,
             pointerEvents: "none"
           }}
         />

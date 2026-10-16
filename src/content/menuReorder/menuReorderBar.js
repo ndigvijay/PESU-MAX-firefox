@@ -1,3 +1,4 @@
+import theme from "../../../frontend/Themes/theme.jsx";
 import { BAR_ID, CLASS } from "./menuReorderStyle.js";
 
 // Bottom-left panel with the reorder actions.
@@ -24,7 +25,7 @@ export function setEditBarMessage(message, isError = false) {
   const hint = document.querySelector(`#${BAR_ID} .${CLASS}-hint`);
   if (!hint) return;
   hint.textContent = message;
-  hint.style.color = isError ? "#d32f2f" : "#666666";
+  hint.style.color = isError ? theme.colors.danger : theme.colors.textMuted;
 }
 
 export function setEditBarBusy(busy) {

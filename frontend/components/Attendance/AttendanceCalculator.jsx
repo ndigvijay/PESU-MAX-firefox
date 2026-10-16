@@ -93,7 +93,7 @@ const AttendanceCalculator = () => {
           >
             {courseName}
           </Typography>
-          <Typography sx={{ fontSize: "13px", color: "#666" }}>
+          <Typography sx={{ fontSize: "13px", color: theme.colors.textMuted }}>
             Current: {attended}/{total} ({percentage}%)
           </Typography>
         </Box>
@@ -128,7 +128,7 @@ const AttendanceCalculator = () => {
             }}
             InputProps={{
               endAdornment: (
-                <Typography sx={{ color: "#666", marginLeft: "4px" }}>%</Typography>
+                <Typography sx={{ color: theme.colors.textMuted, marginLeft: "4px" }}>%</Typography>
               ),
             }}
           />
@@ -145,24 +145,24 @@ const AttendanceCalculator = () => {
                 alignItems: "flex-start",
                 gap: "12px",
                 padding: "12px",
-                backgroundColor: "rgba(67, 160, 71, 0.1)",
+                backgroundColor: theme.colors.successTint,
                 borderRadius: "8px",
-                border: "1px solid rgba(67, 160, 71, 0.3)",
+                border: `1px solid ${theme.colors.successBorder}`,
               }}
             >
-              <CheckCircleIcon sx={{ color: "#43a047", marginTop: "2px" }} />
+              <CheckCircleIcon sx={{ color: theme.colors.success, marginTop: "2px" }} />
               <Box>
                 <Typography
                   sx={{
                     fontSize: "14px",
                     fontWeight: "600",
-                    color: "#43a047",
+                    color: theme.colors.success,
                     marginBottom: "4px",
                   }}
                 >
                   You can miss {classesCanMiss} more class{classesCanMiss !== 1 ? "es" : ""}
                 </Typography>
-                <Typography sx={{ fontSize: "12px", color: "#666" }}>
+                <Typography sx={{ fontSize: "12px", color: theme.colors.textMuted }}>
                   and still maintain {targetPercentage}% attendance
                 </Typography>
               </Box>
@@ -174,18 +174,18 @@ const AttendanceCalculator = () => {
                 alignItems: "flex-start",
                 gap: "12px",
                 padding: "12px",
-                backgroundColor: "rgba(229, 57, 53, 0.1)",
+                backgroundColor: theme.colors.dangerTint,
                 borderRadius: "8px",
-                border: "1px solid rgba(229, 57, 53, 0.3)",
+                border: `1px solid ${theme.colors.dangerBorder}`,
               }}
             >
-              <ErrorIcon sx={{ color: "#e53935", marginTop: "2px" }} />
+              <ErrorIcon sx={{ color: theme.colors.danger, marginTop: "2px" }} />
               <Box>
                 <Typography
                   sx={{
                     fontSize: "14px",
                     fontWeight: "600",
-                    color: "#e53935",
+                    color: theme.colors.danger,
                     marginBottom: "4px",
                   }}
                 >
@@ -195,7 +195,7 @@ const AttendanceCalculator = () => {
                         classesNeeded !== 1 ? "es" : ""
                       }`}
                 </Typography>
-                <Typography sx={{ fontSize: "12px", color: "#666" }}>
+                <Typography sx={{ fontSize: "12px", color: theme.colors.textMuted }}>
                   {classesNeeded !== Infinity
                     ? `to reach ${targetPercentage}% attendance`
                     : "You have already missed some classes"}
@@ -207,7 +207,7 @@ const AttendanceCalculator = () => {
 
         {isAboveTarget && canMaintain && classesCanMiss > 0 && (
           <Box sx={{ marginTop: "12px" }}>
-            <Typography sx={{ fontSize: "11px", color: "#888", fontStyle: "italic" }}>
+            <Typography sx={{ fontSize: "11px", color: theme.colors.textSoft, fontStyle: "italic" }}>
               After missing {classesCanMiss} class{classesCanMiss !== 1 ? "es" : ""}, your
               attendance will be {attended}/{total + classesCanMiss} (
               {Math.floor((attended / (total + classesCanMiss)) * 100)}%)

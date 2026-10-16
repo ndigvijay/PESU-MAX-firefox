@@ -151,8 +151,16 @@ module.exports = (env, argv) => {
             to: 'content/sideMenuDock.css'
           },
           {
+            from: 'public/content/themeTokens.css',
+            to: 'content/themeTokens.css'
+          },
+          {
             from: 'public/content/theme.css',
             to: 'content/theme.css'
+          },
+          {
+            from: 'public/content/themeDark.css',
+            to: 'content/themeDark.css'
           },
           {
             from: 'public/content/menuIcons.css',
@@ -161,10 +169,6 @@ module.exports = (env, argv) => {
           {
             from: 'public/content/materialTable.css',
             to: 'content/materialTable.css'
-          },
-          {
-            from: 'public/icons/Pes_logo_square_ui.png',
-            to: 'icons/Pes_logo_square_ui.png'
           },
           {
             from: 'public/icons/icon16.png',

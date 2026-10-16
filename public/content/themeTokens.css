@@ -1,0 +1,421 @@
+/* IMP: theme.jsx references these names; themePalettes.js overrides five of them inline. */
+
+:root {
+  /* Surfaces */
+  --pesu-max-ui-surface: #ffffff;
+  --pesu-max-ui-surface-alt: #f7f7f7;
+  --pesu-max-ui-raised: #efefef;
+  --pesu-max-ui-panel: rgba(255, 255, 255, 0.85);
+  --pesu-max-ui-sunken: rgba(0, 0, 0, 0.04);
+  --pesu-max-ui-line: rgba(35, 58, 118, 0.12);
+  --pesu-max-ui-border: rgba(35, 58, 118, 0.2);
+  --pesu-max-ui-border-strong: rgba(35, 58, 118, 0.45);
+  --pesu-max-ui-outline: rgba(35, 58, 118, 0.25);
+
+  /* Text */
+  --pesu-max-ui-heading: #233a76;
+  --pesu-max-ui-heading-hover: #1d2f5f;
+  --pesu-max-ui-text: #212121;
+  --pesu-max-ui-text-muted: #666666;
+  --pesu-max-ui-text-soft: #6f6f6f;
+  --pesu-max-ui-text-faint: #767676;
+  --pesu-max-ui-text-disabled: #6a6a6a;
+  --pesu-max-ui-focus-ring: #233a76;
+
+  /* Brand and solid fills */
+  --pesu-max-ui-primary: #f5821f;
+  --pesu-max-ui-primary-hover: #d66f1a;
+  --pesu-max-ui-primary-tint: rgba(245, 130, 31, 0.12);
+  --pesu-max-ui-solid: #233a76;
+  --pesu-max-ui-solid-hover: #1d2f5f;
+  --pesu-max-ui-on-solid: #ffffff;
+  --pesu-max-ui-on-primary: #ffffff;
+  --pesu-max-ui-on-solid-muted: rgba(255, 255, 255, 0.8);
+  --pesu-max-ui-tint: rgba(35, 58, 118, 0.08);
+
+  /* Status */
+  --pesu-max-ui-success: #2e7d32;
+  --pesu-max-ui-success-tint: rgba(46, 125, 50, 0.1);
+  --pesu-max-ui-success-border: rgba(46, 125, 50, 0.3);
+  --pesu-max-ui-warning: #8a6100;
+  --pesu-max-ui-warning-tint: rgba(138, 97, 0, 0.1);
+  --pesu-max-ui-warning-border: rgba(138, 97, 0, 0.3);
+  --pesu-max-ui-info: #0b6bcb;
+  --pesu-max-ui-info-tint: rgba(11, 107, 203, 0.1);
+  --pesu-max-ui-info-border: rgba(11, 107, 203, 0.3);
+  --pesu-max-ui-danger: #d32f2f;
+  --pesu-max-ui-danger-tint: rgba(211, 47, 47, 0.1);
+  --pesu-max-ui-danger-border: rgba(211, 47, 47, 0.3);
+  --pesu-max-ui-error: #d32f2f;
+
+  /* Grade chips */
+  --pesu-max-ui-grade-text: #ffffff;
+  --pesu-max-ui-grade-s: #2e7d32;
+  --pesu-max-ui-grade-a: #b35a0a;
+  --pesu-max-ui-grade-b: #96660a;
+  --pesu-max-ui-grade-c: #1565c0;
+  --pesu-max-ui-grade-d: #233a76;
+  --pesu-max-ui-grade-e: #c62828;
+  --pesu-max-ui-grade-f: #8e1414;
+
+  /* Tables */
+  --pesu-max-ui-row-even: rgba(245, 130, 31, 0.08);
+  --pesu-max-ui-row-odd: rgba(35, 58, 118, 0.06);
+  --pesu-max-ui-row-even-soft: rgba(245, 130, 31, 0.05);
+  --pesu-max-ui-row-odd-soft: rgba(35, 58, 118, 0.04);
+  --pesu-max-ui-row-even-faint: rgba(245, 130, 31, 0.03);
+  --pesu-max-ui-row-odd-faint: rgba(35, 58, 118, 0.02);
+  --pesu-max-ui-table-head: #233a76;
+  --pesu-max-ui-table-head-text: #ffffff;
+
+  /* Dock */
+  --pesu-max-dock-ink: #1c2433;
+  --pesu-max-dock-muted: #5b6472;
+  --pesu-max-dock-surface: #ffffff;
+  --pesu-max-dock-tile: #f1f4f9;
+  --pesu-max-dock-field: #f3f5f8;
+  --pesu-max-dock-entry-hover: #f7f9fc;
+  --pesu-max-dock-placeholder: #757575;
+  --pesu-max-dock-on-bright: #ffffff;
+  --pesu-max-dock-active-fill: var(--pesu-max-accent-bright, #0091cd);
+  --pesu-max-dock-marker: var(--pesu-max-bg, var(--pesu-max-dock-surface));
+  --pesu-max-dock-line: rgba(255, 255, 255, 0.5);
+  --pesu-max-dock-line-strong: rgba(255, 255, 255, 0.72);
+  --pesu-max-dock-hover: rgba(255, 255, 255, 0.14);
+  --pesu-max-dock-focus: rgba(255, 255, 255, 0.75);
+  --pesu-max-dock-scrim: rgba(15, 23, 42, 0.28);
+  --pesu-max-dock-panel-shadow: 0 22px 56px rgba(15, 23, 42, 0.26);
+  --pesu-max-dock-tail-shadow: -6px 6px 12px rgba(15, 23, 42, 0.12);
+
+  /* PESU mark */
+  --pesu-max-mark-plate: #ffffff;
+  --pesu-max-mark-ring: #293d76;
+  --pesu-max-mark-disc: #f08126;
+  --pesu-max-mark-star: #fefefd;
+
+  /* Controls and elevation */
+  --pesu-max-ui-switch-track: #ffffff;
+  --pesu-max-ui-switch-thumb: rgba(35, 58, 118, 0.35);
+  --pesu-max-ui-switch-thumb-on: #ffffff;
+  --pesu-max-ui-switch-border: rgba(35, 58, 118, 0.25);
+  --pesu-max-ui-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --pesu-max-ui-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --pesu-max-ui-scrim: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark mode tokens */
+html[data-pesu-max-dark] {
+  --pesu-max-ui-surface: #1e1e1e;
+  --pesu-max-ui-surface-alt: #292929;
+  --pesu-max-ui-raised: #333333;
+  --pesu-max-ui-panel: rgba(30, 30, 30, 0.86);
+  --pesu-max-ui-sunken: rgba(0, 0, 0, 0.25);
+  --pesu-max-ui-line: #343434;
+  --pesu-max-ui-border: #7c7c7c;
+  --pesu-max-ui-border-strong: #969696;
+  --pesu-max-ui-outline: #898989;
+
+  --pesu-max-ui-heading: #e5e5e5;
+  --pesu-max-ui-heading-hover: #f1f1f1;
+  --pesu-max-ui-text: #dadada;
+  --pesu-max-ui-text-muted: #cccccc;
+  --pesu-max-ui-text-soft: #c1c1c1;
+  --pesu-max-ui-text-faint: #b0b0b0;
+  --pesu-max-ui-text-disabled: #b6b6b6;
+  --pesu-max-ui-focus-ring: #e5e5e5;
+
+  --pesu-max-ui-primary: #dcdcdc;
+  --pesu-max-ui-primary-hover: #ededed;
+  --pesu-max-ui-primary-tint: rgba(255, 255, 255, 0.12);
+  --pesu-max-ui-solid: #333333;
+  --pesu-max-ui-solid-hover: #3e3e3e;
+  --pesu-max-ui-on-solid: #dadada;
+  --pesu-max-ui-on-primary: #1e1e1e;
+  --pesu-max-ui-on-solid-muted: #c9c9c9;
+  --pesu-max-ui-tint: rgba(255, 255, 255, 0.07);
+
+  --pesu-max-ui-success: #a3be8c;
+  --pesu-max-ui-success-tint: #38463c;
+  --pesu-max-ui-success-border: rgba(163, 190, 140, 0.4);
+  --pesu-max-ui-warning: #ebcb8b;
+  --pesu-max-ui-warning-tint: #453d30;
+  --pesu-max-ui-warning-border: rgba(235, 203, 139, 0.4);
+  --pesu-max-ui-info: #88c0d0;
+  --pesu-max-ui-info-tint: #313f49;
+  --pesu-max-ui-info-border: rgba(136, 192, 208, 0.4);
+  --pesu-max-ui-danger: #d98e96;
+  --pesu-max-ui-danger-tint: #3e2e33;
+  --pesu-max-ui-danger-border: rgba(217, 142, 150, 0.4);
+  --pesu-max-ui-error: #d98e96;
+
+  --pesu-max-ui-grade-text: #1e1e1e;
+  --pesu-max-ui-grade-s: #a3be8c;
+  --pesu-max-ui-grade-a: #d1907c;
+  --pesu-max-ui-grade-b: #ebcb8b;
+  --pesu-max-ui-grade-c: #88c0d0;
+  --pesu-max-ui-grade-d: #adc0d5;
+  --pesu-max-ui-grade-e: #d98e96;
+  --pesu-max-ui-grade-f: #e0a2aa;
+
+  --pesu-max-ui-row-even: rgba(255, 255, 255, 0.05);
+  --pesu-max-ui-row-odd: rgba(255, 255, 255, 0.025);
+  --pesu-max-ui-row-even-soft: rgba(255, 255, 255, 0.04);
+  --pesu-max-ui-row-odd-soft: rgba(255, 255, 255, 0.02);
+  --pesu-max-ui-row-even-faint: rgba(255, 255, 255, 0.03);
+  --pesu-max-ui-row-odd-faint: rgba(255, 255, 255, 0.015);
+  --pesu-max-ui-table-head: #333333;
+  --pesu-max-ui-table-head-text: #e5e5e5;
+
+  --pesu-max-ui-switch-track: #333333;
+  --pesu-max-ui-switch-thumb: #cfcfcf;
+  --pesu-max-ui-switch-thumb-on: #1e1e1e;
+  --pesu-max-ui-switch-border: #898989;
+  --pesu-max-ui-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --pesu-max-ui-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --pesu-max-ui-scrim: rgba(0, 0, 0, 0.6);
+
+  --pesu-max-dock-ink: #dadada;
+  --pesu-max-dock-muted: #c1c1c1;
+  --pesu-max-dock-surface: #292929;
+  --pesu-max-dock-tile: #333333;
+  --pesu-max-dock-field: #1e1e1e;
+  --pesu-max-dock-entry-hover: #333333;
+  --pesu-max-dock-placeholder: #b0b0b0;
+  --pesu-max-dock-on-bright: #f1f1f1;
+  --pesu-max-dock-line: rgba(255, 255, 255, 0.18);
+  --pesu-max-dock-line-strong: rgba(255, 255, 255, 0.5);
+  --pesu-max-dock-outline: var(--pesu-max-dock-line);
+  --pesu-max-dock-hover: rgba(255, 255, 255, 0.1);
+  --pesu-max-dock-focus: rgba(255, 255, 255, 0.75);
+  --pesu-max-dock-scrim: rgba(0, 0, 0, 0.5);
+  --pesu-max-dock-panel-shadow: 0 22px 56px rgba(0, 0, 0, 0.5);
+  --pesu-max-dock-tail-shadow: -6px 6px 12px rgba(0, 0, 0, 0.35);
+  --pesu-max-material-accent: #dadada;
+
+  --pesu-max-mark-plate: #1e1e1e;
+  --pesu-max-mark-ring: #e5e5e5;
+  --pesu-max-mark-disc: #535353;
+  --pesu-max-mark-star: #1e1e1e;
+
+  /* Surfaces */
+  --pesu-max-bg: #1e1e1e;
+  --pesu-max-surface: #292929;
+  --pesu-max-surface-alt: #333333;
+  --pesu-max-raised: #3e3e3e;
+  --pesu-max-field: #1e1e1e;
+  --pesu-max-line: #3a3a3a;
+  --pesu-max-line-control: #7c7c7c;
+  --pesu-max-text: #dadada;
+  --pesu-max-text-soft: #c9c9c9;
+  --pesu-max-text-mute: #c1c1c1;
+  --pesu-max-accent: #333333;
+  --pesu-max-accent-bright: #dadada;
+  --pesu-max-accent-link: #ededed;
+  --pesu-max-accent-link-hover: #f5f5f5;
+  --pesu-max-on-accent: #1e1e1e;
+  --pesu-max-ok-bg: #3c473f;
+  --pesu-max-ok-line: rgba(163, 190, 140, 0.45);
+  --pesu-max-ok-text: #c3d3bf;
+  --pesu-max-info-text: #88c0d0;
+  --pesu-max-danger-text: #d98e96;
+  --pesu-max-code-bg: #181818;
+  --pesu-max-code-text: #dadada;
+}
+
+/* Dock */
+html[data-pesu-max-dark][data-pesu-max-dock] {
+  --pesu-max-dock-active-fill: #3e3e3e;
+  --pesu-max-dock-marker: #dadada;
+}
+
+/* Dark accents. Default: Graphite. */
+:root {
+  --pesu-max-dark-accent-graphite: #dadada;
+  --pesu-max-dark-accent-cherry: #f28b82;
+  --pesu-max-dark-accent-ember: #f2a97a;
+  --pesu-max-dark-accent-sand: #dcc19c;
+  --pesu-max-dark-accent-lime: #c6dc93;
+  --pesu-max-dark-accent-mint: #93d6a5;
+  --pesu-max-dark-accent-teal: #7fd4c8;
+  --pesu-max-dark-accent-sky: #8ad4ec;
+  --pesu-max-dark-accent-frost: #8ab4f8;
+  --pesu-max-dark-accent-violet: #c0a8f5;
+  --pesu-max-dark-accent-orchid: #d9a8f0;
+  --pesu-max-dark-accent-rose: #f29bad;
+}
+
+/* Cherry */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="cherry"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-cherry);
+  --pesu-max-ui-primary-hover: #f4a098;
+  --pesu-max-ui-primary-tint: rgba(242, 139, 130, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-cherry);
+  --pesu-max-accent: #553a38;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-cherry);
+  --pesu-max-accent-link: #f5a59e;
+  --pesu-max-accent-link-hover: #f7bcb6;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-cherry);
+  --pesu-max-dock-active-fill: #62413e;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-cherry);
+  --pesu-max-dock-outline: rgba(242, 139, 130, 0.6);
+}
+
+/* Ember */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="ember"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-ember);
+  --pesu-max-ui-primary-hover: #f4b892;
+  --pesu-max-ui-primary-tint: rgba(242, 169, 122, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-ember);
+  --pesu-max-accent: #554236;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-ember);
+  --pesu-max-accent-link: #f5bc97;
+  --pesu-max-accent-link-hover: #f7cdb2;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-ember);
+  --pesu-max-dock-active-fill: #624a3b;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-ember);
+  --pesu-max-dock-outline: rgba(242, 169, 122, 0.6);
+}
+
+/* Sand */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="sand"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-sand);
+  --pesu-max-ui-primary-hover: #e2ccae;
+  --pesu-max-ui-primary-tint: rgba(220, 193, 156, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-sand);
+  --pesu-max-accent: #4f483f;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-sand);
+  --pesu-max-accent-link: #e4cfb2;
+  --pesu-max-accent-link-hover: #ebdbc6;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-sand);
+  --pesu-max-dock-active-fill: #5b5246;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-sand);
+  --pesu-max-dock-outline: rgba(220, 193, 156, 0.6);
+}
+
+/* Lime */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="lime"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-lime);
+  --pesu-max-ui-primary-hover: #d0e2a6;
+  --pesu-max-ui-primary-tint: rgba(198, 220, 147, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-lime);
+  --pesu-max-accent: #4a4f3c;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-lime);
+  --pesu-max-accent-link: #d3e4ab;
+  --pesu-max-accent-link-hover: #deebc0;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-lime);
+  --pesu-max-dock-active-fill: #545b43;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-lime);
+  --pesu-max-dock-outline: rgba(198, 220, 147, 0.6);
+}
+
+/* Mint */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="mint"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-mint);
+  --pesu-max-ui-primary-hover: #a6ddb5;
+  --pesu-max-ui-primary-tint: rgba(147, 214, 165, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-mint);
+  --pesu-max-accent: #3c4e41;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-mint);
+  --pesu-max-accent-link: #abdfb9;
+  --pesu-max-accent-link-hover: #c0e7cb;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-mint);
+  --pesu-max-dock-active-fill: #435949;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-mint);
+  --pesu-max-dock-outline: rgba(147, 214, 165, 0.6);
+}
+
+/* Teal */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="teal"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-teal);
+  --pesu-max-ui-primary-hover: #96dcd2;
+  --pesu-max-ui-primary-tint: rgba(127, 212, 200, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-teal);
+  --pesu-max-accent: #374d4a;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-teal);
+  --pesu-max-accent-link: #9bddd4;
+  --pesu-max-accent-link-hover: #b5e6df;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-teal);
+  --pesu-max-dock-active-fill: #3d5854;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-teal);
+  --pesu-max-dock-outline: rgba(127, 212, 200, 0.6);
+}
+
+/* Sky */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="sky"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-sky);
+  --pesu-max-ui-primary-hover: #9fdcef;
+  --pesu-max-ui-primary-tint: rgba(138, 212, 236, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-sky);
+  --pesu-max-accent: #3a4d54;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-sky);
+  --pesu-max-accent-link: #a4ddf0;
+  --pesu-max-accent-link-hover: #bbe6f4;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-sky);
+  --pesu-max-dock-active-fill: #415860;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-sky);
+  --pesu-max-dock-outline: rgba(138, 212, 236, 0.6);
+}
+
+/* Frost */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="frost"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-frost);
+  --pesu-max-ui-primary-hover: #9fc2f9;
+  --pesu-max-ui-primary-tint: rgba(138, 180, 248, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-frost);
+  --pesu-max-accent: #3a4557;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-frost);
+  --pesu-max-accent-link: #a4c4fa;
+  --pesu-max-accent-link-hover: #bbd4fb;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-frost);
+  --pesu-max-dock-active-fill: #414e64;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-frost);
+  --pesu-max-dock-outline: rgba(138, 180, 248, 0.6);
+}
+
+/* Violet */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="violet"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-violet);
+  --pesu-max-ui-primary-hover: #cbb8f7;
+  --pesu-max-ui-primary-tint: rgba(192, 168, 245, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-violet);
+  --pesu-max-accent: #484256;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-violet);
+  --pesu-max-accent-link: #cebbf7;
+  --pesu-max-accent-link-hover: #dacdf9;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-violet);
+  --pesu-max-dock-active-fill: #524a63;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-violet);
+  --pesu-max-dock-outline: rgba(192, 168, 245, 0.6);
+}
+
+/* Orchid */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="orchid"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-orchid);
+  --pesu-max-ui-primary-hover: #e0b8f3;
+  --pesu-max-ui-primary-tint: rgba(217, 168, 240, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-orchid);
+  --pesu-max-accent: #4f4255;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-orchid);
+  --pesu-max-accent-link: #e1bbf3;
+  --pesu-max-accent-link-hover: #e9cdf6;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-orchid);
+  --pesu-max-dock-active-fill: #5a4a61;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-orchid);
+  --pesu-max-dock-outline: rgba(217, 168, 240, 0.6);
+}
+
+/* Rose */
+html[data-pesu-max-dark][data-pesu-max-dark-accent="rose"] {
+  --pesu-max-ui-primary: var(--pesu-max-dark-accent-rose);
+  --pesu-max-ui-primary-hover: #f4adbc;
+  --pesu-max-ui-primary-tint: rgba(242, 155, 173, 0.16);
+  --pesu-max-ui-focus-ring: var(--pesu-max-dark-accent-rose);
+  --pesu-max-accent: #553e43;
+  --pesu-max-accent-bright: var(--pesu-max-dark-accent-rose);
+  --pesu-max-accent-link: #f5b1bf;
+  --pesu-max-accent-link-hover: #f7c5cf;
+  --pesu-max-material-accent: var(--pesu-max-dark-accent-rose);
+  --pesu-max-dock-active-fill: #62464c;
+  --pesu-max-dock-marker: var(--pesu-max-dark-accent-rose);
+  --pesu-max-dock-outline: rgba(242, 155, 173, 0.6);
+}

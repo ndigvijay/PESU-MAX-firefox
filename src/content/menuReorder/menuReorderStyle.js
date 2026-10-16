@@ -37,7 +37,7 @@ export function injectStyle() {
       padding: 12px 14px;
       box-sizing: border-box;
       border-radius: 14px;
-      background: #ffffff;
+      background: ${theme.colors.surface};
       box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
@@ -47,13 +47,13 @@ export function injectStyle() {
       font-weight: 700;
       color: ${theme.colors.secondary};
     }
-    #${BAR_ID} .${CLASS}-hint { font-size: 12px; color: #666666; }
+    #${BAR_ID} .${CLASS}-hint { font-size: 12px; color: ${theme.colors.textMuted}; }
     #${BAR_ID} button {
       flex: 0 0 auto;
       padding: 8px 14px;
       border-radius: 8px;
-      border: 1.5px solid ${theme.colors.secondary};
-      background: ${theme.colors.secondary};
+      border: 1.5px solid ${theme.colors.solid};
+      background: ${theme.colors.solid};
       color: ${theme.colors.onSolid};
       font-size: 13px;
       font-weight: 600;
@@ -62,10 +62,10 @@ export function injectStyle() {
     #${BAR_ID} button.${CLASS}-lock {
       border-color: ${theme.colors.primary};
       background: ${theme.colors.primary};
-      color: ${theme.colors.onSolid};
+      color: ${theme.colors.onPrimary};
     }
     #${BAR_ID} button.${CLASS}-lock:hover:not(:disabled) { background: ${theme.colors.primaryHover}; }
-    #${BAR_ID} button.${CLASS}-reset:hover:not(:disabled) { background: ${theme.colors.secondaryHover}; }
+    #${BAR_ID} button.${CLASS}-reset:hover:not(:disabled) { background: ${theme.colors.solidHover}; }
     #${BAR_ID} button:focus-visible {
       outline: 2px solid ${theme.colors.secondary};
       outline-offset: 2px;

@@ -7,6 +7,7 @@ import CircularButton from "./components/CircularButton.jsx";
 import { PESU_SESSION_EXPIRED_KEY } from "../src/helpers/pesuAPI.js";
 import { ACADEMY_APP_PATH_PREFIX, hasLoginForm } from "../src/content/academyPage.js";
 import theme from "./Themes/theme.jsx";
+import { dialogPaperSx } from "./styles/styles.js";
 
 const isSignedInPage = () => window.location.pathname.startsWith(ACADEMY_APP_PATH_PREFIX);
 
@@ -42,7 +43,7 @@ const App = () => {
         });
     };
 
-    return ( 
+    return (
         <Provider store={store}>
             <CircularButton/>
             <Sidebar/>
@@ -51,8 +52,8 @@ const App = () => {
                 disableEscapeKeyDown
                 PaperProps={{
                     sx: {
-                        border: `1px solid ${theme.colors.secondaryLight}`,
-                        borderRadius: '12px'
+                        ...dialogPaperSx,
+                        border: `1px solid ${theme.colors.line}`
                     }
                 }}
             >
@@ -81,5 +82,5 @@ const App = () => {
         </Provider>
      );
 }
- 
+
 export default App;

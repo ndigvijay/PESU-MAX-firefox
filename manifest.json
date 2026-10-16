@@ -63,7 +63,7 @@
     },
     {
       "matches": ["https://www.pesuacademy.com/*"],
-      "css": ["content/theme.css"],
+      "css": ["content/themeTokens.css", "content/theme.css", "content/themeDark.css"],
       "js": ["content/themeStart.js"],
       "run_at": "document_start"
     },
@@ -88,7 +88,6 @@
     "128": "icons/icon128.png"
   },
   "web_accessible_resources": [
-    "icons/Pes_logo_square_ui.png",
     "content/startPageMain.js",
     "content/backNavigationMain.js",
     "content/csrfSyncMain.js"

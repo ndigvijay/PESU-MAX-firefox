@@ -25,7 +25,7 @@ const GradeSelect = ({ value, onChange, error, size = "small" }) => {
         renderValue={(selected) => {
           if (!selected) {
             return (
-              <Box sx={{ color: '#999', fontSize: '13px' }}>
+              <Box sx={{ color: theme.colors.textFaint, fontSize: '13px' }}>
                 Grade
               </Box>
             );
@@ -37,8 +37,8 @@ const GradeSelect = ({ value, onChange, error, size = "small" }) => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: grade?.color || '#ccc',
-                color: '#fff',
+                backgroundColor: grade?.color || theme.colors.textDisabled,
+                color: theme.grade.text,
                 borderRadius: '4px',
                 padding: '2px 12px',
                 fontWeight: 600,
@@ -54,13 +54,13 @@ const GradeSelect = ({ value, onChange, error, size = "small" }) => {
           borderRadius: '8px',
           fontSize: '13px',
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: error ? '#e53935' : theme.colors.secondaryLight
+            borderColor: error ? theme.colors.danger : theme.colors.secondaryLight
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: error ? '#e53935' : theme.colors.secondary
+            borderColor: error ? theme.colors.danger : theme.colors.secondary
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: error ? '#e53935' : theme.colors.primary
+            borderColor: error ? theme.colors.danger : theme.colors.primary
           },
           '& .MuiSelect-select': {
             display: 'flex',
@@ -77,7 +77,7 @@ const GradeSelect = ({ value, onChange, error, size = "small" }) => {
         }}
       >
         <MenuItem value="" disabled>
-          <Box sx={{ color: '#999', fontSize: '13px' }}>Select Grade</Box>
+          <Box sx={{ color: theme.colors.textFaint, fontSize: '13px' }}>Select Grade</Box>
         </MenuItem>
         {grades.map((grade) => (
           <MenuItem key={grade.value} value={grade.value}>
@@ -111,7 +111,7 @@ const GradeSelect = ({ value, onChange, error, size = "small" }) => {
               <Box
                 sx={{
                   fontSize: '12px',
-                  color: '#888',
+                  color: theme.colors.textSoft,
                   marginLeft: 'auto',
                 }}
               >

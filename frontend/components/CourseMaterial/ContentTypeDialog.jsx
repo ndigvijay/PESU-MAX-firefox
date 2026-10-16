@@ -57,16 +57,16 @@ const ContentTypeDialog = ({ open, onClose, onConfirm, initialSelection = DEFAUL
         Select Content Types
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body2" sx={{ color: '#666', fontSize: '12px', mb: 2 }}>
+        <Typography variant="body2" sx={{ color: theme.colors.textMuted, fontSize: '12px', mb: 2 }}>
           Choose which materials to download :
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           {CONTENT_TYPE_OPTIONS.map((option) => (
-            <Box 
+            <Box
               key={option.key}
               onClick={() => handleContentTypeChange(option.key)}
-              sx={{ 
-                display: 'flex', 
+              sx={{
+                display: 'flex',
                 alignItems: 'center',
                 padding: '8px 12px',
                 borderRadius: '8px',
@@ -88,9 +88,9 @@ const ContentTypeDialog = ({ open, onClose, onConfirm, initialSelection = DEFAUL
                   '&.Mui-checked': { color: theme.colors.primary }
                 }}
               />
-              <Typography sx={{ 
-                fontSize: '13px', 
-                color: selectedContentTypes[option.key] ? theme.colors.secondary : '#666',
+              <Typography sx={{
+                fontSize: '13px',
+                color: selectedContentTypes[option.key] ? theme.colors.secondary : theme.colors.textMuted,
                 fontWeight: selectedContentTypes[option.key] ? '500' : 'normal'
               }}>
                 {option.label}
@@ -100,14 +100,14 @@ const ContentTypeDialog = ({ open, onClose, onConfirm, initialSelection = DEFAUL
         </Box>
       </DialogContent>
       <DialogActions sx={{ padding: '8px 24px 16px', gap: 1 }}>
-        <Button 
+        <Button
           variant="contained"
           onClick={handleClose}
           sx={secondaryButtonSx}
         >
           Cancel
         </Button>
-        <Button 
+        <Button
           variant="contained"
           onClick={handleConfirm}
           disabled={!hasSelectedContentTypes}

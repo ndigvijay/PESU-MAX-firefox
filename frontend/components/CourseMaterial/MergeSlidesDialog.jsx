@@ -61,7 +61,7 @@ const MergeMaterialsDialog = ({ open, onClose, onConfirm, onBack, selectedConten
           <IconButton
             size="small"
             onClick={onBack || onClose}
-            sx={{ color: "#233a76", padding: "2px" }}
+            sx={{ color: theme.colors.secondary, padding: "2px" }}
             aria-label="Back"
           >
             <KeyboardBackspaceIcon fontSize="small" />
@@ -72,10 +72,10 @@ const MergeMaterialsDialog = ({ open, onClose, onConfirm, onBack, selectedConten
         </Box>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body2" sx={{ color: "#666", fontSize: "12px", lineHeight: 1.6 }}>
+        <Typography variant="body2" sx={{ color: theme.colors.textMuted, fontSize: "12px", lineHeight: 1.6 }}>
           Choose which selected material types should be merged subject-wise into one PDF.
         </Typography>
-        <Typography variant="body2" sx={{ color: "#888", fontSize: "11px", mt: 1 }}>
+        <Typography variant="body2" sx={{ color: theme.colors.textSoft, fontSize: "11px", mt: 1 }}>
           PDF files are merged directly. PPT/PPTX and DOC/DOCX files are converted to PDF first. Unsupported files stay separate.
         </Typography>
 
@@ -94,7 +94,7 @@ const MergeMaterialsDialog = ({ open, onClose, onConfirm, onBack, selectedConten
                   padding: "10px 12px",
                   borderRadius: "10px",
                   border: `1px solid ${selected ? theme.colors.primary : theme.colors.secondaryLight}`,
-                  backgroundColor: selected ? theme.colors.primaryLight : "rgba(255,255,255,0.85)",
+                  backgroundColor: selected ? theme.colors.primaryLight : theme.colors.surface,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   "&:hover": {
@@ -119,7 +119,7 @@ const MergeMaterialsDialog = ({ open, onClose, onConfirm, onBack, selectedConten
                   <Typography sx={{ fontSize: "13px", fontWeight: 600, color: theme.colors.secondary }}>
                     Merge {option.label}
                   </Typography>
-                  <Typography sx={{ fontSize: "11px", color: "#6e6e6e", lineHeight: 1.5 }}>
+                  <Typography sx={{ fontSize: "11px", color: theme.colors.textMuted, lineHeight: 1.5 }}>
                     {MERGE_OPTION_DESCRIPTIONS[option.key]}
                   </Typography>
                 </Box>

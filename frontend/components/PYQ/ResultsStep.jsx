@@ -171,7 +171,7 @@ const ResultsStep = () => {
             marginBottom: "8px"
           }}
         >
-          <Typography sx={{ fontSize: "12px", color: "#666" }}>
+          <Typography sx={{ fontSize: "12px", color: theme.colors.textMuted }}>
             {lastQuery ? resultSummary : "Search a course code or custom title to view PYQs"}
           </Typography>
           {alternateSearch && (

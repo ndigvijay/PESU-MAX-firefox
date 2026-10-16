@@ -31,7 +31,7 @@ const SemesterStep = () => {
             <Typography sx={{ fontSize: "14px", fontWeight: "700", color: theme.colors.secondary }}>
               {semester.label}
             </Typography>
-            <Typography sx={{ fontSize: "12px", color: "#666", marginTop: "2px" }}>
+            <Typography sx={{ fontSize: "12px", color: theme.colors.textMuted, marginTop: "2px" }}>
               Browse courses and download question papers
             </Typography>
           </Paper>

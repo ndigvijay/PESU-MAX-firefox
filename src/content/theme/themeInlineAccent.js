@@ -1,4 +1,4 @@
-import { THEME_ATTR } from "./themeApply.js";
+import { DARK_ATTR, THEME_ATTR } from "./themeApply.js";
 
 // PESU hard-codes its accent as an inline `color: #0091CD!important` on some links
 // (e.g. material previews), which no stylesheet can override.
@@ -18,8 +18,12 @@ function restore(element) {
   element.removeAttribute(RECOLORED_ATTR);
 }
 
+const isThemed = () =>
+  document.documentElement.hasAttribute(THEME_ATTR) ||
+  document.documentElement.hasAttribute(DARK_ATTR);
+
 export function applyInlineAccent() {
-  if (document.documentElement.hasAttribute(THEME_ATTR)) {
+  if (isThemed()) {
     document.querySelectorAll(HOST_ACCENT_SELECTOR).forEach(recolor);
   } else {
     document.querySelectorAll(`[${RECOLORED_ATTR}]`).forEach(restore);
@@ -30,7 +34,7 @@ export function watchInlineAccent() {
   let scheduled = false;
 
   new MutationObserver(() => {
-    if (scheduled || !document.documentElement.hasAttribute(THEME_ATTR)) return;
+    if (scheduled || !isThemed()) return;
     scheduled = true;
     queueMicrotask(() => {
       scheduled = false;

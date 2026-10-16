@@ -73,7 +73,7 @@ const GPACalculator = () => {
               padding: '10px',
               '&.Mui-selected': {
                 backgroundColor: theme.colors.primary,
-                color: '#fff',
+                color: theme.colors.onPrimary,
                 borderColor: theme.colors.primary,
                 '&:hover': {
                   backgroundColor: theme.colors.primaryHover,
@@ -81,7 +81,7 @@ const GPACalculator = () => {
               },
               '&:not(.Mui-selected)': {
                 color: theme.colors.secondary,
-                backgroundColor: '#fff',
+                backgroundColor: theme.colors.surface,
                 '&:hover': {
                   backgroundColor: theme.colors.secondaryLight,
                 },

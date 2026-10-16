@@ -139,7 +139,7 @@ const CGPACalculator = () => {
         >
           <Typography
             sx={{
-              color: '#999',
+              color: theme.colors.textFaint,
               fontSize: '14px',
               marginBottom: '4px',
             }}
@@ -165,14 +165,14 @@ const CGPACalculator = () => {
           sx={{
             textAlign: 'center',
             padding: '24px 16px',
-            color: '#999',
+            color: theme.colors.textFaint,
             marginBottom: '16px',
           }}
         >
           <Typography sx={{ fontSize: '14px', marginBottom: '8px' }}>
             No GPA data available yet
           </Typography>
-          <Typography sx={{ fontSize: '12px', color: '#bbb' }}>
+          <Typography sx={{ fontSize: '12px', color: theme.colors.textDisabled }}>
             Add semesters below to calculate your projected CGPA
           </Typography>
         </Box>
@@ -244,15 +244,15 @@ const CGPACalculator = () => {
                 padding: '12px',
                 borderRadius: '8px',
                 backgroundColor: hasData
-                  ? 'rgba(67, 160, 71, 0.12)'
-                  : 'rgba(0, 0, 0, 0.04)',
+                  ? theme.colors.successTint
+                  : theme.colors.sunken,
               }}
             >
               <Typography
                 sx={{
                   fontSize: '13px',
                   fontWeight: 600,
-                  color: hasData ? theme.colors.secondary : '#999',
+                  color: hasData ? theme.colors.secondary : theme.colors.textFaint,
                 }}
               >
                 Sem {sem.semester}
@@ -260,7 +260,7 @@ const CGPACalculator = () => {
               <Typography
                 sx={{
                   fontSize: '13px',
-                  color: hasData ? theme.colors.secondary : '#999',
+                  color: hasData ? theme.colors.secondary : theme.colors.textFaint,
                 }}
               >
                 {sem.credits || 0}
@@ -268,7 +268,7 @@ const CGPACalculator = () => {
               <Typography
                 sx={{
                   fontSize: '13px',
-                  color: hasData ? theme.colors.secondary : '#999',
+                  color: hasData ? theme.colors.secondary : theme.colors.textFaint,
                 }}
               >
                 {sem.sgpa ? sem.sgpa.toFixed(2) : '0'}
@@ -280,7 +280,7 @@ const CGPACalculator = () => {
                   alignItems: 'center',
                 }}
               >
-                <LockIcon sx={{ fontSize: '16px', color: '#999' }} />
+                <LockIcon sx={{ fontSize: '16px', color: theme.colors.textFaint }} />
               </Box>
             </Box>
           );
@@ -333,17 +333,17 @@ const CGPACalculator = () => {
                       borderRadius: '8px',
                       '& fieldset': {
                         borderColor: errors.credits
-                          ? '#e53935'
+                          ? theme.colors.danger
                           : theme.colors.secondaryLight,
                       },
                       '&:hover fieldset': {
                         borderColor: errors.credits
-                          ? '#e53935'
+                          ? theme.colors.danger
                           : theme.colors.secondary,
                       },
                       '&.Mui-focused fieldset': {
                         borderColor: errors.credits
-                          ? '#e53935'
+                          ? theme.colors.danger
                           : theme.colors.primary,
                       },
                     },
@@ -353,7 +353,7 @@ const CGPACalculator = () => {
                   <Typography
                     sx={{
                       fontSize: '11px',
-                      color: '#e53935',
+                      color: theme.colors.danger,
                       marginTop: '2px',
                       marginLeft: '4px',
                     }}
@@ -381,17 +381,17 @@ const CGPACalculator = () => {
                       borderRadius: '8px',
                       '& fieldset': {
                         borderColor: errors.sgpa
-                          ? '#e53935'
+                          ? theme.colors.danger
                           : theme.colors.secondaryLight,
                       },
                       '&:hover fieldset': {
                         borderColor: errors.sgpa
-                          ? '#e53935'
+                          ? theme.colors.danger
                           : theme.colors.secondary,
                       },
                       '&.Mui-focused fieldset': {
                         borderColor: errors.sgpa
-                          ? '#e53935'
+                          ? theme.colors.danger
                           : theme.colors.primary,
                       },
                     },
@@ -401,7 +401,7 @@ const CGPACalculator = () => {
                   <Typography
                     sx={{
                       fontSize: '11px',
-                      color: '#e53935',
+                      color: theme.colors.danger,
                       marginTop: '2px',
                       marginLeft: '4px',
                     }}
@@ -416,10 +416,10 @@ const CGPACalculator = () => {
                 size="small"
                 onClick={() => handleRemoveSemester(sem.id)}
                 sx={{
-                  color: '#e53935',
+                  color: theme.colors.danger,
                   padding: '8px',
                   '&:hover': {
-                    backgroundColor: 'rgba(229, 57, 53, 0.1)',
+                    backgroundColor: theme.colors.dangerTint,
                   },
                 }}
               >
@@ -455,7 +455,7 @@ const CGPACalculator = () => {
         >
           <Typography
             sx={{
-              color: '#999',
+              color: theme.colors.textFaint,
               fontSize: '14px',
               marginBottom: '4px',
             }}
@@ -466,7 +466,7 @@ const CGPACalculator = () => {
             sx={{
               fontSize: '32px',
               fontWeight: 600,
-              color: isValid ? theme.colors.primary : '#ccc',
+              color: isValid ? theme.colors.primary : theme.colors.textDisabled,
               lineHeight: 1.2,
             }}
           >
@@ -474,7 +474,7 @@ const CGPACalculator = () => {
           </Typography>
           <Typography
             sx={{
-              color: '#666',
+              color: theme.colors.textMuted,
               fontSize: '12px',
               marginTop: '8px',
             }}
