@@ -5,6 +5,7 @@ import {
   TableCell,
   Checkbox
 } from "@mui/material";
+import theme from "../../Themes/theme.jsx";
 import { selectClass } from "../../redux/courseMaterialSlice.js";
 import { cellSx, getClassRowSx, checkboxSx } from "../../styles/styles.js";
 
