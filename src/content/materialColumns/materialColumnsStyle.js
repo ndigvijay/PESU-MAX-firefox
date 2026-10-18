@@ -8,6 +8,19 @@ const CSS = `
   [${MATERIAL_COLUMN_ATTR}].${MATERIAL_COLUMN_HIDDEN} {
     display: none !important;
   }
+
+  /* Class label: centered. */
+  #CourseContentId table th[${MATERIAL_COLUMN_ATTR}="class"] {
+    text-align: center;
+  }
+
+  /* Class names: one line, truncated at the column edge. */
+  #CourseContentId table td[${MATERIAL_COLUMN_ATTR}="class"] .short-title {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 `;
 
 export function injectStyle() {
