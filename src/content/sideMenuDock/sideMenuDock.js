@@ -50,33 +50,33 @@ function trackTopBarHeight() {
   topBarObserver.observe(topBar);
 }
 
-function labelledButton(iconName, label) {
+function dockIconButton(iconName, label) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "pesu-max-dock-item";
   button.title = label;
   button.setAttribute("aria-label", label);
   button.append(glyph(iconName));
-
-  const text = document.createElement("span");
-  text.className = "pesu-max-dock-label";
-  text.textContent = label;
-  button.appendChild(text);
   return button;
 }
 
 function dockButton(id, label) {
-  const button = labelledButton(MENU_ICON_BY_ID[id] || "Menu", label);
+  const button = dockIconButton(MENU_ICON_BY_ID[id] || "Menu", label);
   button.dataset.pesuMaxDockSection = id;
   button.addEventListener("click", () => selectSection(id));
   return button;
 }
 
 function allButton() {
-  const button = labelledButton("GridView", "All");
+  const button = dockIconButton("GridView", "All");
   button.id = ALL_BUTTON_ID;
   button.setAttribute("aria-expanded", "false");
   button.setAttribute("aria-controls", PANEL_ID);
+
+  const text = document.createElement("span");
+  text.className = "pesu-max-dock-label";
+  text.textContent = "All";
+  button.appendChild(text);
   return button;
 }
 

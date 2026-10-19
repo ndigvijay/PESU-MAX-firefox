@@ -1,6 +1,6 @@
 /* Dock */
 html[data-pesu-max-dock] {
-  --pesu-max-dock-width: 90px;
+  --pesu-max-dock-width: 84px;
   --pesu-max-dock-bright: var(--pesu-max-accent-bright, #0091cd);
 }
 
@@ -33,24 +33,23 @@ html[data-pesu-max-dock] #pesu-max-dock {
 
 html[data-pesu-max-dock] .pesu-max-dock-item {
   position: relative;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  min-height: 72px;
+  gap: 4px;
+  width: 72px;
+  height: 64px;
   margin: 0 6px;
-  padding: 8px 4px;
+  padding: 0;
   border: 0;
   border-radius: 14px;
   background-color: transparent;
   color: var(--pesu-max-dock-on-bright) !important;
   font-family: inherit;
-  font-size: 24px;
-  line-height: 1;
-  text-align: center;
   cursor: pointer;
+  box-sizing: border-box;
   transition: background-color 0.16s ease;
 }
 
@@ -99,17 +98,8 @@ html[data-pesu-max-dock] #pesu-max-dock-all[data-pesu-max-dock-open] {
   border-color: var(--pesu-max-dock-line-strong);
 }
 
-html[data-pesu-max-dock] .pesu-max-dock-label,
 html[data-pesu-max-dock] .pesu-max-dock-glyph {
   color: inherit !important;
-}
-
-html[data-pesu-max-dock] .pesu-max-dock-label {
-  max-width: 100%;
-  overflow-wrap: break-word;
-}
-
-html[data-pesu-max-dock] .pesu-max-dock-glyph {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,11 +112,17 @@ html[data-pesu-max-dock] .pesu-max-dock-glyph .pesu-max-menu-icon {
   fill: currentColor;
 }
 
-html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
+html[data-pesu-max-dock] #pesu-max-dock .pesu-max-dock-glyph .pesu-max-menu-icon {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+}
+
+html[data-pesu-max-dock] .pesu-max-dock-label {
   max-width: 100%;
+  color: inherit !important;
   font-size: 11px;
   line-height: 1.2;
-  overflow-wrap: break-word;
 }
 
 /* All section. */
@@ -135,7 +131,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
   top: 10px;
   right: 55%;
   bottom: 10px;
-  left: calc(var(--pesu-max-dock-width, 90px) + 20px);
+  left: calc(var(--pesu-max-dock-width, 84px) + 20px);
   z-index: 1035;
   display: flex;
   flex-direction: column;
@@ -152,7 +148,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
   content: "";
   position: absolute;
   left: -7px;
-  bottom: 39px;
+  bottom: 30px;
   z-index: -1;
   width: 14px;
   height: 14px;
@@ -167,7 +163,7 @@ html[data-pesu-max-dock] .pesu-max-dock-item .pesu-max-dock-label {
   top: 0;
   right: 0;
   bottom: 0;
-  left: var(--pesu-max-dock-width, 90px);
+  left: var(--pesu-max-dock-width, 84px);
   z-index: 1034;
   background-color: var(--pesu-max-dock-scrim);
   animation: pesu-max-dock-fade 0.18s ease-out;
