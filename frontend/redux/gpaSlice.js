@@ -22,6 +22,13 @@ export const GRADE_COLORS = {
   F: theme.grade.F
 };
 
+// Semesters without credits are ongoing and should be excluded.
+const latestPublishedSemester = (gpaData = []) =>
+  gpaData.reduce(
+    (latest, sem) => (sem.credits > 0 ? Math.max(latest, sem.semester) : latest),
+    0
+  );
+
 export const loadGpaData = createAsyncThunk(
   "gpa/loadGpaData",
   async (_, { rejectWithValue }) => {
@@ -104,9 +111,7 @@ const gpaSlice = createSlice({
         state.manualSemesters = state.manualSemesters.filter(s => s.id !== action.payload);
 
         // Recalculate next semester number
-        const apiMax = state.gpaData.length > 0
-          ? Math.max(...state.gpaData.map(g => g.semester))
-          : 0;
+        const apiMax = latestPublishedSemester(state.gpaData);
         const manualMax = state.manualSemesters.length > 0
           ? Math.max(...state.manualSemesters.map(m => m.semester))
           : 0;
@@ -129,11 +134,8 @@ const gpaSlice = createSlice({
           state.currentCgpa = action.payload.currentCgpa || null;
           state.totalCredits = state.gpaData.reduce((sum, s) => sum + (s.credits || 0), 0);
 
-          // Set next manual semester after highest API semester
-          const maxSem = state.gpaData.length > 0
-            ? Math.max(...state.gpaData.map(g => g.semester))
-            : 0;
-          state.nextManualSemester = maxSem + 1;
+          // Set next manual semester after the last semester with results
+          state.nextManualSemester = latestPublishedSemester(state.gpaData) + 1;
         }
       })
       .addCase(loadGpaData.rejected, (state, action) => {

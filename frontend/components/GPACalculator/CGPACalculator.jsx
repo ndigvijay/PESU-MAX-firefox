@@ -122,7 +122,6 @@ const CGPACalculator = () => {
     dispatch(addManualSemester());
   };
 
-  const hasApiData = gpaData.length > 0;
   const hasDataInApi = gpaData.some((s) => s.credits > 0);
 
   return (
@@ -179,7 +178,7 @@ const CGPACalculator = () => {
       )}
 
       {/* Header Row */}
-      {(hasApiData || manualSemesters.length > 0) && (
+      {(hasDataInApi || manualSemesters.length > 0) && (
         <Box
           sx={{
             display: 'grid',
@@ -229,9 +228,8 @@ const CGPACalculator = () => {
 
       {/* Semester Rows */}
       <Box sx={{ flex: 1, overflowY: 'auto', paddingBottom: '8px' }}>
-        {/* API Data Rows (Read-only) */}
-        {gpaData.map((sem) => {
-          const hasData = sem.credits > 0;
+        {/* API Data Rows (Read-only; semesters without credits have no results yet) */}
+        {gpaData.filter((sem) => sem.credits > 0).map((sem) => {
           return (
             <Box
               key={`api-${sem.semester}`}
@@ -243,16 +241,14 @@ const CGPACalculator = () => {
                 marginBottom: '8px',
                 padding: '12px',
                 borderRadius: '8px',
-                backgroundColor: hasData
-                  ? theme.colors.successTint
-                  : theme.colors.sunken,
+                backgroundColor: theme.colors.successTint,
               }}
             >
               <Typography
                 sx={{
                   fontSize: '13px',
                   fontWeight: 600,
-                  color: hasData ? theme.colors.secondary : theme.colors.textFaint,
+                  color: theme.colors.secondary,
                 }}
               >
                 Sem {sem.semester}
@@ -260,15 +256,15 @@ const CGPACalculator = () => {
               <Typography
                 sx={{
                   fontSize: '13px',
-                  color: hasData ? theme.colors.secondary : theme.colors.textFaint,
+                  color: theme.colors.secondary,
                 }}
               >
-                {sem.credits || 0}
+                {sem.credits}
               </Typography>
               <Typography
                 sx={{
                   fontSize: '13px',
-                  color: hasData ? theme.colors.secondary : theme.colors.textFaint,
+                  color: theme.colors.secondary,
                 }}
               >
                 {sem.sgpa ? sem.sgpa.toFixed(2) : '0'}
@@ -300,7 +296,7 @@ const CGPACalculator = () => {
                 marginBottom: '12px',
                 padding: '12px',
                 borderRadius: '8px',
-                backgroundColor: 'white',
+                backgroundColor: theme.colors.surfaceAlt,
                 border: `1px solid ${theme.colors.secondaryLight}`,
               }}
             >
