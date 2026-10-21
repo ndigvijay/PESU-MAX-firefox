@@ -114,7 +114,9 @@ export function createRecorder($, contentRoot, menuList, stack) {
 
   const relevant = (records) =>
     records.filter((record) =>
-      !(record.type === "attributes" && (record.target === contentRoot || record.target === menuList))
+      !(record.type === "attributes" &&
+        (record.target === contentRoot || record.target === menuList ||
+          (record.attributeName === "src" && record.target.tagName === "IFRAME")))
     );
 
   function track(step, record) {
