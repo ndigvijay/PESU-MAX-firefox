@@ -64,6 +64,7 @@ const GPACalculator = () => {
           onChange={handleModeChange}
           fullWidth
           sx={{
+            gap: '8px',
             '& .MuiToggleButtonGroup-grouped': {
               border: `1px solid ${theme.colors.secondary}`,
               borderRadius: '8px',
