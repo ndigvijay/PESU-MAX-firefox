@@ -1038,6 +1038,11 @@ html[data-pesu-max-dark] .MuiSvgIcon-root.MuiCheckbox-root {
   color: var(--pesu-max-ui-text-soft);
 }
 
+html[data-pesu-max-dark] .MuiCheckbox-root.Mui-checked,
+html[data-pesu-max-dark] .MuiCheckbox-root.MuiCheckbox-indeterminate {
+  color: var(--pesu-max-ui-primary);
+}
+
 html[data-pesu-max-dark] .MuiAlert-root {
   color: var(--pesu-max-ui-text);
 }

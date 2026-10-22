@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Drawer, Box, IconButton, Typography, Divider, Badge } from '@mui/material';
+import { Drawer, Box, IconButton, Typography, Divider } from '@mui/material';
 import { closeSidebar, openSidebar, setCurrentPage } from '../redux/sidebarSlice.js';
 import theme from '../Themes/theme.jsx';
-import { newBadgeSx } from '../styles/styles.js';
 import PesuMaxMark from './PesuMaxMark.jsx';
 import ThemeModeButton from './ThemeModeButton.jsx';
 import Home from '../Pages/Home.jsx';
@@ -85,9 +84,7 @@ const Sidebar = () => {
                         <ThemeModeButton />
                         <ResourceNotificationsButton />
                         <IconButton onClick={HandleSettings} aria-label="Open settings" size="large" sx={{ color: theme.colors.secondary }}>
-                            <Badge badgeContent="NEW" overlap="circular" sx={newBadgeSx}>
-                                <SettingsIcon fontSize="large" />
-                            </Badge>
+                            <SettingsIcon fontSize="large" />
                         </IconButton>
                     </Box>
                 </Box>

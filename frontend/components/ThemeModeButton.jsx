@@ -1,8 +1,9 @@
 import React from "react";
-import { IconButton } from "@mui/material";
+import { Badge, IconButton } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import theme from "../Themes/theme.jsx";
+import { newBadgeSx } from "../styles/styles.js";
 import useStoredSetting from "./Settings/useStoredSetting.js";
 import { THEME_DARK_KEY } from "../../src/utils/storageKeys.js";
 
@@ -20,7 +21,9 @@ const ThemeModeButton = () => {
       size="large"
       sx={{ color: theme.colors.icon }}
     >
-      {darkOn ? <LightModeIcon fontSize="large" /> : <DarkModeIcon fontSize="large" />}
+      <Badge badgeContent="NEW" overlap="circular" sx={newBadgeSx}>
+        {darkOn ? <LightModeIcon fontSize="large" /> : <DarkModeIcon fontSize="large" />}
+      </Badge>
     </IconButton>
   );
 };

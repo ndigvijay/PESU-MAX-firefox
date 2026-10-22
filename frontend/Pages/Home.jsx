@@ -158,6 +158,7 @@ const Home = () => {
                 textTransform: 'none',
                 fontWeight: 600,
                 "&:hover": {
+                  color: theme.colors.primary,
                   borderColor: theme.colors.secondaryHover,
                   backgroundColor: theme.colors.sunken
                 }
