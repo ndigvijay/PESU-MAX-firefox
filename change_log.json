@@ -1,5 +1,23 @@
 [
   {
+    "version": "4.3.1",
+    "date": "Oct 23, 2026",
+    "feats": [
+      "Dark mode with 12 accent colours",
+      "Light and dark mode toggle in the panel header",
+      "Dark top bar logo on PESU Academy",
+      "Class names truncated at the column edge with a centered Class label",
+      "Compact dock with icon only sections"
+    ],
+    "fixes": [
+      "CGPA calculation excludes ongoing semesters",
+      "Back button after closing a PDF in topics",
+      "SGPA and CGPA buttons no longer touch",
+      "Card outlines on the results and profile pages in dark mode",
+      "Status colours and error messages in the GPA calculators and attendance"
+    ]
+  },
+  {
     "version": "4.2.0",
     "date": "Oct 14, 2026",
     "feats": [
