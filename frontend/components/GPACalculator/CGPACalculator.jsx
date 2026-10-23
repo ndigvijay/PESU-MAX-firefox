@@ -410,6 +410,7 @@ const CGPACalculator = () => {
               {/* Delete Button */}
               <IconButton
                 size="small"
+                color="error"
                 onClick={() => handleRemoveSemester(sem.id)}
                 sx={{
                   color: theme.colors.danger,

@@ -207,6 +207,7 @@ html[data-pesu-max-dark] {
   --pesu-max-field: #1e1e1e;
   --pesu-max-line: #3a3a3a;
   --pesu-max-line-control: #7c7c7c;
+  --pesu-max-line-strong: #efeff0;
   --pesu-max-text: #dadada;
   --pesu-max-text-soft: #c9c9c9;
   --pesu-max-text-mute: #c1c1c1;

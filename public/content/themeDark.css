@@ -87,12 +87,35 @@ html[data-pesu-max-dark] .list-group-item:nth-child(even) {
 }
 
 /* Cards lift by surface */
-html[data-pesu-max-dark] .elem-info-wrapper,
-html[data-pesu-max-dark] .dashboard-info-bar,
 html[data-pesu-max-dark] .panel,
 html[data-pesu-max-dark] .well,
 html[data-pesu-max-dark] .thumbnail {
   box-shadow: none !important;
+}
+
+/* Info cards share the panel surface, so their outline replaces the light-mode shadow.
+   Matches the host's own column dividers inside these cards. */
+html[data-pesu-max-dark] .elem-info-wrapper,
+html[data-pesu-max-dark] .dashboard-info-bar {
+  box-shadow: 0 0 0 1px var(--pesu-max-line-strong) !important;
+}
+
+/* Results: the outer course list needs no frame; score cards and their dividers share a softer line. */
+html[data-pesu-max-dark] .elem-info-wrapper.multiple-info-wrapper {
+  box-shadow: none !important;
+}
+
+html[data-pesu-max-dark] #getEsaResultsBasedOnSem .dashboard-info-bar {
+  box-shadow: 0 0 0 1px var(--pesu-max-line-control) !important;
+}
+
+html[data-pesu-max-dark] #getEsaResultsBasedOnSem .dashboard-info-bar > div {
+  border-color: var(--pesu-max-line-control) !important;
+}
+
+/* Top bar logo */
+html[data-pesu-max-dark] .logo img[src*="logoPesu"] {
+  content: url("chrome-extension://__MSG_@@extension_id__/icons/pesu-logo-dark.png");
 }
 
 /* Side menu */
@@ -874,6 +897,10 @@ html[data-pesu-max-dark] ::-webkit-scrollbar-track {
   background-color: var(--pesu-max-bg);
 }
 
+html[data-pesu-max-dark] ::-webkit-scrollbar-corner {
+  background-color: var(--pesu-max-bg);
+}
+
 html[data-pesu-max-dark] ::-webkit-scrollbar-thumb {
   background-color: var(--pesu-max-line-control);
   border-radius: 5px;
@@ -1004,6 +1031,14 @@ html[data-pesu-max-dark] .MuiIconButton-root:hover {
   background-color: var(--pesu-max-ui-raised);
 }
 
+html[data-pesu-max-dark] .MuiIconButton-colorError {
+  color: var(--pesu-max-ui-danger);
+}
+
+html[data-pesu-max-dark] .MuiIconButton-colorError:hover {
+  background-color: var(--pesu-max-ui-danger-tint);
+}
+
 html[data-pesu-max-dark] .MuiIconButton-root.Mui-disabled,
 html[data-pesu-max-dark] .MuiButtonBase-root.Mui-disabled {
   color: var(--pesu-max-ui-text-disabled);
@@ -1125,10 +1160,6 @@ html[data-pesu-max-dark] .MuiTab-root.Mui-selected {
 html[data-pesu-max-dark] .MuiAvatar-root {
   background-color: var(--pesu-max-ui-raised);
   color: var(--pesu-max-ui-text);
-}
-
-html[data-pesu-max-dark] .MuiTypography-root {
-  color: inherit;
 }
 
 html[data-pesu-max-dark] .MuiTypography-colorTextSecondary,

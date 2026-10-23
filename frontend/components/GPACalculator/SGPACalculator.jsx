@@ -219,6 +219,7 @@ const SGPACalculator = () => {
               {/* Delete Button */}
               <IconButton
                 size="small"
+                color="error"
                 onClick={() => handleRemoveCourse(course.id)}
                 disabled={courses.length === 1}
                 sx={{
