@@ -10,7 +10,11 @@ const footerLinkSx = {
   color: theme.colors.secondary,
   textDecorationColor: theme.colors.secondary,
   fontStyle: 'italic',
-  fontSize: '15px'
+  fontSize: '15px',
+  '&:hover': {
+    color: theme.colors.primary,
+    textDecorationColor: theme.colors.primary
+  }
 };
 
 const Home = () => {

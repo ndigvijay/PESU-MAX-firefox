@@ -37,6 +37,7 @@ const pickerSx = (tone, current) => {
     fontWeight: 400,
     whiteSpace: "nowrap",
     textTransform: "none",
+    "& .MuiButton-endIcon": { marginLeft: "auto" },
     "&:hover": {
       borderColor: dark ? dotColor(current) : theme.colors.primaryHover,
       backgroundColor: dark ? theme.colors.raised : theme.colors.onSolid,
@@ -91,7 +92,7 @@ const SettingsAccentRow = ({ storageKey, title, description, options, fallback, 
         <Button
           onClick={(event) => setAnchor(event.currentTarget)}
           disabled={!setting.ready || setting.saving}
-          endIcon={<ArrowDropDownIcon sx={{ marginLeft: "auto" }} />}
+          endIcon={<ArrowDropDownIcon />}
           sx={pickerSx(tone, current)}
           aria-label={title}
         >
