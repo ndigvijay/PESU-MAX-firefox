@@ -88,6 +88,7 @@
     "128": "icons/icon128.png"
   },
   "web_accessible_resources": [
+    "icons/pesu-logo-dark.png",
     "content/startPageMain.js",
     "content/backNavigationMain.js",
     "content/csrfSyncMain.js"

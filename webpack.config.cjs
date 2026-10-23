@@ -171,6 +171,10 @@ module.exports = (env, argv) => {
             to: 'content/materialTable.css'
           },
           {
+            from: 'public/icons/pesu-logo-dark.png',
+            to: 'icons/pesu-logo-dark.png'
+          },
+          {
             from: 'public/icons/icon16.png',
             to: 'icons/icon16.png'
           },
