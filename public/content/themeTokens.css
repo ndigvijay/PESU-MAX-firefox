@@ -1,4 +1,5 @@
-/* IMP: theme.jsx references these names; themePalettes.js overrides five of them inline. */
+/* IMP: theme.jsx references the --pesu-max-ui-* names. applyTheme sets --pesu-max-bg,
+   --pesu-max-accent* and --pesu-max-font inline from the selected light palette and font. */
 
 :root {
   /* Surfaces */
@@ -35,18 +36,18 @@
   --pesu-max-ui-tint: rgba(35, 58, 118, 0.08);
 
   /* Status */
-  --pesu-max-ui-success: #2e7d32;
-  --pesu-max-ui-success-tint: rgba(46, 125, 50, 0.1);
-  --pesu-max-ui-success-border: rgba(46, 125, 50, 0.3);
-  --pesu-max-ui-warning: #8a6100;
-  --pesu-max-ui-warning-tint: rgba(138, 97, 0, 0.1);
-  --pesu-max-ui-warning-border: rgba(138, 97, 0, 0.3);
+  --pesu-max-ui-success: #43a047;
+  --pesu-max-ui-success-tint: rgba(67, 160, 71, 0.1);
+  --pesu-max-ui-success-border: rgba(67, 160, 71, 0.3);
+  --pesu-max-ui-warning: #ffa000;
+  --pesu-max-ui-warning-tint: rgba(255, 160, 0, 0.1);
+  --pesu-max-ui-warning-border: rgba(255, 160, 0, 0.3);
   --pesu-max-ui-info: #0b6bcb;
   --pesu-max-ui-info-tint: rgba(11, 107, 203, 0.1);
   --pesu-max-ui-info-border: rgba(11, 107, 203, 0.3);
-  --pesu-max-ui-danger: #d32f2f;
-  --pesu-max-ui-danger-tint: rgba(211, 47, 47, 0.1);
-  --pesu-max-ui-danger-border: rgba(211, 47, 47, 0.3);
+  --pesu-max-ui-danger: #e53935;
+  --pesu-max-ui-danger-tint: rgba(229, 57, 53, 0.1);
+  --pesu-max-ui-danger-border: rgba(229, 57, 53, 0.3);
   --pesu-max-ui-error: #d32f2f;
 
   /* Grade chips */

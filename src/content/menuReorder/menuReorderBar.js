@@ -25,7 +25,7 @@ export function setEditBarMessage(message, isError = false) {
   const hint = document.querySelector(`#${BAR_ID} .${CLASS}-hint`);
   if (!hint) return;
   hint.textContent = message;
-  hint.style.color = isError ? theme.colors.danger : theme.colors.textMuted;
+  hint.style.color = isError ? theme.colors.error : theme.colors.textMuted;
 }
 
 export function setEditBarBusy(busy) {
