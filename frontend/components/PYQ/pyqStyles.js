@@ -24,7 +24,7 @@ export const errorAlertSx = {
 export const paginationButtonSx = {
   textTransform: "none",
   backgroundColor: theme.colors.solid,
-  color: theme.colors.onSolid,
+  color: theme.colors.onSolidAccent,
   "&:hover": {
     backgroundColor: theme.colors.solidHover
   },

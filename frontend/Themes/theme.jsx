@@ -8,6 +8,7 @@ const theme = {
     onSolid: token("on-solid"),
     onPrimary: token("on-primary"),
     onSolidMuted: token("on-solid-muted"),
+    onSolidAccent: token("on-solid-accent"),
     secondary: token("heading"),
     secondaryHover: token("heading-hover"),
     secondaryLight: token("tint"),

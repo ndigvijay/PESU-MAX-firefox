@@ -33,6 +33,7 @@
   --pesu-max-ui-on-solid: #ffffff;
   --pesu-max-ui-on-primary: #ffffff;
   --pesu-max-ui-on-solid-muted: rgba(255, 255, 255, 0.8);
+  --pesu-max-ui-on-solid-accent: #ffffff;
   --pesu-max-ui-tint: rgba(35, 58, 118, 0.08);
 
   /* Status */
@@ -135,6 +136,7 @@ html[data-pesu-max-dark] {
   --pesu-max-ui-on-solid: #dadada;
   --pesu-max-ui-on-primary: #1e1e1e;
   --pesu-max-ui-on-solid-muted: #c9c9c9;
+  --pesu-max-ui-on-solid-accent: var(--pesu-max-ui-primary);
   --pesu-max-ui-tint: rgba(255, 255, 255, 0.07);
 
   --pesu-max-ui-success: #a3be8c;
