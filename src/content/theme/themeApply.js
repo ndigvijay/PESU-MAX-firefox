@@ -5,6 +5,7 @@ export const THEME_ATTR = "data-pesu-max-theme";
 export const DARK_ATTR = "data-pesu-max-dark";
 export const DARK_ACCENT_ATTR = "data-pesu-max-dark-accent";
 export const FONT_ATTR = "data-pesu-max-font";
+const DARK_LOGO_PATH = "icons/pesu-logo-dark.png";
 
 const optionFor = (options, value) =>
   options.find((option) => option.value === value && option.value !== DEFAULT_THEME_VALUE);
@@ -46,6 +47,7 @@ export function applyTheme(values) {
     "--pesu-max-accent-bright": palette && palette.accent.bright,
     "--pesu-max-accent-link": palette && palette.accent.link,
     "--pesu-max-accent-link-hover": palette && palette.accent.linkHover,
+    "--pesu-max-dark-logo": dark && `url("${chrome.runtime.getURL(DARK_LOGO_PATH)}")`,
   });
 
   const font = optionFor(FONT_OPTIONS, values.font);

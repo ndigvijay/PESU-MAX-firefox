@@ -113,9 +113,8 @@ html[data-pesu-max-dark] #getEsaResultsBasedOnSem .dashboard-info-bar > div {
   border-color: var(--pesu-max-line-control) !important;
 }
 
-/* Top bar logo */
 html[data-pesu-max-dark] .logo img[src*="logoPesu"] {
-  content: url("chrome-extension://__MSG_@@extension_id__/icons/pesu-logo-dark.png");
+  content: var(--pesu-max-dark-logo);
 }
 
 /* Side menu */
