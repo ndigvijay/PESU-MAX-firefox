@@ -3,7 +3,7 @@ import { CONTENT_TYPE_IDS } from './pesuAPI.js';
 
 const DEFAULT_CONTENT_TYPES = [CONTENT_TYPE_IDS.slides];
 
-export async function handleBulkDownload(selectedItems, contentTypes, mergeOptions = {}, mergeSlides = false, sender, sendResponse) {
+export async function handleBulkDownload(selectedItems, contentTypes, mergeOptions = {}, mergeSlides = false, mergeMode = "subject-wise", sender, sendResponse) {
   if (!selectedItems || selectedItems.length === 0) {
     sendResponse({ error: "No items selected" });
     return;
@@ -36,7 +36,8 @@ export async function handleBulkDownload(selectedItems, contentTypes, mergeOptio
   try {
     const result = await createBulkDownloadZip(selectedItems, progressCallback, typesToDownload, {
       mergeOptions,
-      mergeSlides
+      mergeSlides,
+      mergeMode
     });
     
     // Use a blob URL instead of a data: URL — Firefox blocks data: URLs in
