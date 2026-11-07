@@ -112,30 +112,37 @@ export async function handleNotificationDownload(notification, sendResponse) {
   }
 
   try {
-    const files = await downloadNotificationFiles(notification);
-    const downloadIds = [];
+    const { files, failed } = await downloadNotificationFiles(notification);
+    let downloadedCount = 0;
 
     for (const file of files) {
-      const blob = file.blob?.type
-        ? file.blob
-        : new Blob([file.blob], { type: file.mimeType || 'application/octet-stream' });
-      const blobUrl = URL.createObjectURL(blob);
-
       try {
-        const downloadId = await triggerChromeDownload(blobUrl, file.filename);
-        downloadIds.push(downloadId);
-      } finally {
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+        const blob = file.blob?.type
+          ? file.blob
+          : new Blob([file.blob], { type: file.mimeType || 'application/octet-stream' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        try {
+          await triggerChromeDownload(blobUrl, file.filename);
+          downloadedCount++;
+        } finally {
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+        }
+      } catch (error) {
+        failed.push({
+          name: file.filename,
+          error: error.message || "Could not save this file"
+        });
       }
     }
 
     sendResponse({
       success: true,
-      downloadedCount: downloadIds.length,
-      downloadIds
+      downloadedCount,
+      failedCount: failed.length,
+      failed
     });
   } catch (error) {
-    console.error("Notification download error:", error);
     sendResponse({ error: error.message || "Could not download file" });
   }
 }
